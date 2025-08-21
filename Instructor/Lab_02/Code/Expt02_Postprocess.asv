@@ -1,0 +1,99 @@
+% Sample code to generate plot from data aquired from calibrated pendulum
+% Use this code to plot the oscillating pendulum data
+% Time period and frequency should be calulated separately.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Date: August 5th, 2020
+% Dr. Vibhav Durgesh
+% User has to provide appropriate information - see beginning of code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear; close all; clc
+%% Fake Data Parameters
+m = 0.049;         % mass (kg)
+L = 0.25;         % length (m)
+g = 9.81;           % gravity (m/s^2)
+b = 0.0023;        % damping coefficient (N*m*s/rad)
+
+w_n_e = sqrt(g/L);           % natural frequency 
+zeta_e = b / (2*m*L^2*w_n_e);  % normalized damping
+w_d_e = w_n_e*sqrt(1-zeta_e^2);
+T_d = 2*pi/w_d_e;
+
+%% Model "Estimate" Parameters
+m = 0.05;         % mass (kg)
+L = 0.25;         % length (m)
+g = 9.81;           % gravity (m/s^2)
+b = 0.002;        % damping coefficient (N*m*s/rad)
+
+w_n = sqrt(g/L);           % natural frequency 
+zeta = b / (2*m*L^2*w_n);  % normalized damping
+
+%% Define Simulation Initial Conditions
+theta0 = pi/2;     % initial angle (radians)
+w0 = 0;            % initial angular velocity (rad/s)
+x0 = [theta0; w0];
+
+%% Time Span
+dt = 0.005;                     % Desired time step (seconds)
+tspan = 0:dt:15;                % Time vector from 0 to 10 seconds
+
+%% Define ODE Function
+pendulumODE = @(t, x) [x(2); -2*zeta*w_n*x(2) - w_n^2 * sin(x(1))];
+pendulumODE_e = @(t, x) [x(2); -2*zeta_e*w_n_e*x(2) - w_n_e^2 * sin(x(1))];
+
+%% Solve ODE
+[t_s, y_s] = ode45(pendulumODE, tspan, x0);
+[t_s, y_se] = ode45(pendulumODE_e, tspan, x0);
+power = 0.02; % add some noise to simulate adc error
+y_se = y_se(:,1)+power*randn(length(y_se),1);
+
+%% Define Experimental Data from File
+fid = fopen('../Data/Student_Name_AngVsTime.dat');
+tline = fgetl(fid);
+data = fscanf(fid, '%f \n', [2 inf]);
+t_e = data(1,:);
+y_e = data(2,:);
+fclose(fid);
+
+% Trim experimental data to drop time 
+t_drop = 1.175; % sec
+idx_to_remove = find(t_e<t_drop);
+t_e(idx_to_remove) = []; % delete samples before the drop
+y_e(idx_to_remove) = []; % delete samples before the drop
+% apply a time shift to the time vector to start at t = 0
+t_e = t_e-t_drop;
+
+%% Generate Properly Formatted Figure 
+figure (1)
+set(gcf,'unit','inches','color',[1 1 1],'position',[0.50 0.50, 6.50 5],...
+    'defaultaxesfontsize',10,'defaultaxesfontname','times');
+
+% Plotting Experiment Data
+%plot(t_e,y_e,'-r','LineWidth',2);
+plot(t_s,rad2deg(y_se(:,1)),'-r','LineWidth',1);
+
+hold on
+
+% Plot Simulation Data
+plot(t_s,rad2deg(y_s(:,1)),'-b','LineWidth',1);
+
+xlabel('Time (s)')
+ylabel('Angle (^{o})')
+grid on; box off
+
+ylim([-90 90])
+xlim([0 15])
+
+legend({'Expt. data','Model'},'location','Southeast')
+title('FirstName LastName''s plot')
+
+text(12,70,fprintf('T_d = %.3f',t_s),'Fontname','times')
+text(12,60,'\omega_d = 6.6287','Fontname','times')
+
+%% Saving the files in png and pdf format
+figName = ('../Figures/Student_Name_Expt02_Postprocess');
+set(gcf,'PaperPositionMode','auto')
+print(figName,'-dpng','-r600')
+set(gcf,'PaperUnits','inches','Units','inches');
+figpos = get(gcf, 'Position');
+set(gcf, 'PaperSize', figpos(3:4),'Units','inches');
+print(figName,'-dpdf','-r600') 

@@ -14,6 +14,7 @@ clear all
 close all
 clc
 
+
 %% Start of user information
 Fs = 200; %Sampling rate data per sec
 T = 20; %Time to aquire data

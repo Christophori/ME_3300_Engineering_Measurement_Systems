@@ -10,8 +10,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear; close all; clc
 
-Test
-
 %% User have to manually add information- change x, y, and t_nuP values as required.
 x = [3.8005 3.5127 3.2527 2.9704 2.6897 2.5767 2.465 2.206 1.9007 1.6289 1.3384]; % Example Voltage Data
 y = [-90 -70 -50 -30 -10 0 10 30 50 70 90]; % Angular Location of Pendulum

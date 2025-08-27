@@ -12,13 +12,13 @@ clc
 % when we read data with readtable, the result is a matlab "table"
 % variable. These work much like a Pandas table in Python, or a dataframe
 % in R. 
-volt_data = readtable('time_volts_data_example.csv');
+volt_data = readtable('..\Data\time_volts_data_example.csv');
 time = volt_data.Time; % This step accesss the values from the table.
 voltage = volt_data.Volts;  
 
 %% load the data using readmatrix
 % alternatively we can directly read in data values with readmatrix
-data = readmatrix("time_volts_data_example.csv");
+data = readmatrix("..\Data\time_volts_data_example.csv");
 time = data(:,1); % Now we need to access data by column instead of by header name
 voltage = data(:,2);
 
@@ -95,8 +95,8 @@ grid minor
 grid on
 
 %% Finally, lets save the figure to file now that we are happy with it.
-print(better_fig,"My_Awesome_Voltage_Scatter",'-dpng','-r600') % for reports/presentations
-print(better_fig,"My_Awesome_Voltage_Scatter",'-dpdf','-r600') % for canvas submission 
+print(better_fig,"..\Figures\My_Awesome_Voltage_Scatter",'-dpng','-r600') % for reports/presentations
+print(better_fig,"..\Figures\My_Awesome_Voltage_Scatter",'-dpdf','-r600') % for canvas submission 
 
 %% Now let's try making a histogram plot
 % use scatter markers for showing discrete data and lines for trends...
@@ -118,8 +118,8 @@ grid on
 box off
 
 %% Finally save the figure to file now that we are happy with it.
-print(historgram_fig,"My_Awesome_Voltage_Hist",'-dpng','-r600')
-print(historgram_fig,"My_Awesome_Voltage_Hist",'-dpdf','-r600')
+print(historgram_fig,"..\Figures\My_Awesome_Voltage_Hist",'-dpng','-r600')
+print(historgram_fig,"..\Figures\My_Awesome_Voltage_Hist",'-dpdf','-r600')
 
 %%  *** PART 2 ***
 %% Generate linear data with some noise
@@ -200,8 +200,8 @@ grid on
 box off
 
 % save the figure to file
-print(curve_fit_fig,"My_Curve_Fit",'-dpng','-r600')
-print(curve_fit_fig,"My_Curve_Fit",'-dpdf','-r600')
+print(curve_fit_fig,"..\Figures\My_Curve_Fit",'-dpng','-r600')
+print(curve_fit_fig,"..\Figures\My_Curve_Fit",'-dpdf','-r600')
 
 %% *** PART 3 ***
 % For Part-3, you'll work with an example set of data that follows a normal (bell curve) distribution. You'll start by
@@ -284,5 +284,5 @@ strings = compose("x'=%5.3f, \\sigma = %5.3f", mu(:), sig(:));
 legend(ax2,strings)
 
 % save the figure to file
-print(historgram_fig_2,"My_PDFs",'-dpng','-r600')
-print(historgram_fig_2,"My_PDFs",'-dpdf','-r600')
+print(historgram_fig_2,"..\Figures\My_PDFs",'-dpng','-r600')
+print(historgram_fig_2,"..\Figures\My_PDFs",'-dpdf','-r600')

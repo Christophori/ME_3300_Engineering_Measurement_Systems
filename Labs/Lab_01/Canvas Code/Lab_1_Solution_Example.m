@@ -95,7 +95,8 @@ grid minor
 grid on
 
 %% Finally, lets save the figure to file now that we are happy with it.
-print(better_fig,"My_Awesome_Voltage_Scatter",'-dpng','-r600')
+print(better_fig,"My_Awesome_Voltage_Scatter",'-dpng','-r600') % for reports/presentations
+print(better_fig,"My_Awesome_Voltage_Scatter",'-dpdf','-r600') % for canvas submission 
 
 %% Now let's try making a histogram plot
 % use scatter markers for showing discrete data and lines for trends...
@@ -118,6 +119,7 @@ box off
 
 %% Finally save the figure to file now that we are happy with it.
 print(historgram_fig,"My_Awesome_Voltage_Hist",'-dpng','-r600')
+print(historgram_fig,"My_Awesome_Voltage_Hist",'-dpdf','-r600')
 
 %%  *** PART 2 ***
 %% Generate linear data with some noise
@@ -191,7 +193,7 @@ legend(legend_items,{'Data','Fit Line','95% CI Range'}, ...
     'Location', 'northwest'); % Update legend
 
 % to finish add descriptive labels
-xlabel('Velocity (V)');
+xlabel('Velocity (m/s)');
 ylabel('Voltage (V)');
 title(' FirstName LastName''s Curvefit Plot MM/DD/YY');
 grid on
@@ -199,6 +201,7 @@ box off
 
 % save the figure to file
 print(curve_fit_fig,"My_Curve_Fit",'-dpng','-r600')
+print(curve_fit_fig,"My_Curve_Fit",'-dpdf','-r600')
 
 %% *** PART 3 ***
 % For Part-3, you'll work with an example set of data that follows a normal (bell curve) distribution. You'll start by
@@ -213,7 +216,7 @@ mu = [-2 0 0 3];
 sig = [.8 0.5 2 2];
 
 % generate data
-N = 500;
+N = 1000;
 data_1 = randn(N,1)*sig(1)+mu(1);
 data_2 = randn(N,1)*sig(2)+mu(2);
 data_3 = randn(N,1)*sig(3)+mu(3);
@@ -250,7 +253,7 @@ set(hists,"Normalization","pdf") % using normalization changes the y axis from c
 % add labels
 xlabel('Voltage (V)');
 ylabel('x');
-title(' FirstName LastName''s PDF and Historgram Plot MM/DD/YY');
+title('FirstName LastName''s PDF and Historgram Plot MM/DD/YY');
 grid on
 box off
 
@@ -282,3 +285,4 @@ legend(ax2,strings)
 
 % save the figure to file
 print(historgram_fig_2,"My_PDFs",'-dpng','-r600')
+print(historgram_fig_2,"My_PDFs",'-dpdf','-r600')

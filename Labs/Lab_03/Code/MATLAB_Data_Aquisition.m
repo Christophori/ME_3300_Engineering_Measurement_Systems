@@ -1,4 +1,4 @@
-% This is a generic program to aquire the data from myDAQ
+ ""% This is a generic program to aquire the data from myDAQ
 % Sample data acquisition program for collecting the data to capture
 % pendulum motion file for later use
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -23,8 +23,8 @@ T = 5; % Time to aquire data
 deviceName = 'myDAQ1';
 % inputChannels = 'ai0'; % use to sample a single channel
 inputChannels = ["ai0", "ai1"]; % use this line instead to aquire multiple channels
-enableLogging = true; % enable / disable logging to file
-enablePlotting = true; % enable / disable plotting on a figure during aquisition
+enableLogging = true; % enable / disable logging to file (true/false)
+enablePlotting = true; % enable / disable plotting on a figure during aquisition (true/false)
 
 %% Input the filename and directory where to store the data
 filename = '../Data/Student_Name_VoltsVsTime.csv'; % Name/ location for storing data file
@@ -97,8 +97,7 @@ plot(time, voltage,'k.-');hold on
 xlabel('time (s)')
 ylabel('Voltage (Volts)')
 end
-
-
+s
 % Function for multiple channels
 function plotData2(src,event, m1, c1, m2, c2)
 time = event.TimeStamps;

@@ -22,7 +22,7 @@ T = 5; % Time to aquire data
 % Here change the device name and input channel as needed; if not sure then talk to TAs
 deviceName = 'myDAQ1';
 % inputChannels = 'ai0'; % use to sample a single channel
-inputChannels = ["ai0", "ai1"]; % use this line instead to aquire multiple channels
+inputChannels = [0, 1]; % use this line instead to aquire multiple channels
 enableLogging = true; % enable / disable logging to file (true/false)
 enablePlotting = true; % enable / disable plotting on a figure during aquisition (true/false)
 
@@ -49,14 +49,14 @@ addAnalogInputChannel(s,deviceName,[inputChannels],'Voltage');
 s.Rate = Fs; % Sample rate modify as required
 s.DurationInSeconds = T; % Sampling time modify as required
 if enablePlotting == 1
-    if length(inputChannels) < 2
+    if size(inputChannels,1) < 2
         lh1 = addlistener(s,'DataAvailable',@(src, event)plotData(src,event,slope,intercept));
     else
         lh1 = addlistener(s,'DataAvailable',@(src, event)plotData2(src,event,slope,intercept,slope2,intercept2));
     end
 end
 if enableLogging
-    if length(inputChannels) < 2
+    if size(inputChannels,1) < 2
         lh2 = addlistener(s,'DataAvailable',@(src, event)logData(src,event,fid1,slope,intercept));
     else
         lh2 = addlistener(s,'DataAvailable',@(src, event)logData2(src,event,fid1,slope,intercept,slope2,intercept2));

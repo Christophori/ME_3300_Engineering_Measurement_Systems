@@ -33,11 +33,13 @@ fid1 = fopen(filename,'w'); % this will fail if you don't create a blank csv in 
 
 %% Add the slope and intercept values to convert volts to physical varaible (angle)
 % NOTE: If you use this make sure to change the name of your file
-slope = 1; % Add your calibration slope for potentiometer for this experiment it is not required use default of 1
-intercept = 0; % Add you calibration intercept for potentioment for this experiment it is not required used default of 0
+%% Slope and intercept for "ai0"
+slope = 1; % Add your calibration slope for potentiometer for this experiment if is not required use default of 1
+intercept = 0; % Add you calibration intercept for potentioment for this experiment if is not required used default of 0
 
-slope2 = 1; % Add your calibration slope for potentiometer for this experiment it is not required use default of 1
-intercept2 = 0; % Add your calibration slope for potentiometer for this experiment it is not required use default of 1
+%% Slope and intercept for "ai1"
+slope2 = 1; % Add your calibration slope for accelerometer for this experiment if is not required use default of 1
+intercept2 = 0; % Add your calibration slope for accelerometer for this experiment if is not required use default of 1
 
 plotTitle = 'Firstname LastName''s plot - Lab #02';
 fprintf(fid1,'%s,%s\n',header(1),header(2)); % modify this line as needed for more columns in later labs
@@ -85,7 +87,7 @@ function logData2(src,evt, fid, m1, c1, m2, c2)
 %Add the time stamp and the data values to data. To write data sequentially
 %transpose the matrix
 data = [evt.TimeStamps m1*evt.Data(:,1)+c1 m2*evt.Data(:,2)+c2];
-fprintf(fid,'%f,%f \n', data');
+fprintf(fid,'%f,%f,%f \n', data');
 end
 
 %% Function to plot the data as it is being acquired

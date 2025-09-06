@@ -45,7 +45,7 @@ header = ["Times (s)","Voltage (Volts)"]; % set the column titles for the data f
 % Uncomment for multi-channel data aquisition
 % header = ["Times (s)","Annugular Position (degree)","Acceleration (m/s)"]; % set the column titles for the data file
 
-plotTitle = 'Firstname LastName''s plot - Lab #03';
+plotTitle = 'Firstname LastName''s plot - Lab #04';
 fprintf(fid1,'%s,%s\n',header(1),header(2)); % modify this line as needed for more columns in later labs
 
 %% End of user information

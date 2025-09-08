@@ -103,7 +103,7 @@ plot(time, voltage,'k.-');hold on
 xlabel('time (s)')
 ylabel('Voltage (Volts)')
 end
-s
+
 % Function for multiple channels
 function plotData2(src,event, m1, c1, m2, c2)
 time = event.TimeStamps;

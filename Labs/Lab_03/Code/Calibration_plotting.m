@@ -16,7 +16,7 @@ close all
 clc
 
 %% User have to manually add information
-x = [1.7107 1.9208 1.7166 1.5067 ]; %Voltage Data
+x = [1.7107 1.9208 1.7166 1.5067]; %Voltage Data
 y = [0 -9.81 0 9.81]; % Acceleration
 t_nuP= 0; % Value read from t-student's table
 plotTitle = 'Student''s Name Calibration Plot';
@@ -35,7 +35,7 @@ set(gcf,'unit','inches','position',[0.50 0.50 6.50 3.50],...
     'defaultaxesfontsize',10,'defaultaxesfontname','times');
 % Plotting data
 plot(xfit,yfit,'b-','linewidth',2);hold on
-plot(x,y,'ro','markersize',9,'markerfacecolor','r')
+scatter(x,y,90,'ro','filled')
 xlabel('Volts (v)')
 ylabel('Acceleration (m/s^{2})')
 % Now adding 95% confidence level in the plot
@@ -53,10 +53,5 @@ text(1.55,-7,sprintf('Norm = %3.4fx',s.normr),'Fontname','times')
 text(1.55,-9,sprintf('s_{yx} = %3.4f',syx),'Fontname','times')
 
 %% Saving the files in png and pdf format
-figName = ['../Figures/Student_Name_Exp03_Calibration'];
-set(gcf,'PaperPositionMode','auto')
-print(figName,'-dpng','-r600')
-set(gcf,'PaperUnits','inches','Units','inches');
-figpos = get(gcf,'Position');
-set(gcf,'Papersize',figpos(3:4),'Units','inches');
-print(figName,'-dpdf','-r600')
+exportgraphics(better_fig,"..\Figures\Student_Name_Exp03_Calibration.png",Resolution=600) % for reports/presentations
+exportgraphics(better_fig,"..\Figures\Student_Name_Exp03_Calibration.pdf",Resolution=600) % for canvas submission 

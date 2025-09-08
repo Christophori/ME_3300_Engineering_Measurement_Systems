@@ -45,7 +45,7 @@ header = ["Times (s)","Voltage (Volts)"]; % set the column titles for the data f
 % Uncomment for multi-channel data aquisition
 % header = ["Times (s)","Annugular Position (degree)","Acceleration (m/s)"]; % set the column titles for the data file
 
-plotTitle = 'Firstname LastName''s plot - Lab #04';
+plotTitle = 'Firstname LastName''s plot - Lab #03';
 fprintf(fid1,'%s,%s\n',header(1),header(2)); % modify this line as needed for more columns in later labs
 
 %% End of user information
@@ -103,7 +103,7 @@ plot(time, voltage,'k.-');hold on
 xlabel('time (s)')
 ylabel('Voltage (Volts)')
 end
-s
+
 % Function for multiple channels
 function plotData2(src,event, m1, c1, m2, c2)
 time = event.TimeStamps;

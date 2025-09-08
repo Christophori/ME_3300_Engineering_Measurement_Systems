@@ -16,7 +16,7 @@ close all
 clc
 
 %% User have to manually add information
-x = [0.0 0.0 0.0 0.0]; %Voltage Data
+x = [1.7107 1.9208 1.7166 1.5067 ]; %Voltage Data
 y = [0 -9.81 0 9.81]; % Acceleration
 t_nuP= 0; % Value read from t-student's table
 plotTitle = 'Student''s Name Calibration Plot';
@@ -43,12 +43,14 @@ y_cl_low = yfit - t_nuP*syx; % Using regression analysis
 y_cl_up  = yfit + t_nuP*syx;
 plot(xfit,y_cl_low,'--','color',[0.2 0.2 0.2], 'HandleVisibility','off');
 plot(xfit,y_cl_up,'--','color',[0.2 0.2 0.2]);
+grid on
+grid minor
 
 legend('Curve fit','Expt. data','95% Cl range','location','Northeast')
 title(plotTitle)
-text(1.5,-5,sprintf('y = %3.4fx + %3.4f',p(1),p(2)),'Fontname','times')
-text(1.5,-7,sprintf('Norm = %3.4fx',s.normr),'Fontname','times')
-text(1.5,-9,sprintf('s_{yx} = %3.4f',syx),'Fontname','times')
+text(1.55,-5,sprintf('y = %3.4fx + %3.4f',p(1),p(2)),'Fontname','times')
+text(1.55,-7,sprintf('Norm = %3.4fx',s.normr),'Fontname','times')
+text(1.55,-9,sprintf('s_{yx} = %3.4f',syx),'Fontname','times')
 
 %% Saving the files in png and pdf format
 figName = ['../Figures/Student_Name_Exp03_Calibration'];

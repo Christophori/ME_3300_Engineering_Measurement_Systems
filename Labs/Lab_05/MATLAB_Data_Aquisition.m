@@ -55,14 +55,14 @@ addAnalogInputChannel(s,deviceName,[inputChannels],'Voltage');
 s.Rate = Fs; % Sample rate modify as required
 s.DurationInSeconds = T; % Sampling time modify as required
 if enablePlotting == 1
-    if size(inputChannels,1) < 2
+    if size(inputChannels,2) < 2
         lh1 = addlistener(s,'DataAvailable',@(src, event)plotData(src,event,slope,intercept));
     else
         lh1 = addlistener(s,'DataAvailable',@(src, event)plotData2(src,event,slope,intercept,slope2,intercept2));
     end
 end
 if enableLogging
-    if size(inputChannels,1) < 2
+    if size(inputChannels,2) < 2
         lh2 = addlistener(s,'DataAvailable',@(src, event)logData(src,event,fid1,slope,intercept));
     else
         lh2 = addlistener(s,'DataAvailable',@(src, event)logData2(src,event,fid1,slope,intercept,slope2,intercept2));

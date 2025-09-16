@@ -21,10 +21,10 @@ Fs = 200; % Sampling rate data per sec
 T = 5; % Time to aquire data
 % Here change the device name and input channel as needed; if not sure then talk to TAs
 deviceName = 'myDAQ1';
-inputChannels = 'ai0'; % use to sample a single channel
-% inputChannels = [0, 1]; % use this line instead to aquire multiple channels
+inputChannels = 0; % use to sample a single channel
 enableLogging = true; % enable / disable logging to file (true/false)
 enablePlotting = true; % enable / disable plotting on a figure during aquisition (true/false)
+enableCalibratedPressure = false; % enable / disable calibrated flow rate (true/false)
 
 %% Input the filename and directory where to store the data
 filename = '../Data/Student_Name_VoltsVsTime.csv'; % Name/ location for storing data file
@@ -35,18 +35,16 @@ fid1 = fopen(filename,'w'); % this will fail if you don't create a blank csv in 
 %% Slope and intercept for "ai0"
 slope = 1;
 intercept = 0;
-
-%% Slope and intercept for "ai1"
-slope2 = 1; 
-intercept2 = 0;
+% New variable to bias your data
+v0 = 0; % Voltage output from sensor at sensor at zero flow rate
 
 % Uncomment for single-channel data aquisition
 header = ["Times (s)","Voltage (Volts)"]; % set the column titles for the data file
-% Uncomment for multi-channel data aquisition
-% header = ["Times (s)","Annugular Position (degree)","Acceleration (m/s)"]; % set the column titles for the data file
+%vheader = ["Times (s)","Voltage (Volts)","Flowrate (scfm)"]; % set the column titles for the data file
 
-plotTitle = 'Firstname LastName''s plot - Lab #03';
+plotTitle = 'Firstname LastName''s plot - Lab #05';
 fprintf(fid1,'%s,%s\n',header(1),header(2)); % modify this line as needed for more columns in later labs
+% fprintf(fid1,'%s,%s,%s\n',header(1),header(2),header(3)); % modify this line as needed for more columns in later labs
 
 %% End of user information
 d = daq.getDevices;
@@ -55,19 +53,13 @@ addAnalogInputChannel(s,deviceName,[inputChannels],'Voltage');
 s.Rate = Fs; % Sample rate modify as required
 s.DurationInSeconds = T; % Sampling time modify as required
 if enablePlotting == 1
-    if size(inputChannels,2) < 2
-        lh1 = addlistener(s,'DataAvailable',@(src, event)plotData(src,event,slope,intercept));
-    else
-        lh1 = addlistener(s,'DataAvailable',@(src, event)plotData2(src,event,slope,intercept,slope2,intercept2));
-    end
+    lh1 = addlistener(s,'DataAvailable',@(src, event)plotData(src,event,slope,intercept,v0));
 end
+
 if enableLogging
-    if size(inputChannels,2) < 2
-        lh2 = addlistener(s,'DataAvailable',@(src, event)logData(src,event,fid1,slope,intercept));
-    else
-        lh2 = addlistener(s,'DataAvailable',@(src, event)logData2(src,event,fid1,slope,intercept,slope2,intercept2));
-    end
+    lh2 = addlistener(s,'DataAvailable',@(src, event)logData(src,event,fid1,slope,intercept,v0));
 end
+
 errorListener = addlistener(s, 'ErrorOccurred',@(src, event) disp(getReport(event.Error)));
 drawnow
 s.IsContinuous = true;
@@ -79,39 +71,34 @@ delete(lh2)
 fclose(fid1)
 
 %% Function to store the data in a file- values are converted to physical variable using slope and intercept
-function logData(src,evt, fid,m,c)
+function logData(src,evt, fid,m,c,v0)
 %Add the time stamp and the data values to data. To write data sequentially
 %transpose the matrix
-data = [evt.TimeStamps m*evt.Data+c];
-fprintf(fid,'%f,%f \n', data');
-end
-
-% Function for multiple channels
-function logData2(src,evt, fid, m1, c1, m2, c2)
-%Add the time stamp and the data values to data. To write data sequentially
-%transpose the matrix
-data = [evt.TimeStamps m1*evt.Data(:,1)+c1 m2*evt.Data(:,2)+c2];
-fprintf(fid,'%f,%f,%f \n', data');
+    if enableCalibratedPressure == false
+        data = [evt.TimeStamps m*evt.Data+c];
+        fprintf(fid,'%f,%f \n', data');
+    else
+        data = [evt.TimeStamps evt.Data (slope*(sqrt(abs(evt.Data-v0))))+intercept];
+        fprintf(fid,'%f,%f,%f \n', data');
+    end
 end
 
 %% Function to plot the data as it is being acquired
-function plotData(src,event,m,c)
-time = event.TimeStamps;
-voltage = m*event.Data + c; %Potentiometer data in voltage
-figure(1)
-plot(time, voltage,'k.-');hold on
-xlabel('time (s)')
-ylabel('Voltage (Volts)')
-end
+function plotData(src,event,m,c,v0)
 
-% Function for multiple channels
-function plotData2(src,event, m1, c1, m2, c2)
-time = event.TimeStamps;
-angularPosition =  m1*event.Data(:,1) + c1; %Potentiometer data in voltage
-acc = m2*event.Data(:,2) + c2; %Accerlerameter
-figure(1)
-plot(time, angularPosition,'k.-');hold on
-plot(time, acc,'b.-')
-xlabel('time (s)')
-ylabel('Angular position (degrees)/ Accerleration (m/s^2)')
+    if enableCalibratedPressure == false
+        time = event.TimeStamps;
+        voltage = m*event.Data + c; %Potentiometer data in voltage
+        figure(1)
+        plot(time, voltage,'k.-');hold on
+        xlabel('time (s)')
+        ylabel('Voltage (Volts)')
+    else
+        time = event.TimeStamps;
+        flowrate = (slope*(sqrt(abs(event.Data-v0))))+intercept; %flowrate
+        figure(1)
+        plot(time, flowrate,'k.-');hold on
+        xlabel('time (s)')
+        ylabel('Flowrate (scfm)')
+    end
 end

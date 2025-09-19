@@ -53,11 +53,11 @@ addAnalogInputChannel(s,deviceName,[inputChannels],'Voltage');
 s.Rate = Fs; % Sample rate modify as required
 s.DurationInSeconds = T; % Sampling time modify as required
 if enablePlotting == 1
-    lh1 = addlistener(s,'DataAvailable',@(src, event)plotData(src,event,slope,intercept,v0));
+    lh1 = addlistener(s,'DataAvailable',@(src, event)plotData(src,event,slope,intercept,v0,enableCalibratedPressure));
 end
 
 if enableLogging
-    lh2 = addlistener(s,'DataAvailable',@(src, event)logData(src,event,fid1,slope,intercept,v0));
+    lh2 = addlistener(s,'DataAvailable',@(src, event)logData(src,event,fid1,slope,intercept,v0,enableCalibratedPressure));
 end
 
 errorListener = addlistener(s, 'ErrorOccurred',@(src, event) disp(getReport(event.Error)));
@@ -71,31 +71,30 @@ delete(lh2)
 fclose(fid1)
 
 %% Function to store the data in a file- values are converted to physical variable using slope and intercept
-function logData(src,evt, fid,m,c,v0)
+function logData(src,evt, fid,m,c,v0,enableCalibratedPressure)
 %Add the time stamp and the data values to data. To write data sequentially
 %transpose the matrix
-    if enableCalibratedPressure == false
-        data = [evt.TimeStamps m*evt.Data+c];
+    if enableCalibratedPressure == 0
+        data = [evt.TimeStamps evt.Data];
         fprintf(fid,'%f,%f \n', data');
-    else
-        data = [evt.TimeStamps evt.Data (slope*(sqrt(abs(evt.Data-v0))))+intercept];
+    elseif enableCalibratedPressure == 1
+        data = [evt.TimeStamps evt.Data (m.*(sqrt(abs(evt.Data-v0))))+c];
         fprintf(fid,'%f,%f,%f \n', data');
     end
 end
 
 %% Function to plot the data as it is being acquired
-function plotData(src,event,m,c,v0)
-
-    if enableCalibratedPressure == false
+function plotData(src,event,m,c,v0,enableCalibratedPressure)
+    if enableCalibratedPressure == 0
         time = event.TimeStamps;
-        voltage = m*event.Data + c; %Potentiometer data in voltage
+        voltage = event.Data; %Potentiometer data in voltage
         figure(1)
         plot(time, voltage,'k.-');hold on
         xlabel('time (s)')
         ylabel('Voltage (Volts)')
-    else
+    elseif enableCalibratedPressure == 1
         time = event.TimeStamps;
-        flowrate = (slope*(sqrt(abs(event.Data-v0))))+intercept; %flowrate
+        flowrate = (m.*(sqrt(abs(event.Data-v0))))+c; %flowrate
         figure(1)
         plot(time, flowrate,'k.-');hold on
         xlabel('time (s)')

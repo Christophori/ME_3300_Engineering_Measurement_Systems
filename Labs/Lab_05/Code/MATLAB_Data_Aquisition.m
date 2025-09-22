@@ -56,7 +56,7 @@ if enablePlotting == 1
     lh1 = addlistener(s,'DataAvailable',@(src, event)plotData(src,event,slope,intercept,v0,enableCalibratedPressure));
 end
 
-if enableLogging
+if enableLogging == 1
     lh2 = addlistener(s,'DataAvailable',@(src, event)logData(src,event,fid1,slope,intercept,v0,enableCalibratedPressure));
 end
 

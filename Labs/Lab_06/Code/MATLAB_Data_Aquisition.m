@@ -21,14 +21,14 @@ Fs = 200; % Sampling rate data per sec
 T = 5; % Time to aquire data
 % Here change the device name and input channel as needed; if not sure then talk to TAs
 deviceName = 'myDAQ1';
-inputChannels = [0]; % use to sample a single channel
+inputChannels = [0 1]; % use to sample a single channel
 enableLogging = true; % enable / disable logging to file (true/false)
 enablePlotting = true; % enable / disable plotting on a figure during aquisition (true/false)
 
 %% Input the filename and directory where to store the data
-filename = '../Data/LM358Data.csv'; % Name/ location for storing data file
+filename = '../Data/AD622Data.csv'; % Name/ location for storing data file
 fid1 = fopen(filename,'w'); % this will fail if you don't create a blank csv in the required location first!
-vheader = ["Times (s)","Input Voltage (v)","Output Voltage (v)"]; % set the column titles for the data file
+header = ["Times (s)","Output Voltage (v)","Input Voltage (v)"]; % set the column titles for the data file
 
 plotTitle = 'Firstname LastName''s plot - Lab #06';
 fprintf(fid1,'%s,%s,%s\n',header(1),header(2),header(3)); % modify this line as needed for more columns in later labs
@@ -69,16 +69,16 @@ function logData(src,evt, fid)
 %Add the time stamp and the data values to data. To write data sequentially
 %transpose the matrix
     data = [evt.TimeStamps evt.Data(:,1) evt.Data(:,2)];
-    fprintf(fid,'%f,%f.%f \n', data');
+    fprintf(fid,'%f,%f,%f \n', data');
 end
 
 %% Function to plot the data as it is being acquired
 function plotData(src,event)
     time = event.TimeStamps;
-    inputvoltage = event.Data(:,1); % Amplified voltage
-    outputvoltage = event.Data(:,2); % Output voltage 0-5V
-    plot(time, InputData,'k-');hold on
-    plot(time, OutputData,'r-');
+    outputvoltage = event.Data(:,1); % Amplified voltage
+    inputvoltage = event.Data(:,2); % Output voltage 0-5V
+    plot(time, inputvoltage,'k-');hold on
+    plot(time, outputvoltage,'r-');
     xlabel('time (s)')
     ylabel('Voltage(v)')
     legend('Input volt','Output volt','location','northwest')

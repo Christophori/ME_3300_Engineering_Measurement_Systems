@@ -75,3 +75,8 @@ plot(time, voltage,'k.-');hold on
 xlabel('time (s)')
 ylabel('Voltage (Volts)')
 end
+
+data = readmatrix(filename);
+avgVolt = mean(data(:,2));
+gcf;
+title(['Average voltage: ' sprintf('%3.4f',avgVolt) '(v)'],'fontname','times','fontsize',14)

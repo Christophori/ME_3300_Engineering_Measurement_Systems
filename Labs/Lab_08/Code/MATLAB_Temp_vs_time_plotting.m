@@ -9,21 +9,21 @@ t_0 = [1.561, 1.415, 1.484];
 %% End of user input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fid = fopen('../Data/TimeSeries_Temperature01.dat'); %Reading data from the stored file
 line1 = fgetl(fid);
-data1 = fscanf(fid,'%f \n', [2 inf]);
+data1 = fscanf(fid,'%f,%f \n', [2 inf]);
 time1 = data1(1,:)- t_0(1);
 temperature1 = data1(2,:);
 fclose(fid);
 
 fid = fopen('../Data/TimeSeries_Temperature02.dat'); %Reading data from the stored file
 line1 = fgetl(fid);
-data2 = fscanf(fid,'%f \n', [2 inf]);
+data2 = fscanf(fid,'%f,%f \n', [2 inf]);
 time2 = data2(1,:) - t_0(2);
 temperature2 = data2(2,:);
 fclose(fid);
 
 fid = fopen('../Data/TimeSeries_Temperature03.dat'); %Reading data from the stored file
 line1 = fgetl(fid);
-data3 = fscanf(fid,'%f \n', [2 inf]);
+data3 = fscanf(fid,'%f,%f \n', [2 inf]);
 time3 = data3(1,:) - t_0(3);
 temperature3 = data3(2,:);
 fclose(fid);

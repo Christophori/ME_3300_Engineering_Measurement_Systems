@@ -9,7 +9,7 @@ istr = 1562; iend = 1647;% Index of T_0 and T_ss
 
 %% End of user input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 line = fgetl(fid);
-data = fscanf(fid,'%f \n', [2 inf]);
+data = fscanf(fid,'%f,%f \n', [2 inf]);
 time = data(1,istr:iend) - data(1,istr);
 temperature = data(2,istr:iend);
 fclose(fid);

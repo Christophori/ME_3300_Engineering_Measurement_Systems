@@ -21,7 +21,7 @@ Fs = 200; % Sampling rate data per sec
 T = 5; % Time to aquire data
 % Here change the device name and input channel as needed; if not sure then talk to TAs
 deviceName = 'myDAQ1';
-inputChannels = 'ai0'; % use to sample a single channel
+inputChannels = 1; % use to sample a single channel ; use 0 or 1
 % inputChannels = [0, 1]; % use this line instead to aquire multiple channels
 enableLogging = true; % enable / disable logging to file (true/false)
 enablePlotting = true; % enable / disable plotting on a figure during aquisition (true/false)

@@ -16,7 +16,7 @@ angularPosition = data(:,2); % Angular location (degree)
 acc = data(:,3); % Accelerometer data (m/s^2)
 
 rad = angularPosition*pi/180; % convert degree value to radians
-theta_d =  diff(rad)./diff(angularPosition); % calculating angular velocity rad/s
+theta_d =  diff(rad)./diff(time); % calculating angular velocity rad/s
 
 acc_1 =  - (theta_d.^2) * r; % calculated acceleration m/s^2
 acc_2 = acc - (g*cos(rad)); % removing acceleration due to gravity component accelerometer data

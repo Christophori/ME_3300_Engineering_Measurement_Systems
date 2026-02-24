@@ -78,7 +78,7 @@ function logData(src,evt, fid,m,c,v0,enableCalibratedPressure)
         data = [evt.TimeStamps evt.Data];
         fprintf(fid,'%f,%f \n', data');
     elseif enableCalibratedPressure == 1
-        data = [evt.TimeStamps evt.Data (m.*(sqrt(abs(evt.Data-v0))))+c];
+        data = [evt.TimeStamps evt.Data-v0 (m.*(sqrt(abs(evt.Data-v0))))+c];
         fprintf(fid,'%f,%f,%f \n', data');
     end
 end
@@ -87,7 +87,7 @@ end
 function plotData(src,event,m,c,v0,enableCalibratedPressure)
     if enableCalibratedPressure == 0
         time = event.TimeStamps;
-        voltage = event.Data; %Potentiometer data in voltage
+        voltage = event.Data; %Pressure data in voltage
         figure(1)
         plot(time, voltage,'k.-');hold on
         xlabel('time (s)')

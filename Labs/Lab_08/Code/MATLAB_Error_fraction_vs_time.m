@@ -29,9 +29,9 @@ plot(time,Y2,'ro','markersize',4,'markerfacecolor','r');hold on
 plot(xfit,yfit,'b-','linewidth',2);
 xlim([0 0.06])
 %ylim([0 10])
-xlabel('\Gamma (Error fraction)')
-ylabel('Time (s)')
-legend('Curve fit','Expt. data','location','northeast')
+ylabel('\Gamma (Error fraction)')
+xlabel('Time (s)')
+legend('Expt. data','Curve fit','location','northeast')
 text(0.01,-1.4,sprintf('%s%3.4f%s','\tau=',-1/p(1),'s'))
 grid on
 grid minor

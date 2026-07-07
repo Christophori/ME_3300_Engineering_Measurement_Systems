@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-01: Introduction to Data Analysis and Visualization in Python</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab01_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab01_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="lab01_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="lab01_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab01_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab01_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab01_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab01_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab01_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab01_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab01_files/libs/bootstrap/bootstrap-19216fa8bb71272e13fc45993650fab3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check your understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#datasets-code-resources" id="toc-datasets-code-resources" class="nav-link" data-scroll-target="#datasets-code-resources"><span class="header-section-number">2.1</span> Datasets &amp; Code Resources</a></li>
+  <li><a href="#prepare-your-local-folder-structure" id="toc-prepare-your-local-folder-structure" class="nav-link" data-scroll-target="#prepare-your-local-folder-structure"><span class="header-section-number">2.2</span> Prepare your local folder structure</a></li>
+  <li><a href="#install-visual-studio-code-and-uv" id="toc-install-visual-studio-code-and-uv" class="nav-link" data-scroll-target="#install-visual-studio-code-and-uv"><span class="header-section-number">2.3</span> Install Visual Studio Code and UV</a></li>
+  <li><a href="#create-your-me-3300-python-environment" id="toc-create-your-me-3300-python-environment" class="nav-link" data-scroll-target="#create-your-me-3300-python-environment"><span class="header-section-number">2.4</span> Create your ME 3300 Python Environment</a></li>
+  <li><a href="#configure-vs-code" id="toc-configure-vs-code" class="nav-link" data-scroll-target="#configure-vs-code"><span class="header-section-number">2.5</span> Configure VS Code</a></li>
+  <li><a href="#create-a-jupyter-notebook" id="toc-create-a-jupyter-notebook" class="nav-link" data-scroll-target="#create-a-jupyter-notebook"><span class="header-section-number">2.6</span> Create a Jupyter Notebook</a></li>
+  <li><a href="#setup-waveforms" id="toc-setup-waveforms" class="nav-link" data-scroll-target="#setup-waveforms"><span class="header-section-number">2.7</span> Setup WaveForms</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.8</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#vs-code-quick-reference" id="toc-vs-code-quick-reference" class="nav-link" data-scroll-target="#vs-code-quick-reference"><span class="header-section-number">2.9</span> VS Code Quick Reference</a></li>
+  <li><a href="#python-quick-references" id="toc-python-quick-references" class="nav-link" data-scroll-target="#python-quick-references"><span class="header-section-number">2.10</span> Python Quick References</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">4</span> Part-1: Scatterplot and Histogram from Voltage data</a>
+  <ul class="collapse">
+  <li><a href="#detailed-instruction" id="toc-detailed-instruction" class="nav-link" data-scroll-target="#detailed-instruction"><span class="header-section-number">4.1</span> Detailed Instruction</a></li>
+  <li><a href="#plot-format-instructions" id="toc-plot-format-instructions" class="nav-link" data-scroll-target="#plot-format-instructions"><span class="header-section-number">4.2</span> Plot Format Instructions</a></li>
+  <li><a href="#example-results" id="toc-example-results" class="nav-link" data-scroll-target="#example-results"><span class="header-section-number">4.3</span> Example Results</a></li>
+  </ul></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">5</span> Part-2: Linear Curve Fit on Scatter Data</a>
+  <ul class="collapse">
+  <li><a href="#detailed-instruction-1" id="toc-detailed-instruction-1" class="nav-link" data-scroll-target="#detailed-instruction-1"><span class="header-section-number">5.1</span> Detailed Instruction</a></li>
+  <li><a href="#plot-format-instructions-1" id="toc-plot-format-instructions-1" class="nav-link" data-scroll-target="#plot-format-instructions-1"><span class="header-section-number">5.2</span> Plot Format Instructions</a></li>
+  </ul></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">6</span> Part-3: Generated Histogram and PDF Lines</a>
+  <ul class="collapse">
+  <li><a href="#detailed-instruction-2" id="toc-detailed-instruction-2" class="nav-link" data-scroll-target="#detailed-instruction-2"><span class="header-section-number">6.1</span> Detailed Instruction</a></li>
+  <li><a href="#plot-format-instructions-2" id="toc-plot-format-instructions-2" class="nav-link" data-scroll-target="#plot-format-instructions-2"><span class="header-section-number">6.2</span> Plot Format Instructions</a></li>
+  </ul></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">7</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#general-instruction" id="toc-general-instruction" class="nav-link" data-scroll-target="#general-instruction"><span class="header-section-number">7.1</span> General Instruction</a></li>
+  <li><a href="#submission-items" id="toc-submission-items" class="nav-link" data-scroll-target="#submission-items"><span class="header-section-number">7.2</span> Submission Items</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">7.3</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave" id="toc-before-you-leave" class="nav-link" data-scroll-target="#before-you-leave"><span class="header-section-number">8</span> Before you leave</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Code/ME3300/lab01.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-01: Introduction to Data Analysis and Visualization in Python</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning objective</h2>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li>Set up a Python development environment using VS Code and <code>uv</code></li>
+<li>Set up WaveForms and the Analog Discovery Studio for data creation and collection</li>
+<li>Learn how to read data files using <code>numpy</code> and <code>pandas</code></li>
+<li>Create and format publication-quality scatter plots and histograms</li>
+<li>Learn about plotting with the <code>matplotlib</code> library, including:
+<ul>
+<li>Setting proper text in x and y labels and setting font size</li>
+<li>Setting the size of the figure to be used in reports</li>
+<li>Saving figure files in .pdf and .png format at 600 dpi</li>
+<li>Learning about different plot types and formatting options in Python</li>
+</ul></li>
+<li>Compute basic descriptive statistics: mean, median, standard deviation, and variance</li>
+<li>Generate synthetic normally-distributed data and visualize probability density functions (PDFs)</li>
+<li>Perform linear regression and compute 95% confidence intervals on the fit
+<ul>
+<li>Compute and interpret the standard error of fit and the standard error of the linear fit slope.</li>
+</ul></li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check your understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="programming" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.1</span> Programming</h4>
+<ul>
+<li><p>How do I create and activate a <code>uv</code> virtual environment, and how do I select it in <code>VS Code</code>?</p></li>
+<li><p>How can I find the size (dimensions) of a data file?</p></li>
+<li><p>How can I find the value of the 50th data point in a numpy array?</p></li>
+<li><p>What is the difference between a <code>pandas</code> DataFrame and a <code>numpy</code> array? When would you use each?</p></li>
+<li><p>How can I view the values of individual data points in a dataset? For example, points 4 through 8 in a series of 100 data points?</p></li>
+<li><p>How do I load a CSV file using <code>pandas</code>? How about <code>numpy</code>?</p></li>
+<li><p>What is the standard file format for saving figure files in this class?</p></li>
+<li><p>How can I set the size (width and height) of a figure for reports and submissions?</p></li>
+<li><p>What command is used to set the DPI (dots per inch) of a figure?</p></li>
+</ul>
+</section>
+<section id="data-visualization" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="data-visualization"><span class="header-section-number">1.2.2</span> Data Visualization</h4>
+<ul>
+<li>How can you use <a href="https://matplotlib.org/stable/">Matplotlib</a> to create professional, easy-to-read visualizations of your results? Know how to:
+<ul>
+<li>Change and size fonts</li>
+<li>Create and locate legends</li>
+<li>Color and style lines, scatters, and histograms</li>
+</ul></li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>What NumPy function performs polynomial fitting? What does it return?</li>
+<li>What functions do I use to calculate the average and standard deviation of a dataset?</li>
+<li>What SciPy function computes the Student’s t-value for confidence intervals?</li>
+<li>Why do we pass <code>0.975</code> (not <code>0.95</code>) to <code>stats.t.ppf()</code> when computing a two-sided 95% confidence interval?</li>
+<li>What does <code>np.random.randn(N)</code> return, and how do you scale it to a desired mean and standard deviation?</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section</p>
+<section id="datasets-code-resources" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="datasets-code-resources"><span class="header-section-number">2.1</span> Datasets &amp; Code Resources</h3>
+<p>In this laboratory session, you will use Python for data analysis and for creating visually appealing and communicative plots. Before the lab, please review/explore these Python online learning resources on <a href="https://docs.python.org/3/library/index.html">general Python</a>, <a href="https://numpy.org/">NumPy</a>, <a href="https://pandas.pydata.org/docs/user_guide/index.html">pandas</a>, and <a href="https://matplotlib.org/">Matplotlib</a>).</p>
+<p>Throughout this course, you will conduct engineering measurement experiments primarily using <em>Python</em> for programming and <em>Digilent’s WaveForms</em> for interfacing with our data acquisition system, the <em>Analog Discovery Studio</em> or <strong>ADS</strong>. For most labs, you will collect your own datasets. We will often provide starter code and example scripts on Canvas to help guide you through each lab.</p>
+<p>While it might be tempting to copy and paste from the example files, you are strongly encouraged to <strong>hand-type the code</strong>, especially in the first few labs, as a way to build familiarity with Python syntax and tools. Once you understand how provided code examples work, you’ll find it easier to modify and expand on them to suit your specific goals each lab throughout the semester and beyond.</p>
+</section>
+<section id="prepare-your-local-folder-structure" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="prepare-your-local-folder-structure"><span class="header-section-number">2.2</span> Prepare your local folder structure</h3>
+<p>Being a good scientist requires you to be organized. To keep your lab files organized, create a new ME3300 course folder on your PC or OneDrive. This will be a place for you to organize your Python code, data from experiments, and the products you create including visualizations and more.</p>
+<ul>
+<li>Note: if you are using a lab PC, your files won’t be saved unless OneDrive finishes uploading them. Always check that your files are available online (e.g., on your phone or in another browser).</li>
+</ul>
+<p>Create this folder structure on your PC or OneDrive:</p>
+<pre class="text"><code>ME3300/
+├── Lab_01/
+│   ├── Code/
+│   │   ├── Lab01_Prelab_Walkthrough.ipynb
+│   │   └── FirstName_LastName_Lab01.ipynb
+│   ├── Data/
+│   │   ├── walkthrough_temperature_data.csv
+│   │   └── time_voltage_data.csv
+│   └── Figures/
+├── Lab_02/
+│   ├── Code/
+│   ├── Data/
+│   └── Figures/
+├── Lab_03/ &lt;- Keep adding these as we continue the semester!</code></pre>
+<p>The walkthrough notebook and temperature data are downloaded from Canvas for the pre-lab assignment (see <a href="#sec-prelab-walkthrough" class="quarto-xref">Section&nbsp;2.8</a>). The other <strong>.ipynb</strong> notebook file and <strong>.csv</strong> data will be created later on in the lab.</p>
+</section>
+<section id="install-visual-studio-code-and-uv" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="install-visual-studio-code-and-uv"><span class="header-section-number">2.3</span> Install Visual Studio Code and UV</h3>
+<p><strong>VS Code</strong> (Visual Studio Code) is a free code editor made by Microsoft. It lets users write, edit, and debug code in multiple programming languages. Its flexibility has made it a widely used code editor in academic and professional settings.</p>
+<p>When you write Python code, you’ll rely on other people’s pre-written tools (called packages) instead of writing everything from scratch. Think of a package like a specialized bit for a drill. They are standardized tooling you would “buy” rather than “machine” every time you need to drive a different kind of screw. They are also interchangeable, so you can use the same drill to drive different screws by changing bits — but that only works if the bit you need is actually compatible with your drill. In code, the problem is that different projects will often need different, sometimes incompatible, versions of the same package (e.g., different bits), and installing everything into one shared pile on your computer means a version needed for Project B can break Project A.</p>
+<p>The fix is to give each project its own separate, self-contained set of packages, like giving each station its own dedicated toolbox instead of one communal pile of tools that everyone digs through and leaves in a different state. That way, nothing you install for one project can interfere with another.</p>
+<p><a href="https://docs.astral.sh/uv/">uv</a> (short for UltraViolet but also UniVersal python manager) is the tool we’ll use to manage this. It installs Python itself, builds these separate per-project toolboxes (called virtual environments), and installs the right packages into each one, all with a single, fast command.</p>
+<section id="install-instructions" class="level4" data-number="2.3.1">
+<h4 data-number="2.3.1" class="anchored" data-anchor-id="install-instructions"><span class="header-section-number">2.3.1</span> Install Instructions</h4>
+<ol type="1">
+<li><p>Install VS Code using the following link: <a href="https://code.visualstudio.com/">VS Code</a></p></li>
+<li><p>In VS Code, go to the Extensions tab and search for and install the <strong>Python,</strong> <strong>Pylance</strong>, and <strong>Jupyter</strong> extensions (The correct versions should each be certified by Microsoft).</p>
+<div id="fig-vscode-extension" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vscode-extension-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/VSCode_Extension.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vscode-extension-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Steps to add a VS Code Extension
+</figcaption>
+</figure>
+</div></li>
+<li><p>Install <strong>uv</strong>:</p>
+<ul>
+<li><p><strong>Windows</strong>: open PowerShell and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>powershell <span class="op">-</span>ExecutionPolicy ByPass <span class="op">-</span>c <span class="st">"irm https://astral.sh/uv/install.ps1 | iex"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Mac/Linux</strong>: open the Terminal and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-LsSf</span> https://astral.sh/uv/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Close and reopen your terminal after installing so the <code>uv</code> command is recognized.</p></li>
+</ul></li>
+</ol>
+<blockquote class="blockquote">
+<p>Note: more options and details for installing uv are documented here: <a href="https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_1">uv Documentation</a></p>
+</blockquote>
+</section>
+</section>
+<section id="create-your-me-3300-python-environment" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="create-your-me-3300-python-environment"><span class="header-section-number">2.4</span> Create your ME 3300 Python Environment</h3>
+<p>Now we will create a virtual environment in your ME3300 folder.</p>
+<ol type="1">
+<li><p>First, you will need to identify the path for your ME3300 folder. On windows/mac you can do this with explorer/finder:</p>
+<div id="fig-windows-find-folder-path" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-windows-find-folder-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Windows_Find_Folder_Path.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-windows-find-folder-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Copying a folder path in Windows
+</figcaption>
+</figure>
+</div>
+<div id="fig-mac-find-folder-path" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mac-find-folder-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Mac_Find_Folder_Path.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mac-find-folder-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Copy Folder Path on Mac
+</figcaption>
+</figure>
+</div></li>
+<li><p>Open a terminal and run the following commands:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ME3300  <span class="co"># Replace with the path to your ME3300 folder!</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> init <span class="at">--python</span> 3.11</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add numpy scipy matplotlib pandas ipykernel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This creates a <code>.venv</code> virtual environment and a <code>pyproject.toml</code> file in your <code>ME3300</code> folder, and installs all of the packages you’ll need for this lab into it.</p></li>
+<li><p>Open up the <code>pyproject.toml</code> file uv created to see what is inside. Your file should look similar to this:</p>
+<div id="fig-uv-toml-inspection" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-uv-toml-inspection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/UV_Toml_Inspection.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-uv-toml-inspection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: What you should see in your TOML file
+</figcaption>
+</figure>
+</div>
+<p>It essentially contains a list of all the packages and version numbers your project uses. Whenever you need to add another package later in the semester you will run <code>uv add &lt;package-name&gt;</code> from inside your <code>ME3300</code> folder.</p></li>
+<li><p>Close <code>pyproject.toml</code></p></li>
+</ol>
+</section>
+<section id="configure-vs-code" class="level3" data-number="2.5">
+<h3 data-number="2.5" class="anchored" data-anchor-id="configure-vs-code"><span class="header-section-number">2.5</span> Configure VS Code</h3>
+<ol type="1">
+<li><p>Open VS Code and open your <code>ME3300</code> folder (<strong>File → Open Folder</strong>).</p></li>
+<li><p>Press <code>Ctrl+Shift+P</code> (or <code>Cmd+Shift+P</code> on Mac) and type <strong>Python: Select Interpreter</strong>.</p></li>
+<li><p>Choose the interpreter located at <code>.venv</code> (it will be listed as a recommended environment for the folder).</p>
+<div id="fig-vscode-interpreter-select" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vscode-interpreter-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/VSCode_Interpreter_Select.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vscode-interpreter-select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Selecting the right Python Interpreter
+</figcaption>
+</figure>
+</div></li>
+<li><p>Confirm your setup is working by opening a new terminal in VS Code (<code>Ctrl+`</code>) and running:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import numpy, scipy, matplotlib, pandas; print('All good!')"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You should see <code>All good!</code> printed. If you see an error, ask your TA for help in lab!</p></li>
+</ol>
+</section>
+<section id="create-a-jupyter-notebook" class="level3" data-number="2.6">
+<h3 data-number="2.6" class="anchored" data-anchor-id="create-a-jupyter-notebook"><span class="header-section-number">2.6</span> Create a Jupyter Notebook</h3>
+<ol type="1">
+<li><p>Create a new file and select <strong>Jupyter Notebook</strong> as the format.</p></li>
+<li><p>Save it in the <code>Code</code> folder you created earlier, using the naming convention <code>FirstName_LastName_Lab01.ipynb</code> (replace with your first and last name).</p>
+<div id="fig-make-a-notebook" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-make-a-notebook-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/MakeANotebook.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-make-a-notebook-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Making a new notebook file
+</figcaption>
+</figure>
+</div></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you’re ready to run your notebook, click <strong>Select Kernel</strong> in the top right and choose the <code>.venv (Python 3.11)</code> environment from your <code>ME3300</code> folder.</p>
+</div>
+</div>
+<div id="fig-set-notebook-kernel" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-set-notebook-kernel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/SetNotebookKernel.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-set-notebook-kernel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Set Jupyter Kernel
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="setup-waveforms" class="level3" data-number="2.7">
+<h3 data-number="2.7" class="anchored" data-anchor-id="setup-waveforms"><span class="header-section-number">2.7</span> Setup WaveForms</h3>
+<p>WaveForms is the virtual instrument suite for Digilent Analog Discovery Studio data acquisition device. Follow the instructions on Digilent’s site: <a href="https://digilent.com/reference/software/waveforms/waveforms-3/getting-started-guide">WaveForms download page</a> to install this program on your computer. You’ll use this program and Digilent’s Analog Discovery Studio for the remainder of the semester. In this lab you will create a quick dataset to complete the plots in <a href="#sec-part-1" class="quarto-xref">Section&nbsp;4</a>.</p>
+<p>When you get to lab, you will start WaveForms by following these instructions.</p>
+<ol type="1">
+<li>Open the WaveForms application.</li>
+<li>Ensure the Analog Discovery Studio is plugged into a wall outlet and powered on.</li>
+<li>Connect the Studio to your computer using the USB port.</li>
+<li>In the Device Manager, select Analog Discovery Studio from the list of connected devices.</li>
+<li>Click Select to initialize the connection and launch the software workspace.</li>
+</ol>
+<div id="fig-waveforms-init" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-waveforms-init-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Waveforms_Init.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-waveforms-init-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Initialized WaveForms Connected to a Discovery Studio DAQ
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.8">
+<h3 data-number="2.8" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.8</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Your main pre-lab assignment is to work through the <strong>Prelab 01 Walkthrough</strong> notebook. It teaches, one small step at a time, every Python skill this lab requires — loading data with <code>pandas</code> and <code>numpy</code> (and how the two differ), indexing arrays, computing statistics, formatting and saving figures, curve fitting with confidence intervals, and generating synthetic data — using a <em>different</em> dataset than the one you will collect in lab.</p>
+<ol type="1">
+<li>Download <code>Lab01_Prelab_Walkthrough.ipynb</code> and <code>walkthrough_temperature_data.csv</code> from Canvas. Save the notebook in your <code>ME3300/Lab_01/Code/</code> folder and the data file in <code>ME3300/Lab_01/Data/</code>.</li>
+<li>Open the notebook in VS Code, select your <code>.venv</code> kernel, and run it cell by cell, reading as you go.</li>
+<li>The notebook contains <strong>checkpoint</strong> boxes asking for specific computed values. Report these in the <strong>Prelab 01 quiz on Canvas</strong> (due before your lab session). If your values match, your environment is set up correctly and you are ready for lab.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Never used a Jupyter notebook before? Don’t panic — we will spend time in class before the lab explaining and demonstrating how to run notebooks in VS Code. Attempt the walkthrough on your own first and bring your questions to class.</p>
+</div>
+</div>
+<p>A well-commented <strong>starter notebook</strong> for the lab itself is also provided on Canvas. You may copy it into your <code>Code</code> folder and complete it during the lab. A full example solution will be posted on Canvas <em>after</em> the lab for you to check your approach against.</p>
+</section>
+<section id="vs-code-quick-reference" class="level3" data-number="2.9">
+<h3 data-number="2.9" class="anchored" data-anchor-id="vs-code-quick-reference"><span class="header-section-number">2.9</span> VS Code Quick Reference</h3>
+<p>You may find the following hot keys and features in VS Code helpful</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 36%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Windows/Linux Shortcut</th>
+<th>Mac Shortcut</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Run current file</td>
+<td><code>F5</code> or click the ▷ button</td>
+<td><code>F5</code> or click the ▷ button</td>
+</tr>
+<tr class="even">
+<td>Run selected lines</td>
+<td><code>Shift+Enter</code></td>
+<td><code>Shift+Enter</code></td>
+</tr>
+<tr class="odd">
+<td>Open terminal</td>
+<td><code>Ctrl+`</code></td>
+<td><code>Ctrl+`</code></td>
+</tr>
+<tr class="even">
+<td>Command palette</td>
+<td><code>Ctrl+Shift+P</code></td>
+<td><code>Cmd+Shift+P</code></td>
+</tr>
+<tr class="odd">
+<td>Comment/uncomment line</td>
+<td><code>Ctrl+/</code></td>
+<td><code>Cmd+/</code></td>
+</tr>
+<tr class="even">
+<td>Auto-format file</td>
+<td><code>Shift+Alt+F</code></td>
+<td><code>Shift+Option+F</code></td>
+</tr>
+<tr class="odd">
+<td>Go to definition</td>
+<td><code>F12</code></td>
+<td><code>F12</code></td>
+</tr>
+<tr class="even">
+<td>Hover for docs</td>
+<td>hover over any function name</td>
+<td>hover over any function name</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="python-quick-references" class="level3" data-number="2.10">
+<h3 data-number="2.10" class="anchored" data-anchor-id="python-quick-references"><span class="header-section-number">2.10</span> Python Quick References</h3>
+<p>The following tables summarize many python commands you will want to use this lab.</p>
+<table class="caption-top table">
+<caption>Matplotlib Quick Reference: Plot Formatting</caption>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Create figure + axes</td>
+<td><code>fig, ax = plt.subplots(figsize=(6.5, 3.5))</code></td>
+</tr>
+<tr class="even">
+<td>Make two-panel figure</td>
+<td><code>fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6.5, 7.0), sharex=True)</code></td>
+</tr>
+<tr class="odd">
+<td>Set a white background</td>
+<td><code>fig.patch.set_facecolor('white')</code></td>
+</tr>
+<tr class="even">
+<td>Set axis label</td>
+<td><code>ax.set_xlabel('Label (units)')</code></td>
+</tr>
+<tr class="odd">
+<td>Set axis label font size</td>
+<td><code>ax.set_xlabel('Label (units)', fontsize=10)</code></td>
+</tr>
+<tr class="even">
+<td>Set title</td>
+<td><code>ax.set_title('Title', fontsize=10)</code></td>
+</tr>
+<tr class="odd">
+<td>Set grid on</td>
+<td><code>ax.grid(True, which='both', linestyle='--', linewidth=0.5)</code></td>
+</tr>
+<tr class="even">
+<td>Remove top/right border</td>
+<td><code>ax.spines['top'].set_visible(False)</code></td>
+</tr>
+<tr class="odd">
+<td>Set axis limits</td>
+<td><code>ax.set_xlim(0, 10)</code> / <code>ax.set_ylim(0, 5)</code></td>
+</tr>
+<tr class="even">
+<td>Make legend</td>
+<td><code>ax.legend(loc='upper right', fontsize=10)</code></td>
+</tr>
+<tr class="odd">
+<td>Annotate with text box</td>
+<td><code>ax.text(0.05, 0.95, 'text', transform=ax.transAxes, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))</code></td>
+</tr>
+<tr class="even">
+<td>Make horizontal reference line</td>
+<td><code>ax.axhline(y_value, color='black', linewidth=1.5)</code></td>
+</tr>
+<tr class="odd">
+<td>Save PDF at 600 DPI</td>
+<td><code>fig.savefig('name.pdf', dpi=600, bbox_inches='tight')</code></td>
+</tr>
+<tr class="even">
+<td>Save PNG at 600 DPI</td>
+<td><code>fig.savefig('name.png', dpi=600, bbox_inches='tight')</code></td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<caption>Python Quick Reference: Key Functions This Lab</caption>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pd.read_csv('path/file.csv')</code></td>
+<td>Load a CSV into a pandas DataFrame</td>
+</tr>
+<tr class="even">
+<td><code>df['column'].values</code></td>
+<td>Extract a column from a DataFrame as a numpy array</td>
+</tr>
+<tr class="odd">
+<td><code>np.loadtxt('path', delimiter=',', skiprows=1)</code></td>
+<td>Load a CSV directly into a numpy array</td>
+</tr>
+<tr class="even">
+<td><code>np.mean(x)</code></td>
+<td>Arithmetic mean</td>
+</tr>
+<tr class="odd">
+<td><code>np.std(x, ddof=1)</code></td>
+<td>Sample standard deviation</td>
+</tr>
+<tr class="even">
+<td><code>np.var(x, ddof=1)</code></td>
+<td>Sample variance</td>
+</tr>
+<tr class="odd">
+<td><code>np.polyfit(x, y, 1)</code></td>
+<td>Linear (degree-1) polynomial fit; returns <code>[slope, intercept]</code></td>
+</tr>
+<tr class="even">
+<td><code>np.polyval(coeffs, x)</code></td>
+<td>Evaluate polynomial at values x</td>
+</tr>
+<tr class="odd">
+<td><code>stats.t.ppf(0.975, df=nu)</code></td>
+<td>Student’s <span class="math inline">\(t\)</span>-value for a two-sided 95% CI, <span class="math inline">\(\nu\)</span> degrees of freedom (from <code>scipy.stats</code>; note <span class="math inline">\(1-0.05/2 = 0.975\)</span>)</td>
+</tr>
+<tr class="even">
+<td><code>np.random.randn(N)</code></td>
+<td>N samples from standard normal distribution (<span class="math inline">\(\mu=0\)</span>, <span class="math inline">\(\sigma=1\)</span>)</td>
+</tr>
+<tr class="odd">
+<td><code>np.linspace(start, stop, N)</code></td>
+<td>N evenly spaced values from start to stop</td>
+</tr>
+<tr class="even">
+<td><code>ax.scatter(x, y, s=25, color='blue', alpha=0.8)</code></td>
+<td>Scatter plot</td>
+</tr>
+<tr class="odd">
+<td><code>ax.hist(x, bins=20, density=True)</code></td>
+<td>Histogram (normalized if <code>density=True</code>)</td>
+</tr>
+<tr class="even">
+<td><code>ax.plot(x, y, color='blue', linewidth=2)</code></td>
+<td>Line plot</td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>This lab is divided into 3 parts, each covering key tasks you need to master as an engineer to understand and communicate about data.</p>
+<ul>
+<li>In <a href="#sec-part-1">part-1</a>, you’ll learn how to capture experimental data (in this case random noise). Then you will learn how to load data from a complete experiment using python and use it to create three types of plots: <strong>lines</strong>, <strong>scatters</strong>, and <strong>histograms</strong>. These are basic but powerful visualizations engineers and scientists use to understand their data better and spot useful patterns.</li>
+<li>In <a href="#sec-part-2">part-2</a> you’ll import tabular data and use <strong>NumPy’s</strong> curve-fitting tools to find a trend between two related variables. You’ll also apply statistical formulas (covered in class) to estimate <strong>uncertainty</strong>, or <strong>confidence intervals</strong>, for the fit and the slope. Learning how to fit curves and evaluate confidence helps engineers build models that can make predictions and understand how <strong>reliable</strong> those predictions are.</li>
+<li>For <a href="#sec-part-3">part-3</a>, you’ll work with an example dataset that follows a normal (bell curve) distribution. You’ll start by generating artificial data and creating histograms to see how it’s spread out. Then you’ll calculate a few key statistics: the mean, median, and standard deviation. After that, you’ll use the equation for the normal distribution to recreate a smooth curve that represents your data. Engineers often use this kind of analysis to turn sets of measurements into continuous models that helps with design decisions — for example, answering questions like: what percentage of parts will fit together based on the variation of a key dimension?</li>
+</ul>
+</section>
+<section id="sec-part-1" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">4</span> Part-1: Scatterplot and Histogram from Voltage data</h2>
+<p>In this part of the lab, you will capture voltage data (in this case random noise) using the ADS , save it to file, visualize it using a scatter plot and histogram, and calculate basic statistics (mean and standard deviation) on that data.</p>
+<p>During most experiments, we read measurements and record them. You can do this with pen and paper, but using a programming tool such as Python along with a WaveForms-based instrument, we can automate this process to efficiently collect measurements and store them in a digital file.</p>
+<p>Data can be stored in many different file formats (e.g.&nbsp;<code>.csv</code>, <code>.mat</code>, <code>.dat</code>, etc). Most of these store data as plain ASCII text, and each uses a <strong>filename</strong> and an <em>extension</em> to indicate its type for your computer (e.g.&nbsp;<strong>my_data</strong><em>.csv</em>). Different formats offer various advantages depending on the application, and you’ll likely encounter many of them throughout your career. In this course, we will use <em>.csv</em> (comma-separated values) format. CSV files organize data into columns and can include headers to clearly label variables. They are human-readable and can be opened in any plain text editor, including VS Code. They also work well with programs like Excel, MATLAB, and Python, making them an excellent format for both inspection and analysis.</p>
+<p>To make it easier to get started, we have provided a well-commented <strong>starter notebook</strong> on the Canvas page for lab 01. It guides you through each step with hints on which Python commands to use; you may copy it into your <code>Code</code> folder and complete it during this lab. The syntax for every step was covered in the <strong>prelab walkthrough notebook</strong>, so keep it open as a reference. A full example solution will be posted after the lab.</p>
+<div style="page-break-after: always;"></div>
+<section id="detailed-instruction" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="detailed-instruction"><span class="header-section-number">4.1</span> Detailed Instruction</h3>
+<ol type="1">
+<li><p>Open your Jupyter notebook file</p>
+<ul>
+<li>This is the file you created earlier at <strong>ME3300/Lab_01/Code/</strong>, named <strong>FirstName_LastName_Lab01.ipynb</strong>. Always give your notebook files names that make their purpose clear at a glance.</li>
+</ul></li>
+<li><p>Create sample data: <code>time_voltage_data.csv</code>.</p>
+<ul>
+<li><p>Connect the waveform generator (Wavegen): To output a signal, connect your circuit to W1 (Channel 1); see <a href="#fig-waveform1" class="quarto-xref">Figure&nbsp;9</a>.</p></li>
+<li><p>Connect the data logger (Logger): To input a signal, connect a jumper to Oscilloscope Channel 1; see <a href="#fig-waveform1" class="quarto-xref">Figure&nbsp;9</a>.</p>
+<div id="fig-waveform1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-waveform1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/P1_Circuit.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-waveform1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Connecting Wavegen out (W1) and Oscilloscope to ADS breadboard.
+</figcaption>
+</figure>
+</div></li>
+</ul></li>
+<li><p>WaveForms setup:</p>
+<ul>
+<li><p>Open the WaveForms app on your computer;</p></li>
+<li><p>Click “Wavegen” and “Logger”. Two new tabs should open.</p></li>
+</ul></li>
+<li><p>WaveGen setup</p>
+<ul>
+<li><p>Click the “Wavegen” tab to set up the noise generator; see <a href="#fig-waveformsp1setup" class="quarto-xref">Figure&nbsp;10</a>:</p></li>
+<li><p>Ensure “Channel 1 (W1)” is selected.</p></li>
+<li><p>Change “Simple” to “Basic” to access the needed controls.</p></li>
+<li><p>Select “Noise” and match the following settings:</p>
+<ul>
+<li>Frequency: 10 Hz</li>
+<li>Amplitude: 1 V</li>
+<li>Offset: 2 V</li>
+</ul></li>
+</ul></li>
+</ol>
+<div id="fig-waveformsp1setup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-waveformsp1setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Waveforms_P1_Setup.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-waveformsp1setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Wavegen Setup in WaveForms Program
+</figcaption>
+</figure>
+</div>
+<ol start="5" type="1">
+<li>Logger setup and run
+<ul>
+<li>Now, click the “Logger” tab to collect the noise data; see <a href="#fig-loggerp1" class="quarto-xref">Figure&nbsp;11</a>:</li>
+<li>Ensure only “C1” is collecting data, by either removing “C2” or adding “C1”.</li>
+<li>Click “More” to set up the Logger and match these settings:
+<ul>
+<li>Update: 5 ms</li>
+<li>Set Ch1 Range to 1 V</li>
+</ul></li>
+<li>Press “Single” and wait for 10 seconds of data, or “Run” and then “Stop” after 10 seconds has passed</li>
+</ul></li>
+</ol>
+<div id="fig-loggerp1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-loggerp1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Logger_P1.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-loggerp1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Logger Setup and Recording Data in WaveForms
+</figcaption>
+</figure>
+</div>
+<ol start="6" type="1">
+<li><p>Export Data</p>
+<ul>
+<li><p>Click “File,” then “Export”; see <a href="#fig-p1exportcsv" class="quarto-xref">Figure&nbsp;12</a>.</p></li>
+<li><p>Save the file as <code>time_voltage_data.csv</code> in your <code>ME3300/Lab_01/Data/</code> folder</p></li>
+</ul></li>
+</ol>
+<div id="fig-p1exportcsv" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-p1exportcsv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/P1_Export_csv.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-p1exportcsv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Exporting Data (Match these settings!)
+</figcaption>
+</figure>
+</div>
+<ol start="7" type="1">
+<li><p>Inspect the Data File by opening it in VS Code</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Watch for boxes like this throughout the lab manuals. They contain questions you are required to answer in your lab notebook! <strong>These will be checked by TAs.</strong></em></p>
+<p><strong>Q1.</strong> How many columns of data do you see in the document?</p>
+<p><strong>Q2.</strong> Does the data include headers? If so, do the values below the headers make sense (e.g., time counts up, and the scale is reasonable for the measurement units)?</p>
+</div>
+</div></li>
+<li><p>Load data into your Jupyter Notebook</p>
+<ul>
+<li>Method 1: Use <em>pandas</em> (<code>pd.read_csv</code>)</li>
+<li>Method 2: Use <em>numpy</em> (<code>np.loadtxt</code>)</li>
+<li>Note: in each method, you need to use a relative path to access the data, e.g.&nbsp;<code>df = pd.read_csv('../Data/time_voltage_data.csv')</code></li>
+<li>You practiced both methods in the prelab walkthrough; the syntax is also in the quick-reference tables above.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q3:</strong> What is the key difference between a pandas DataFrame and a numpy array? When would you prefer to use each?</p>
+</div>
+</div></li>
+<li><p>Compute Statistics on the data</p>
+<ul>
+<li><p>Compute the mean, median, standard deviation, and variance of the voltage. Record these values in your notebook.</p></li>
+<li><p>Use NumPy’s statistics functions (<code>np.mean</code>, <code>np.median</code>, <code>np.std</code>, <code>np.var</code>) for these calculations — remember <code>ddof=1</code> for sample statistics. You may also test your work by implementing the formulas yourself.</p></li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q4:</strong> What does <code>ddof=1</code> do? What would change if you used <code>ddof=0</code> instead?</p>
+</div>
+</div></li>
+<li><p>Visualize the Data</p>
+<ul>
+<li>Create two separate figures: one scatter plot and one histogram.</li>
+<li>Your completed plots should look similar to <a href="#fig-part-a1" class="quarto-xref">Figure&nbsp;13</a> and <a href="#fig-part-a2" class="quarto-xref">Figure&nbsp;14</a>.</li>
+<li>See the <a href="https://matplotlib.org/stable/api/markers_api.html">Matplotlib markers documentation</a> for more information on formatting markers and lines in your plots.</li>
+<li>Include the measured sample mean and standard deviation on the scatter plot as annotations.</li>
+</ul></li>
+<li><p>Save Your Plots</p>
+<ul>
+<li>Use <code>fig.savefig(...)</code> to save a 600 DPI <strong>.pdf</strong> render of your figure to file. Repeat to save a <strong>.png</strong> render as well. You will regularly save figures in both formats: <strong>.pdf</strong> files are better for submitting on Canvas, while <strong>.png</strong> retains transparency and is more appropriate for inserting in reports and presentations.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q5:</strong> What is the importance of figure DPI? When might you need to use a higher DPI? How about a lower DPI?</p>
+</div>
+</div></li>
+</ol>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="plot-format-instructions" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="plot-format-instructions"><span class="header-section-number">4.2</span> Plot Format Instructions</h3>
+<p>Your completed figures need to match the example formatting. Use the following list to make sure your figures are properly formatted. Note that in future labs you will be expected to continue using similar settings (and more) to generate high-quality figures.</p>
+<ul>
+<li>Both Plots
+<ul>
+<li>Figure size: 6.5” wide x 3.5” tall</li>
+<li>Figure background color: white</li>
+<li>All fonts: “Times”</li>
+<li>Min/Max font sizes: 10 pt / 12 pt</li>
+<li>Turn on major and minor grids</li>
+<li>Top and right border (spine) removed</li>
+<li>Include appropriate axis labels (always include units when needed)</li>
+<li>Add a short, accurate title, including your name and today’s date</li>
+</ul></li>
+<li>Scatter Plot
+<ul>
+<li>Match example horizontal line colors (red for standard deviation lines, black for the mean)</li>
+<li>Horizontal line widths: 1.5 pt</li>
+<li>Scatter marker size: 25</li>
+<li>Scatter marker face and edge color: blue</li>
+<li>Marker face alpha: 0.8</li>
+</ul></li>
+<li>Histogram Plot:
+<ul>
+<li>Choose an appropriate number of bins: between 10 and 40</li>
+<li>Set the face color to blue</li>
+</ul></li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="example-results" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="example-results"><span class="header-section-number">4.3</span> Example Results</h3>
+<p>You will be submitting .pdf figure files for your post-lab. Your submitted files should look similar to <a href="#fig-part-a1" class="quarto-xref">Figure&nbsp;13</a> and <a href="#fig-part-a2" class="quarto-xref">Figure&nbsp;14</a>.</p>
+<div id="fig-part-a1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-part-a1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab01_Scatter.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-part-a1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Sample figure showing scatter of the experimental data around the mean value.
+</figcaption>
+</figure>
+</div>
+<div id="fig-part-a2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-part-a2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab01_Histogram.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-part-a2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Sample figure showing histogram.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-2" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">5</span> Part-2: Linear Curve Fit on Scatter Data</h2>
+<p>For part 2 of this lab, you will use tabular data to generate a scatter plot and then perform a curve fit on the data. You will compute and add confidence-level lines to the plot. You will also learn how to annotate your plot by adding the linear fit equation and the standard deviation of the slope to the plot as text.</p>
+<p>To calculate the confidence level of the curve fit, we will use the following equations:</p>
+<p><span id="eq-confidence-level"><span class="math display">\[y_{cl} = y_{fit} \pm t_{\nu,P}\,s_{yx} \quad (P\%) \tag{1}\]</span></span></p>
+<p><span id="eq-standard-error-fit"><span class="math display">\[s_{yx} = \sqrt{\frac{\sum_{i=1}^{N}(y_i-y_{c_i})^2}{\nu}} \tag{2}\]</span></span></p>
+<p>where <span class="math inline">\(t_{\nu,P}\)</span> is the Student’s t-value, <span class="math inline">\(\nu\)</span> is the degrees of freedom, <span class="math inline">\(P\)</span> is the confidence level (use 95%), <span class="math inline">\(s_{yx}\)</span> is the standard error of fit, <span class="math inline">\(y\)</span> is a vector of sample data, <span class="math inline">\(y_c\)</span> is a vector of curve-fit data, and <span class="math inline">\(N\)</span> is the total number of data points. Because a linear fit estimates <em>two</em> parameters (slope and intercept) from the data, the degrees of freedom are <span class="math inline">\(\nu = N-2\)</span>.</p>
+<p>To compute the standard deviation of the slope, you will implement the following formula:</p>
+<p><span id="eq-slope-std-error"><span class="math display">\[S_{a1} = s_{yx} \sqrt{\frac{1}{\sum_{i=1}^{N} (x_i -\overline{x})^2}} \tag{3}\]</span></span></p>
+<p>where <span class="math inline">\(s_{yx}\)</span> is given by <a href="#eq-standard-error-fit" class="quarto-xref">Equation&nbsp;2</a> and <span class="math inline">\(\overline{x}\)</span> is the mean value of the x data points. Note that <span class="math inline">\(S_{a_1}\)</span> carries the units of the <em>slope</em>, while <span class="math inline">\(s_{yx}\)</span> carries the units of <span class="math inline">\(y\)</span>. You practiced these calculations in the prelab walkthrough. We will cover these equations in further detail in class.</p>
+<section id="detailed-instruction-1" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="detailed-instruction-1"><span class="header-section-number">5.1</span> Detailed Instruction</h3>
+<p>Use the data provided in <strong>?@tbl-experimental-data</strong> and <a href="#eq-confidence-level" class="quarto-xref">Equation&nbsp;1</a> and <a href="#eq-standard-error-fit" class="quarto-xref">Equation&nbsp;2</a> to create a figure similar to <a href="#fig-part-b" class="quarto-xref">Figure&nbsp;15</a>.</p>
+<ol type="1">
+<li>Transfer the data into your notebook manually, or use another program like Excel to make a <strong>.csv</strong> to import.</li>
+<li>Plot the raw data on a figure using red filled circle markers with a marker size of 75, using <code>scatter</code>.</li>
+<li>Curve-fit the data using the Python curve-fitting functions <em>polyfit</em> and <em>polyval</em>.</li>
+<li>Plot the resulting linear curve fit as a solid blue line with <em>linewidth</em> = 2.</li>
+<li>Compute the confidence interval using <a href="#eq-confidence-level" class="quarto-xref">Equation&nbsp;1</a> and <a href="#eq-standard-error-fit" class="quarto-xref">Equation&nbsp;2</a>. Compute the t-value using <em><code>stats.t.ppf(0.975, df=nu)</code></em> from <code>scipy.stats</code>. <strong>Careful:</strong> <code>ppf()</code> takes a <em>cumulative</em> (one-tailed) probability, but a 95% confidence interval is two-sided — so you must pass <span class="math inline">\(1 - 0.05/2 = 0.975\)</span>, not 0.95. Check yourself against your t-table: for <span class="math inline">\(\nu = 5\)</span>, <span class="math inline">\(t_{5,95\%} = 2.571\)</span>. (This trip-up is explained in detail in the prelab walkthrough.) Plot the CI lines as black dashed lines with line widths of 1.</li>
+<li>Compute the slope fit error using <a href="#eq-slope-std-error" class="quarto-xref">Equation&nbsp;3</a>.</li>
+<li>Annotate the plot with the fit line equation and slope error using <em>ax.text</em>.</li>
+<li>Include a legend, title, and labels, and update formatting to closely match example <a href="#fig-part-b" class="quarto-xref">Figure&nbsp;15</a>.</li>
+<li>Save a <strong>.pdf</strong> and <strong>.png</strong> of the figure for your post-lab submission.</li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>What does <span class="math inline">\(s_{yx}\)</span> tell you about the quality of a fit? What would a larger value mean physically?</li>
+<li>How would you formally report the slope with its uncertainty? Write it out in your notebook using appropriate units and significant figures.</li>
+</ul>
+</div>
+</div>
+<table class="caption-top table">
+<caption>Experimental Data.</caption>
+<thead>
+<tr class="header">
+<th>Velocity (m/s)</th>
+<th>Volts (V)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.00</td>
+<td>0.7036</td>
+</tr>
+<tr class="even">
+<td>1.00</td>
+<td>1.0096</td>
+</tr>
+<tr class="odd">
+<td>2.00</td>
+<td>1.3907</td>
+</tr>
+<tr class="even">
+<td>3.00</td>
+<td>1.8867</td>
+</tr>
+<tr class="odd">
+<td>4.00</td>
+<td>2.2557</td>
+</tr>
+<tr class="even">
+<td>5.00</td>
+<td>2.6313</td>
+</tr>
+<tr class="odd">
+<td>6.00</td>
+<td>2.9504</td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="plot-format-instructions-1" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="plot-format-instructions-1"><span class="header-section-number">5.2</span> Plot Format Instructions</h3>
+<p>Use the following list to make sure this figure is properly formatted.</p>
+<ul>
+<li>Figure size: 6.5” wide x 3.5” tall</li>
+<li>Figure background color: white</li>
+<li>Text: font “Times”; Min/Max font sizes: 10 pt / 12 pt</li>
+<li>Turn on major and minor grids</li>
+<li>Top and right border (spine) removed</li>
+<li>Include appropriate axis labels (always include units when needed)</li>
+<li>Add a short, accurate title, including your name and today’s date</li>
+<li>Fit line: solid blue, 2 pt width</li>
+<li>CI line: dashed black, 1 pt width</li>
+<li>Scatter markers: red face and edge, size 75</li>
+</ul>
+<div id="fig-part-b" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-part-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab01_CurveFit.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-part-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Sample figure showing experimental data and curve fit.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-3" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">6</span> Part-3: Generated Histogram and PDF Lines</h2>
+<p>For the final part of this lab, you will generate your own synthetic data, then use it to create visualizations of probability density functions (PDFs) using both normalized histograms and the standard normal PDF equation.</p>
+<p>The probability density function for a normal distribution is</p>
+<p><span id="eq-normal-pdf"><span class="math display">\[p(x) = \frac{1}{\sigma \sqrt{2\pi}}\exp\left[ -0.5 \times \left(\frac{x-x'}{\sigma}\right)^2 \right] \tag{4}\]</span></span></p>
+<p>where <span class="math inline">\(\sigma\)</span> is the standard deviation of the population and <span class="math inline">\(x'\)</span> is the mean value of the population.</p>
+<p>For your plot, create data with the following true mean and standard deviation values:</p>
+<ol type="1">
+<li><span class="math inline">\(x' = -2\)</span> and <span class="math inline">\(\sigma = 0.80\)</span></li>
+<li><span class="math inline">\(x' = 0\)</span> and <span class="math inline">\(\sigma = 0.50\)</span></li>
+<li><span class="math inline">\(x' = 0\)</span> and <span class="math inline">\(\sigma = 2.00\)</span></li>
+<li><span class="math inline">\(x' = 3\)</span> and <span class="math inline">\(\sigma = 2.00\)</span></li>
+</ol>
+<section id="detailed-instruction-2" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="detailed-instruction-2"><span class="header-section-number">6.1</span> Detailed Instruction</h3>
+<ol type="1">
+<li>Generate synthetic datasets, using N = 1000 points for each set. You can use numpy’s <em>randn</em> function to help with this step.
+<ul>
+<li>Hint: scale and shift the standard normal samples, <code>data = mu + sigma * np.random.randn(N)</code>, as practiced in the prelab walkthrough.</li>
+</ul></li>
+<li>Implement your PDF function using <a href="#eq-normal-pdf" class="quarto-xref">Equation&nbsp;4</a> to generate a curve of samples for each dataset.
+<ul>
+<li>Use the range -10 to 10 for the input x. One way to generate a vector of sample points for x is to use <em>np.linspace</em>.</li>
+</ul></li>
+<li>Set up a 2-row, 1-column figure using the <em>plt.subplots</em> command, or the <em>plt.subplot</em> command.</li>
+<li>Use a <em>histogram</em> with <code>density=True</code> to generate normalized (PDF) histograms on the top chart.
+<ul>
+<li>Set the histogram colors to black, red, green, and blue, in order.</li>
+<li>Set the number of bins, <strong>nbins</strong> = 20, for each histogram.</li>
+</ul></li>
+<li>Use your PDF function to generate continuous lines and plot them on the bottom chart.
+<ul>
+<li>Set the line colors to black, red, green, and blue, in order.</li>
+</ul></li>
+<li>Include a legend, title, and labels, and update formatting to closely match example <a href="#fig-part-c" class="quarto-xref">Figure&nbsp;16</a>.</li>
+<li>Save a <strong>.pdf</strong> and <strong>.png</strong> of the figure for your post-lab submission.</li>
+</ol>
+</section>
+<section id="plot-format-instructions-2" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="plot-format-instructions-2"><span class="header-section-number">6.2</span> Plot Format Instructions</h3>
+<p>Use the following list to make sure your figure is properly formatted.</p>
+<ul>
+<li>Figure size: 6.5” wide x 7” tall</li>
+<li>Figure background color: white</li>
+<li>Text: font “Times”; Min/Max font sizes: 10 pt / 12 pt</li>
+<li>Turn on major grids</li>
+<li>Top and right border (spine) removed</li>
+<li>Include appropriate axis labels (always include units when needed)</li>
+<li>Add a short, accurate title, including your name and today’s date</li>
+<li>Line widths: 2 pt</li>
+<li>Match x and y axis limits across subplots so that plots are directly comparable
+<ul>
+<li>This is very important for understanding when making multi-axis figures!</li>
+</ul></li>
+</ul>
+<div id="fig-part-c" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-part-c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab01_PDFs.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-part-c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Sample figure showing PDF for different true mean and standard deviations.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">7</span> Post-Lab Assignment</h2>
+<p>Following each lab, you will upload your submissions to Canvas. A full example solution notebook will be posted on Canvas after all lab sections have met — use it to check your approach, but the work you submit must be your own.</p>
+<section id="general-instruction" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="general-instruction"><span class="header-section-number">7.1</span> General Instruction</h3>
+<ul>
+<li>Name your files FirstName_LastName_LabXX_PartXX. You will follow this file-naming format for all future experiments.</li>
+<li>Make sure your submitted figures have updated titles with your name and the date. Include the apostrophe!</li>
+<li>As you can see, Matplotlib provides a great deal of power for formatting high-quality scientific figures. Here are a few best practices to remember throughout the semester.
+<ul>
+<li>Sampled data points should be plotted using markers, without lines connecting the points.</li>
+<li>Continuous lines/curves from theory (or curve-fit lines) should be plotted as solid colored lines.</li>
+<li>Remember to set the x- and y-axis limits. When preparing multi-axis plots, limits should usually match to make data easy to compare.</li>
+<li>Make sure the major grid lines are visible. When needed, set axis ticks to be dense enough to make the figure easy to read.</li>
+<li>In this class, all plot text should be in Times font. You will need to specify this for the title, labels, and legends. Axis labels and tick numbers should typically be in 10-point font.</li>
+<li>Titles are not always needed if labels are clear enough, but should be set at 10-point font when used.</li>
+<li>Make sure to add a legend when there are multiple elements on the plot. Keep in mind that the legend should not obscure the plotted data.</li>
+<li>Always refer to the example figures in the lab manual to make sure your figures match the expected formatting.</li>
+<li>If in doubt, ask the lab TAs for help. They can confirm whether your plot matches expectations.</li>
+</ul></li>
+</ul>
+</section>
+<section id="submission-items" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="submission-items"><span class="header-section-number">7.2</span> Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook file</li>
+<li>Part-1
+<ul>
+<li>Your Time vs.&nbsp;Voltage scatter plot in <strong>.pdf</strong> file format.</li>
+<li>Your Voltage histogram in <strong>.pdf</strong> file format.</li>
+</ul></li>
+<li>Part-2
+<ul>
+<li>Your Voltage vs.&nbsp;Velocity scatter and curve-fit plot in <strong>.pdf</strong> file format.</li>
+</ul></li>
+<li>Part-3
+<ul>
+<li>Your multi-axis PDF plot in <strong>.pdf</strong> format.</li>
+</ul></li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">7.3</span> Post-Lab Questions</h3>
+<p>Be prepared to answer the following post-lab questions (make sure you can answer these questions before leaving the lab!) <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u></p>
+<ol type="1">
+<li>What happens to the shape of a normal distribution (PDF) when the standard deviation is decreased?</li>
+<li>What happens to a normal distribution (PDF) when the mean value is increased?</li>
+<li>What is the observed standard deviation of the slope in part-2?</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="before-you-leave"><span class="header-section-number">8</span> Before you leave</h2>
+<ul>
+<li>Return all equipment you used to its designated location.</li>
+<li>Remove all the wires from the breadboard and return them to the wire bin. Keep colors sorted nicely, and discard any broken / severely damaged wires.</li>
+<li>Make sure the station is clean.</li>
+<li>Pick up all your belongings.</li>
+<li>Make sure the data is accessible to all the team members.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

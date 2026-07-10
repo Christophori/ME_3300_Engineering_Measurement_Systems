@@ -1,0 +1,365 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} % 'openany' here removes the gap page between days, erase it to restore this gap; 'oneside' can also be added to remove the shift that odd pages have to the right for easier reading
+
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+
+\section{Learning objective}
+The objectives of this experiment are to provide the student with an opportunity to:
+
+\begin{enumerate}
+    \item	Calibrate a custom orifice plate using a rotameter as a reference standard.
+    \item	Observe the dynamic response of piezoelectric pressure sensors during changes in flow rate.
+    \item	Gain experience with non-linear regression (curve fitting).
+    \item	Use the regressed calibration curve to create a flow measurement system.
+\end{enumerate}
+
+
+
+\section{Required Equipment}
+\begin{multicols}{2}
+\begin{enumerate}
+\item Air flow apparatus with Kings Rotameter and custom orifice plate with up- and down-stream pressure taps.
+    \item USB Data Acquisition Device (NI-MyDAQ)
+    \item One Honeywell differential pressure sensors with $\pm$30 psi range (P/N SSCDRRN030PDAA5) and two air hoses.
+    \item Breadboard (MyDigital protoboard)
+    \item Digital Multimeter (DMM)
+    \item DC Power Supply
+    \item Needle-nose pliers \& wire strippers
+    \item Small flathead screwdriver
+    \item Power supply and wire kit
+\end{enumerate}
+\end{multicols}
+
+\section{Introduction}
+
+Orifice plates and rotameters are two common types of flow sensors. Rotameters are displacement volume flow sensors; they measure flow by observing the displacement of a floating vessel in an upward flow stream. For this experiment, a purchased rotameter is provided as the flow measurement standard. More details are given in the References.\\~\\
+Orifice plates are obstruction flow sensors; they measure the difference between the upstream and downstream pressure caused by an obstruction in the flow stream. For orifice plates, the obstruction is a plate with a hole that is smaller than the existing flow pipe. The obstruction causes a pressure drop. For this experiment, a custom orifice plate with pressure taps has been provided.  The internal geometry of the orifice plate is shown in Fig. \ref{fig:orficePlate}. \\~\\
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.25in]{Lab05Fig01.png}
+    \caption{Orifice plate internal geometry. Flow is from left to right.}
+    \label{fig:orficePlate}
+\end{figure}
+
+To create a custom orifice plate flowmeter, downstream and upstream pressure will be measured separately with the Honeywell pressure sensors. The differential pressure (pressure drop across the flowmeter) can then be correlated with the flow measured by the rotameter to create a calibrated flow measurement system. Flow through an obstruction meter, such as an orifice plate, can be calculated according to:
+
+\begin{equation}
+    Q= \left( Y K_{o}A_{o}\sqrt{\frac{2}{\rho}} \right) \sqrt{\Delta P},
+    \label{eq:calA}
+\end{equation}
+
+where $\Delta P$ is the pressure drop, $\rho$ is the density, $A_o$ is the area of the throat, $K_o$ is the flow coefficient, and $Y$ is the adiabatic expansion factor (compressible fluids only).  
+
+In this experiment, the calibration equation will have the form:
+
+\begin{equation}
+    Q = a_1 \sqrt{\Delta P} + a_o
+    \label{eq:calB}
+\end{equation}
+
+where $a_1$ will be the best estimate of the combined factor $Y K_{o}A_{o}\sqrt{\Delta P}$ and should be close to zero.  This regression can be performed by plotting the measured flow vs the square root of the measured pressure drop and then using the Matlab fitting function (polyfit).
+
+\section{Laboratory instruction}
+\subsection{Part 1: Connecting the sensor and hardware}
+In this lab, you will be using two Honeywell SSCDRRN030PDAA5 pressure sensors (see Figure \ref{fig:sampleCon}) with analog output. These differential pressure sensors have a $\pm$30 psi range, require a 5V supply and are amplified and temperature compensated. For more information, see \href{https://us.rs-online.com/product/honeywell/sscdrrn030pdaa5/70237501/?srsltid=AfmBOory4VnsN00xBr8yBZUDXfq7TsxGcRs9MxiVNRzgQ63wzcbJjC-c}{Honeywell pressure transducer SSCDRRN030PDAA5 webpage}.
+A single apparatus will serve two stations; you will work with a group directly across from your station. Each station will have its own data acquisition but the flow apparatus, pressure sensors, and breadboard circuit will be  shared and common. Please make sure to plan accordingly.
+
+\begin{enumerate}
+    \item Place pressure sensors on the breadboard. A sample circuit for the components on a breadboard is shown in Figure \ref{fig:sampleCon}.
+    \item Supply each pressure sensor with a 5V supply and ground wire. Reference Figure \ref{fig:sampleCon} for the proper pin-outs. {\bf Do not turn on the power supply until confirming your circuit with the TAs.}
+    \item Using the supplied air hose, connect each pressure tap on the experimental apparatus to Port 1 on each pressure sensor.
+    \begin{itemize}
+        \item Port 1:``Pressure Port" (upstream)
+        \item Port 2: ``Reference Port" (downstream)
+    \end{itemize}
+    \item Connect the output voltage from the sensor to your group's NI-MyDAQ as well as the daq for the group in front of you \\ (for multi-group experiments). 
+    \item Show the connections to the TAs prior to connecting the NI-MyDAQ to the computer.
+    \item Update the code \boldpurp{MATLAB\_Data\_Acquisition.m} to match the provided code on Canvas and with the following settings.
+    \item Collect the single-channel voltage output from ([0]).
+    \begin{itemize}
+        \item Duration: 10 seconds
+        \item Sample rate: 100 samples per second
+        \item Keep the slope = 1, intercept =0, and $V_0=0.00$
+        \item enableCalibratedPressure = false;
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Q:} What type of pressure is measured by the pressure transducer? See figure \ref{fig:sampleCon2} for the proper experimental setup.  \\
+
+\begin{figure}
+\centering
+\includegraphics[width=6.00in]{Lab05Circuit03.png}
+\caption{Sample connection for experiment 4.}
+\label{fig:sampleCon}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=5.00in]{Lab05OrificePlate.png}
+\caption{Experimental setup for orifice plate.}
+\label{fig:sampleCon2}
+\end{figure}
+
+
+
+\subsection{Part 2: Record calibration data}
+In this lab, we will be using a King’s Rotameter as a reference for flow rate. These rotameters measure air flow by correlation to vertical displacement of a float in the flow field (the rotameter must be vertical during measurements). Inspect the rotameter for flow units and proper reading technique. For additional information on the King's rotameter see website \href{https://kinginstrumentco.com/glass-flowmeters/}{Rotameter}.
+\textbf{During this part, you will work together with the station directly across from your station (e.g. stations 1 and 2 work together)}. Identify one person to vary the flow, one to read the rotameter, and one from each station to record the pressure sensor voltages from MATLAB and the flow data from the rotameter.
+
+\begin{enumerate}
+    \item \textbf{NOTE: all pressurized flow comes from a single source in the room, so ensure only two orifice plates are run at the same time.}
+    \item \textbf{NOTE: Be considerate of other groups by not changing the flow rate during their data collection.}
+    \item Flow rate is controlled through a ball valve located between the air supply hose and the apparatus. 
+    \begin{itemize}
+        \item Practice opening the valve slightly to test your circuit and calibration MATLAB program. 
+    \end{itemize}
+    \item Verify your circuit and setup with the TAs.
+    \item Procedure for calibration (make sure you collect at least ten points for calibration):
+    \begin{enumerate}
+        \item Open the valve to obtain a desired flow rate. Make sure to take care of parallax error and use the right readout location for float.
+        \item Wait for at least 10 seconds before collecting data. This will allow time for the flow and pressures to settle to their nominal value.
+        \item Collect the single-channel voltage output from (``AI0").
+        \item The first data point in your calibration should be for a zero flow rate condition (i.e., valve fully closed).
+        \begin{itemize}
+            \item Duration: 20 seconds
+            \item Sample rate: 30 samples per second
+        \end{itemize}
+        \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Save a data file using this naming convention: \boldpurp{SCFM\_XX.csv} where
+            \begin{itemize}
+                \item \texttt{XX} indicates rotatmeter flowrate.
+            \end{itemize}
+            \item Update the file name before each run to avoid overwriting data.
+            \end{itemize}
+        
+            \item Compute the Average Voltage:
+            \begin{itemize}
+                \item Write a MATLAB script to calculate the mean voltage from each data file.
+                \item Record the result with at least two decimal places.
+            \end{itemize}
+        \end{enumerate}
+        \item Take at least ten points evenly distributed across the flow range of the apparatus.
+    \end{enumerate}
+    \item {\bf NOTE: subtract the voltage for the zero flow rate case for all the other calibration data, while performing calibration}.
+    \item A sample dataset used for calibration is shown in table \ref{tab:calData}. Make sure to include a similar table in your logbook.
+    \item Refer to the next section to create a calibration plot with data (i.e, calibration data recorded in your log book). A sample calibration plot is shown in Figure \ref{fig:sampCalPlot}.
+\end{enumerate}
+
+\begin{table}
+\centering
+\caption{Sample calibration data.}
+\begin{tabular}{c|cc}
+Flow rate (scfm) & Voltage (v) & Voltage - $V_{zero, flowrate}$ (v)\\\toprule
+0 & 2.5534 & 0 \\
+1.0 & 2.5806 & 0.0272\\
+1.6 & 2.6379 & 0.0845\\
+2.0 & 2.6783 & 0.1249 \\
+2.6 & 2.7503 & 0.1969 \\
+3.0 & 2.8058 & 0.2524\\
+3.6 & 2.9352 & 0.3818\\
+4.0 & 3.0423 & 0.4889\\
+4.6 & 3.2088 & 0.6554\\
+5.0 & 3.3549 & 0.8015\\
+5.6 & 3.5643 & 1.0109\\
+6.0 & 3.6940 & 1.1408\\
+\end{tabular}
+\label{tab:calData}
+\end{table}
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[scale=1]{Student_Name_Exp05_CalPlot.png}
+    \caption{Sample calibration plot with all the relevant details.}
+    \label{fig:sampCalPlot}
+\end{figure}
+
+\subsection{Part 3: Create calibration of custom Orifice plate flow-meter}
+\begin{enumerate}
+    \item Create a figure with two subplots. See sample calibration plot in Figure \ref{fig:sampCalPlot}. You will produce a similar plot for your calibration.
+    \item {\bf LEFT PLOT:}  Use markers to plot your measured flow rate vs. the square root($\sqrt{V}$) of the pressure drop.  
+    \begin{itemize}
+        \item Use the \boldpurp{polyfit} function in MATLAB, to create a linear fit line from the regression.
+        \item The determined slope and bias will correspond to those defined in equation \ref{eq:calB}.
+        \item Include axis labels (with units), a legend, etc.   
+        \item Show the 95\% confidence level for the curve fit. 
+    \end{itemize}
+    \item {\bf RIGHT PLOT:} Use markers to plot your measured flow rate vs. the pressure drop \\ (NOT THE SQUARE ROOT OF PRESSURE DROP).
+    \item Write down your calibration slope value and intercept value in the log book. These values will be used for the following parts of your experiment.
+\end{enumerate}
+
+\section{Part 4: Custom Orifice plate flowmeter verification.}
+\emph{ Verification should be performed for five distinct flow rates.}
+\begin{enumerate}
+    \item Update the code \boldpurp{MATLAB\_Data\_Acquisition.m} to match the provided code on Canvas and with the following settings.
+    \item Collect the single-channel voltage output from (“AI0”).
+    \begin{itemize}
+        \item Duration: 20 seconds
+        \item Sample rate: 200 samples per second
+        \item Change the slope, intercept, and $V_0$ to your values
+        \item enableCalibratedPressure = true;
+        \item Comment line for double header and uncomment line for triple header
+    \end{itemize}
+        \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Open the values to get a desired flow rate and wait for 10 seconds for the rotameter reading to stablize.
+            \item Save a data file using this naming convention: \boldpurp{Verification\_SCFM\_XX.csv} where
+            \begin{itemize}
+                \item \texttt{XX} indicates rotatmeter flowrate.
+            \end{itemize}
+            \item Update the file name before each run to avoid overwriting data.
+            \end{itemize}
+        
+            \item Compute the Average Voltage:
+            \begin{itemize}
+                \item Write a MATLAB script to calculate the mean voltage and SCFM from each data file.
+                \item Record the result with at least two decimal places.
+            \end{itemize}
+        \end{enumerate}
+    \item Compare your average calibrated flowrate indicated in from DAQ system to flowrate indicated by the Rotameter.
+    \item Make sure to check your recorded data file. The file should be stored in three columns: the first column is time data, the second column is voltage data, and the third column is flow rate data.
+    \item Record the rotameter reading and average flow rate reading from the DAQ system in your logbook.
+    \item Repeat this at five distinct flow rates, recording both flowrates (from the DAQ and from the Rotameter).
+\end{enumerate}
+
+\textbf{Q:} How accurate is your calibration? Is it an accurate flow measurement? Is it repeatable? \\
+
+\subsection{Part 5: Record flowrate vs time for a step input of the ball valve}
+\begin{enumerate}
+    \item Collect the single-channel voltage output from ( “AI0”).
+    \begin{itemize}
+        \item Duration: 7 seconds
+        \item Sample rate: 1000 samples per second
+        \item Change the slope, intercept, and $V_0$ to your values
+        \item enableCalibratedPressure = true;
+        \item Comment line for double header and uncomment line for triple header
+    \end{itemize}
+        \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Open the values to get a desired flow rate and wait for 10 seconds for the rotameter reading to stablize.
+            \item Save a data file using this naming convention: \boldpurp{Step\_Input\_of\_ballvalve.csv} where
+            \item Update the file name before each run to avoid overwriting data.
+            \end{itemize}
+        
+            \item Compute the Average Voltage:
+            \begin{itemize}
+                \item Write a MATLAB script to calculate the mean voltage and SCFM from each data file.
+                \item Record the result with at least two decimal places.
+            \end{itemize}
+        \end{enumerate}
+    \item With the inlet valve closed, start recording in Matlab DAQ program.
+    \item Open the valve half way at approximately 2 seconds. Repeat as needed for timing.
+    \item Make sure to save this time series data for plotting.
+    \item Create a plot with two y-axis scales using \boldpurp{plotyy}: the left y-axis should be in volts for the pressure drop voltage and the right y-axis should be in the calibrated flow units (SCFM).  Plot both pressure drop and calibrated flow rate vs time for the 5 second step response, reference \ref{fig:trRes}. 
+\end{enumerate}
+
+\textbf{Q:} Is there a significant transient response? Is there overshoot? Do you think the flowrate calibration is valid during the transient response?  Is the pressure drop during the transient response within the calibration range? \\
+
+Refer to the sample result figure \ref{fig:trRes}. Make sure to generate a similar plot using your data.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=6.00in]{Student_Name_Exp05_Part2.png}
+  \caption{Sample transient response plot}
+  \label{fig:trRes}
+\end{figure}
+
+
+\section{Part 6: Return Lab Space to Prior Condition}
+\begin{enumerate}
+    \item Remove all breadboard wires and place them back in the wire kit in an organized fashion.
+    \item Remove the pendulum wires from the breadboard and set them aside.
+    \item Confirm your data files are saved to OneDrive.
+    \begin{enumerate}[label=\alph*.]
+        \item Check that files are available online using your phone or personal laptop to confirm.
+        \item Make sure that all team members have access to experiment files, including data and scripts.
+    \end{enumerate}
+    \item Log off the computer.
+\end{enumerate}
+
+\section{Post-Laboratory Assignment}
+For this experiment, submit the following items on Canvas for your post-laboratory assessment. 
+\begin{enumerate}
+    \item \textbf{Custom orifice plate calibration plots}
+    \begin{itemize}
+        \item Use of subplot to create the figure.
+        \item The calibration plot should include:
+        \begin{itemize}
+            \item Using ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 90}.
+        \end{itemize} 
+        \item The plot should be 5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Include legend of all different sampling types.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Calibration Plots''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+    \end{itemize}
+    \item \textbf{Step input response plot}
+    \begin{itemize}
+        \item The calibration plot should include:
+        \begin{itemize}
+            \item Using ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 10}.
+        \end{itemize} 
+        \item The plot should be 3.5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Include legend of all different sampling types.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Step Input Response Plot''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+    \end{itemize}
+    \item \textbf{Answer All Questions in the Post-Lab Canvas Assignment}
+    \begin{itemize}
+        \item Compare your plots to the example plots shown in figure \ref{fig:sampCalPlot} and \ref{fig:trRes} to confirm that you have completed the assignment correctly. Note that your values will differ, but your formatting and annotation should match.
+    \end{itemize}
+\end{enumerate}
+
+%\section{Post-Laboratory Report}
+%This experiment will be the subject of the 1st of 3 Formal Reports.  For this first report, start with the report draft posted on Canvas.
+
+
+%\section{Appendix}
+%
+%
+%\subsection{Matlab program to calibrate pressure sensors}
+%\label{app:calCode}
+%\lstinputlisting{../Code/Expt05_Calibration.m}
+%%
+%\clearpage
+%\subsection{Matlab program to plot calibration data}
+%\label{app:pltCalibration}
+%\lstinputlisting{../Code/Expt05_Calibration_plot.m}
+%%
+%\clearpage
+%\subsection{Matlab program to acquire data after your calibration}
+%\label{app:mainDAQProgram}
+%\lstinputlisting{../Code/Expt05_Data_aquisition.m}
+%
+%\clearpage
+%\subsection{Matlab program to plot transient response}
+%\label{app:postLabTrans}
+%\lstinputlisting{../Code/Expt05_Data_plotting.m}
+%\clearpage
+%
+%\subsection{Plot sample post lab}
+%\label{app:postLabB}
+%\begin{figure}[!ht]
+%\centering
+%\includegraphics[width=5.0in]{Firstname_Lastname_Exp04_Part2.png}
+%\caption{Sample plot dynamic signal post lab.}
+%\label{fig:dynSignalPlot}
+%\end{figure}
+%\clearpage
+
+
+\end{document} 

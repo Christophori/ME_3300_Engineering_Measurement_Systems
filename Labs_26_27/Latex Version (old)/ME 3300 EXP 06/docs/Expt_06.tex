@@ -1,0 +1,272 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} % 'openany' here removes the gap page between days, erase it to restore this gap; 'oneside' can also be added to remove the shift that odd pages have to the right for easier reading
+
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\section{Learning objective}
+The objectives of this experiment are to provide students with an opportunity to:
+
+\begin{enumerate}
+    \item Become more familiar with using MATLAB for data acquisition, analysis, and visualization and sharing (e.g., plotting, etc.).
+    \item Design, build, and test a non-inverting amplifier circuit using a generic operational amplifier chip.
+    \item Design, build, and test an instrumentation amplifier circuit using an instrumentation amplifier chip.
+    \item Explore and verify the performance characteristics of operational amplifiers.
+    \item Verify the gains of the constructed op-amp circuits.
+\end{enumerate}
+
+\section{Required Equipment}
+\begin{multicols}{2}
+    \begin{enumerate}
+        \item LM358AN Op-Amp
+        \item AD622AN Instrumentation Amp
+        \item Digilent Breadboard
+        \item Powered Breadboard (or similar power supply)
+        \item Wire \& Resistor Kits
+        \item USB Data Acquisition Device (NI-MyDAQ)
+    \end{enumerate}
+\end{multicols}
+
+\section{Introduction}
+In this experiment, you will construct and test two op-amp circuits. The first will be the non-inverting amplifier shown in figure \ref{fig:opAmp}, using National Instruments’ LM358 DIP (dual in-line package) chip. The second will be an instrumentation amplifier circuit using Analog Devices’ AD622 DIP. Both circuits will be built to achieve a gain of approximately G = 3.  Details for both of these DIP chips are given at the end of this document.
+
+\section{Laboratory instruction}
+The goal of this experiment is to learn about the operational amplifier and setting the gain in the op-amp circuit.
+
+\subsection{Part 1: Construct and test a non-inverting amplifier}
+\begin{enumerate}
+    \item Construct a non-inverting amplifier circuit on a breadboard.
+    \begin{itemize}
+        \item Verify the correct color bands using a resistor chart (or internet resource).
+        \item Measure and record the actual resistor values using your DMM.
+        \item Use your measured values to calculate expected gain.
+        \item Reference the LM358 datasheet to learn how to connect the DIP chip. See section \ref{sec:instrument}.
+    \end{itemize}
+    \item Place the op-amp on the breadboard across the center channel as seen in Figure \ref{fig:opAmp}.
+    \begin{itemize}
+        \item NOTE: ensure that the op-amp is properly positioned on the breadboard (push down on the chip; it should not wiggle).
+    \end{itemize}
+    \item Construct your circuit on the breadboard in a neat and organized manner. 
+    \item Use the long vertical rails for your common signals (such as the +15V, -15V, ground, etc.).
+    \item Use the NI MyDAQ power supply to provide +15V and -15V to the chip at the V+ (pin 8) and GND (pin 4) pins, respectively. 
+    \begin{itemize}
+        \item NOTE: the GND (pin 4) pin on the LM358 amplifier is not the signal ground, it should be -15V for this experiment
+    \end{itemize}
+    \item Connect your resistors as shown in figure \ref{fig:opAmp}, with $R_1$ = 10 k$\Omega$ and $R_2$ = 20 k$\Omega$.
+    \begin{itemize}
+        \item $G=\left(\frac{R_1+R_2}{R_2} \right)$
+    \end{itemize}
+    \item Use the Analog out ``AO 0" on the NI MyDAQ for supplying the input voltage to your op-amp circuit \\ (use a range of 0-5 Volts for input). 
+    \begin{itemize}
+        \item Update the MATLAB code \boldpurp{MATLAB\_Data\_Acquisition.m} so that ``AO 0" provides a voltage.
+    \end{itemize}
+    \item Use the handheld digital multimeter to test the non-inverting op-amp circuit to verify that it is performing correctly.
+    \begin{itemize}
+        \item Yellow wires: ground 
+        \item Blue wires: $V^{-}_{supply}$ 
+        \item Red wires: $V^{+}_{supply}$ 
+        \item Green wires: $V_{out}$ output voltage signal, acquired at ``AI0" of NI-MyDAQ
+        \item Orange wires: $V_{in}$, input voltage signal, generated from ``AO0" of NI MyDAQ and acquired at ``AI1'' of NI MyDAQ to record the data.
+\end{itemize}
+    \item Show your circuit to TAs before acquiring the data. {\bf improper wiring will damage the op-amp}.
+\end{enumerate}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=4.0in]{non_int.png}
+    \caption{The wiring diagram for LM358 op-amp.}
+    \label{fig:opAmp}
+\end{figure}
+
+
+\subsection{Part 2: Prepare MATLAB for data acquisition}
+
+Update the MATLAB code, \boldpurp{MATLAB\_Data\_Acquisition.m} , with the instructions provided in this section.
+
+\begin{enumerate}
+    \item Collect double-channel acquisition; ``AI0" and ``AI1", or [0, 1].
+    \begin{itemize}
+        \item Duration: 5 seconds
+        \item Sample rate: 200 samples per second
+    \end{itemize}
+    \item Set up data acquisition for two channels of DAQ system.
+    \begin{itemize}
+        \item ``AI0": output signal from op-amp
+        \item ``AI1": acquire input voltage to op-amp (voltage output from MyDAQ; ``AO0")
+    \end{itemize}
+    \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Save a data file using this naming convention: \boldpurp{LM358Data.csv}
+            \item Update the file name before each run to avoid overwriting data.
+        \end{itemize}
+    \end{enumerate}
+    \item The program should gradually increase to 5 volts from 0 volts.
+    \item After the acquisition is done and data is recorded, {\bf please use DMM to record input voltage and output voltage to the LM358 circuit in your log book}. \emph{For checking your results: The input voltage value should be close to 5 volts. The output voltage should be greater than 10 volts.}
+\end{enumerate}
+
+\textbf{Q:} What explains the differences between the recorded output voltage in your log book vs the output voltage shown in your DAQ plot?  \\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4.5in]{LM358CircuitNew.png}
+    \caption{Sample wiring diagram for LM358 op-amp.}
+    \label{fig:opAmp}
+\end{figure}
+\clearpage
+
+\subsection{Part 3: Connect and test an instrumentation amplifier}
+\begin{enumerate}
+    \item Use the other side of the breadboard to build the circuit for AD622 chip.
+    \item Construct an instrumentation amplifier with a gain of G = 3 on the breadboard. 
+    \begin{itemize}
+        \item Select resistors from the supply provided at your station.
+        \item Use the datasheet link (ref. \ref{sec:instrument}) given at the end of this document as reference.
+    \end{itemize}
+    \item Measure and record the actual resistor values.
+    \item Place the instrumentation amplifier on the breadboard across the center channel as seen in figure \ref{fig:opAmp2}.
+    \begin{itemize}
+        \item NOTE: ensure that the AD622 instrumentation amplifier is properly positioned on the breadboard (push down on the chip, and it should not wiggle out).
+    \end{itemize}
+    \item Use the NI MyDAQ power on the breadboard to provide +15V and -15V to the chip at the V+ and V- pins, respectively.
+    \item Use the ground from the Digilent breadboard to ground the circuit and the output ground from the op-amp circuit, as well as the REF pin on the instrumentation amplifier (this acts as signal ground).  
+    \item Use the Analog out ``AO 0" on the NI MyDAQ for supplying the input voltage to your op-amp circuit (use a range of 0-5 Volts for input). 
+    \item Sample breadboard circuit is shown in figure \ref{fig:opAmp2}.
+    \begin{itemize}
+        \item Yellow color wires: are  ground 
+        \item Blue color wires: are $V^{-}_{supply}$ 
+        \item Red color wires: are $V^{+}_{supply}$ 
+        \item Green color wire: are $V_{out}$ output voltage signal, acquired at ``AI0" of NI MyDAQ
+        \item Orange color wire: are $V_{in}$, input voltage signal, generated from ``AO0" of NI MyDAQ and then acquired at ``AI1" of NI MyDAQ to record the data.
+\end{itemize}
+    \item Show your circuit to TAs before acquiring the data. {\bf Incorrect wiring will damage the instrumentation amp!}
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=6.0in]{AD622CircuitNew.png}
+\caption{Sample wiring diagram for AD622 instrument amplifier.}
+\label{fig:opAmp2}
+\end{figure}
+
+\subsection{Part 4: Prepare MATLAB for data acquisition}
+Use similar settings as in the previous section.
+\begin{itemize}
+    \item Collect double-channel acquisition; ``AI0" and ``AI1", or [0, 1].
+    \begin{itemize}
+        \item Duration: 5 seconds
+        \item Sample rate: 200 samples per second
+    \end{itemize}
+    \item Set up data acquisition for two channels of DAQ system.
+    \begin{itemize}
+        \item ``AI0": output signal from op-amp
+        \item ``AI1": acquire input voltage to op-amp (voltage output from MyDAQ; ``AO0")
+    \end{itemize}
+    \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Save a data file using this naming convention: \boldpurp{AD622Data.csv}
+            \item Update the file name before each run to avoid overwriting data.
+        \end{itemize}
+    \end{enumerate} 
+    \item The program should gradually increase to 5 volts from 0 volts.
+    \item After completing data acquisition, {\bf please use DMM to record input voltage and output voltage to the AD622 circuit in your log book}. \emph{For checking your results: The input voltage value should be close to 5 volts. The output voltage should be greater than 10 volts}.
+\end{itemize}
+
+\textbf{Q:} Why does the instrumentation amplifier need a $V^{-}_{supply}$ and $V^{+}_{supply}$? 
+
+\section{Part 5: Return Lab Space to Prior Condition}
+\begin{enumerate}
+    \item Remove all breadboard wires and place them back in the wire kit in an organized fashion.
+    \item Confirm your data files are saved to OneDrive.
+    \begin{enumerate}[label=\alph*.]
+        \item Check that files are available online using your phone or personal laptop to confirm.
+        \item Make sure that all team members have access to experiment files, including data and scripts.
+    \end{enumerate}
+    \item Log off the computer.
+\end{enumerate}
+
+
+\section{Post-Laboratory Assignment}
+For this experiment, submit the following items on Canvas for your post-laboratory assignment.
+\begin{enumerate}
+    \item \textbf{Amplifier gain plot}
+    \begin{itemize}
+        \item Submit a single figure with a plot showing the output vs. input data and the linear regression line from both amplifier circuits, which should include:
+        \begin{itemize}
+            \item Output vs. Input data from the LM358 op-amp circuit, including saturation (Top Plot). 
+            \begin{itemize}
+                \item Using the ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 90}.
+                \item Linear regression line for the linear portion.
+            \end{itemize}
+            \item Output vs. Input data from the AD622 instrumentation amplifier circuit, including saturation (bottom plot).
+            \begin{itemize}
+                \item Using the ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 90}.
+                \item Linear regression line for the linear portion.
+            \end{itemize}
+        \end{itemize} 
+        \item The plot should be 6'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Include legend of all different sampling types.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Operational Amplifier Measurements''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+    \end{itemize}
+    \item \textbf{Answer All Questions in the Post-Lab Canvas Assignment}
+    \begin{itemize}
+        \item Compare your plots to the example plots shown in figure \ref{fig:samplePlot} to confirm that you have completed the assignment correctly. Note that your values will differ, but your formatting and annotation should match.
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=6.0in]{Firstname_Lastname_Exp06_Part1.png}
+    \caption{Sample plot for post-lab.}
+    \label{fig:samplePlot}
+\end{figure}
+
+\clearpage
+
+\section{Appendix}
+
+%
+\subsection{OP-AMP LM358}
+\label{sec:LM358}
+The LM358 DIP (dual in-line package) actually includes two internal operational amplifiers. For this experiment, you will be using only 1 side (A or B) of the chip.  A connection diagram is given in Figure  \ref{fig:SchematicLM358}. To determine which side is A and which is B, locate the half-circle indentation on the top of the chip and match it to the diagram. The chip must be powered by an external $\pm$12 or $\pm$15 Volt external power supply (for this lab, we will use the powered breadboard or similar). The +15 Volt source should be connected to the V+ pin, and the -15 Volt source should be connected to the GND pin. Please note that the GND pin should not be connected to the signal ground! Make sure, however, that the ground from the input signal is connected to the ground from the powered breadboard, and that you measure the output voltage from pin 1 or pin 7 (depending on which side you use) to the common ground (not the GND pin!). A detailed datasheet for the LM358N can be found at: \href{https://www.sparkfun.com/datasheets/Components/General/LM358.pdf}{Sparkfun website}.
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=6.00in]{LM358.png}
+\caption{Connection diagram and package outline for the LM358 operational amplifier.}
+\label{fig:SchematicLM358}
+\end{figure}
+
+\clearpage
+\subsection{Instrument amplifier AD-622}
+\label{sec:instrument}
+The AD622 DIP (dual in-line package) contains several operational amplifiers arranged in an instrumentation amplifier circuit utilizing precision resistors in order to improve the accuracy of the gain and to reduce uncertainty.  A connection diagram is shown in Figure \ref{fig:SchematicAD622}.  Refer to the datasheet below for determining how to change the gain through the external resistor $R_G$ The AD622 datasheet can be found at:  \href{http://www.analog.com/static/imported-files/data_sheets/AD622.pdf}{AD622 Webpage}.
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=3.00in]{AD622.png}
+\caption{Connection diagram and package outline for the AD622 instrumentation amplifier.}
+\label{fig:SchematicAD622}
+\end{figure}
+
+The AD622 gain is resistor programmed by RG or, more precisely, by whatever impedance appears between Pin 1 and Pin 8. The AD622 is designed to offer gains as close as possible to popular integer values using standard 1\% resistors. Figure \ref{fig:TableAD622} shows required values of RG for various gains. Note that for
+G = 1, the RG pins are unconnected (RG = $\infty$). For any arbitrary gain, RG can be calculated by using the formula
+\begin{equation}
+R_G = \frac{50.5k\Omega}{G-1}
+\end{equation}
+To minimize gain error, avoid high parasitic resistance in series with $R_G$. To minimize gain drift, RG should have a low temperature coefficient less than 10 ppm/$^o$C for the best performance.
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=4.00in]{AD622Table.png}
+\caption{Required Values of Gain Resistor.}
+\label{fig:TableAD622}
+\end{figure}
+
+\end{document} 

@@ -1,0 +1,310 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} % 'openany' here removes the gap page between days, erase it to restore this gap; 'oneside' can also be added to remove the shift that odd pages have to the right for easier reading
+
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
+\section{Learning objective}
+The objectives of this experiment are to provide the student with an opportunity to:
+
+\begin{enumerate}
+    \item Learn about using strain gauges with a Wheatstone bridge
+    \item Learn about the uncertainty propagation and analysis
+    \item Learn about using an instrumentation amplifier
+\end{enumerate}
+
+\section{Required Equipment}
+\begin{multicols}{2}
+    \begin{enumerate}
+        \item Cantilevered beam with mounted strain gauges.
+        \item AD622 Instrumentation Amp
+        \item Powered Breadboard \& $\pm$ 15 Volt source
+        \item Table-top Digital Multi-Meter
+        \item Wire \& Resistor Kits
+        \item Screw Driver, Pliers, Wire Stripper
+        \item Precision Matched Resistors (350 $\Omega$)
+        \item Calipers
+        \item Measuring Tape
+        \item Weight Set
+    \end{enumerate}
+\end{multicols}
+
+\section{Introduction}
+Measurement of strain is a fundamental tool used by engineers in both research and design. Strain measurements are often used in systems where force or pressure measurements are required. In some applications the strain (and associated stress) of a part can only be determined by measurement, as calculation is either too complicated or not accurate enough. In this experiment, you will learn to use a metallic strain gauge to measure strain in an end-loaded cantilevered beam. Simultaneously, you will calculate the stress due to bending caused by the end load. You will use these values to calculate a stress value. Finally, your stress and strain plot will be used to determine the modulus of elasticity (or Young’s modulus) of the beam. \\
+
+\section{Objectives}
+\begin{itemize}
+    \item Assemble a \textbf{Wheatstone half bridge} circuit to measure a signal from two strain gauges affixed to a cantilevered beam.
+    \item Collect enough strain and loading data to perform a linear regression to estimate Young’s modulus, E, of the cantilevered beam. Compare the experimental value with published values.
+\end{itemize}
+
+\begin{figure}[!h]
+    \includegraphics[width=6.5in]{Schematic.PNG}
+    \caption{End loaded cantilever beam with two bonded strain gauges.}
+    \label{fig:01}
+\end{figure}
+
+\clearpage
+\textbf{{\LARGE Parts 1-4 first week, Parts 5-6 second week}}
+
+\section{Laboratory instruction}
+
+\subsection{Part 1: Build and Test a Half Arm Wheatstone Bridge Circuit}
+
+\begin{enumerate}
+    \item On the breadboard:
+    \begin{itemize}
+        \item Build a half arm Wheatstone bridge circuit as shown in Figure \ref{fig:2}.
+        \item Use the two strain gauges mounted to the cantilevered beam as resistors R\#1 and R\#2.
+        \item Use matching precision resistors (350$\Omega$) for R\#3 and R\#4.
+    \end{itemize}  
+    \item Use a 102 $\Omega$ resistor to set AD622 amplifier gain to G $\approx$ 500.
+    \begin{itemize}
+        \item The outputs from the bridge are the inputs to the instrumentation amplifier. 
+        \item A gain of 500 will amplify the voltage to a range suitable for the multi-meter and data acquisition.
+        \item Connect the output of the instrumentation amplifier to the NI-MyDAQ.
+    \end{itemize}
+    \item Connect the excitation ground to the REF pin on the instrumentation amplifier (\ref{fig:2}).
+    \item Provide the amplifier and the bridge with a 5V excitation voltage from Ni MyDAQ (\ref{fig:2}). 
+    \item Use the DMM to measure the amplified output voltage, $V_{o}\times G$ , from the instrumentation amplifier to check that your experimental setup is working properly.
+\end{enumerate}
+
+\textbf{Q:} What extraneous effect does this Wheatstone bridge configuration compensate for?  \\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=5.5in]{Schematic7.png}
+    \caption{Two strain gauges mounted on a cantilevered beam and a half-arm Wheatstone bridge circuit.}
+    \label{fig:2}
+\end{figure}
+\newpage
+
+\subsection{Part 2: Preparing for analysis of the Strain and Stress Data.}
+\begin{enumerate}
+    \item Measure the beam using the following tools/dimensions:
+    \begin{itemize}
+        \item Use a tape measure to measure the distance between the center of the strain gauge and the point of loading, L. Note the resolution of the tape measure in meters.
+        \item Use a vernier caliper to measure the width of the beam, w. Note the resolution of the vernier caliper in meters.
+        \item Use a micrometer to measure the beam thickness, t. Note the resolution of the micrometer in meters.
+    \end{itemize} 
+    \item Determine local gravity using this \href{https://www.sensorsone.com/local-gravity-calculator/}{local gravity website}  (use the Latitude value of 46.7324 and the elevation of 2579 ft).
+    \item From solid mechanics we get the relationship $\sigma = My/I$. You will use this relationship for stress calculations. The stress equation, including all the measured variables, is provided in equation 4.
+    \begin{eqnarray}
+    \sigma &=& \frac{M y}{I}, \\
+      &=& \frac{P L (t/2)}{w t^3 / 12}, \\
+      &=& \frac{6PL}{wt^3}, \textrm{and} \\
+      &=& \frac{6mgL}{wt^2}.
+    \end{eqnarray}
+    \item The measured strain, $\varepsilon $, may be found from the half-bridge Wheatstone  circuit
+    \begin{eqnarray}
+    \frac{\delta V_o}{V_i  G} &=& \frac{GF \varepsilon }{2},\\
+    \varepsilon  &=& 2 \frac{\delta V_o}{V_i G} \times \frac{1}{GF}
+    \end{eqnarray}
+    where $V_i$ is excitation voltage, $GF$ = 2.012 is the gauge factor, $G$ is the instrumentation amplifier gain, and $\delta V_o$ is the change in output voltage from loaded to unloaded condition. 
+\end{enumerate}
+
+\textbf{Q:} What is hysteresis, and how can you mitigate it while running experiments?  \\
+
+\subsection{Part 3: Take Load and Strain Data for the Cantilevered Beam}
+\begin{enumerate}
+    \item Update the MATLAB code, \boldpurp{MATLAB\_Data\_Acquisition.m}, with the instructions provided in this section.
+    \item Collect the single-channel voltage output from (``AI0").
+    \begin{itemize}
+        \item Duration: 10 seconds
+        \item Sample rate: 50 samples per second
+    \end{itemize}
+    \item Set up data acquisition for single channels of DAQ system.
+    \begin{itemize}
+        \item ``AI0": output from the instrumentation amplifier
+    \end{itemize}
+    \begin{enumerate}[label=\alph*.]
+        \item Running your program:
+        \begin{itemize}
+            \item Save a data file using this naming convention: \boldpurp{Mass\#\#\_@@.csv}
+            \item Change \#\# to the current mass in kilogram.
+            \item Change @@ to either loaded or unloaded
+            \begin{itemize}
+                \item Loaded scenarios have the weight included during the measurements.
+                \item Unloaded at measured before and after loaded scenarios when the weight is removed.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+    \item Record the average voltage value in the table provided (Table \ref{tab:data}).
+    \item Method of measuring strain data for each weight, example for 0.4 kg:
+    \begin{enumerate}
+        \item Record voltage measurement for unloaded scenario($[V_{i,1}]_{avg}$.)
+        \item Load 0.4 kg weight, record voltage measurement for loaded scenario ($[V_{i,2}]_{avg}$.)
+        \item Record a second voltage measurement for unloaded scenario ($[V_{i,3}]_{avg}$.)
+        \begin{itemize}
+            \item Your 2nd column should have two unloaded voltage values.
+        \end{itemize}
+        \item Subtract the unloaded from loaded: $G\delta V_{o,1}=[V_{i,2}]_{avg} -[V_{i,1}]_{avg}$ and $G\delta V_{o,2}=[V_{i,2}]_{avg} -[V_{i,3}]_{avg}$.
+        \begin{itemize}
+            \item Your 3rd column should have two $G\delta V_o$ values.
+        \end{itemize}
+        \item Average the two values: $[G\delta V_o]_{avg}=\frac{G\delta V_{o,1}+G\delta V_{o,2}}{2}$
+    \end{enumerate}
+    \item Repeat the process for the remaining weights.
+    \item NOTE: Make sure \textbf{not to touch} the wires in your setup since the gain of 500 will make it sensitive to any changes. 
+    \item NOTE: $[G \delta V_o]_{avg}$ should not be modified. Since $V_o$ is amplified and $G$ is included for clarity. In equation \ref{fig:ErrEq} $V_o$ is expressed without $G$ to ensure the user does not include $G$ in the error propagation $V_o$ but $V_o$ should still remain unchanged.
+\end{enumerate}
+
+\begin{table}[H]
+    \Large
+    \caption{Table to record your experimental data.}
+    \centering
+    \begin{tabular}{c|c|p{2cm}|p{2cm}|c|c| p{1.5cm}|p{2cm}|}
+    \toprule \toprule
+    &Mass (kg) & Loaded voltage (v) & Unloaded voltage (v) & $G \delta V_o$ & $[G \delta V_o]_{avg}$ & $\varepsilon$ \newline\small{[Use Eq.6]}& $\sigma$ (GPa)  \small{[Use Eq.4]}\\ \hline
+    1&0.0 & & & & &  & \\ \hline
+    \multirow{2}{*}{2}& 0.4 & & & & & & \\ \cline{4-5}
+                              & 0.4 & & & & & & \\ \hline
+    \multirow{2}{*}{3}&0.6 & & & & & & \\ \cline{4-5}
+                              &0.6 & & & & & & \\ \hline
+    \multirow{2}{*}{4}&0.8 & & & & & & \\ \cline{4-5}
+                              &0.8 & & & & & &\\ \hline
+    \multirow{2}{*}{5}&1.0 & & & & & &\\ \cline{4-5}
+                              &1.0 & & & & & &\\ \hline
+    \multirow{2}{*}{6}&1.2 & & & & & &\\ \cline{4-5}
+                              &1.2 & & & & & & \\ \hline
+    \multirow{2}{*}{7}&1.4 & & & & & & \\ \cline{4-5}
+                              &1.4 & & & & & &\\ \hline
+    \multirow{2}{*}{8}&1.6 & & & & & &\\ \cline{4-5}
+                               &1.6 & & & & & &\\ \hline
+    \multirow{2}{*}{9}&1.8 & & & & & &\\ \cline{4-5}
+                              &1.8 & & & & & &\\ \hline
+    \multirow{2}{*}{10}&2.0 & & & & & & \\ \cline{4-5}
+                                &2.0 & & & & & &\\ \bottomrule \bottomrule
+    \end{tabular}
+    \label{tab:data}
+\end{table}
+
+\subsection{Part 4: Perform linear regression of stress vs strain to estimate Young’s modulus of the beam.}
+\begin{enumerate}
+    \item Use the provided MATLAB code (\boldpurp{StrainStressPlot.m}) to obtain the for curve fitting.
+    \item The code calculates the stress and strain for all data points and can be used to fill in your table. 
+    \item Using polyfit in MATLAB to perform a linear regression. The slope of the stress vs. strain plot is Young’s modulus.
+\end{enumerate}
+
+\textbf{Q:} What is the range of Young's modulus for published steel values?  Does your result make sense compared to published values?\\
+
+\clearpage
+{\LARGE Parts 5-6 (Second Week)}
+
+\subsection{Part 5: Collect uncertainties for each variable used to determine Young’s Modulus.}
+\begin{enumerate}
+    \item Determine the uncertainty for each variable used to calculate stress and strain in the experiment. Complete the 1st two rows in Table \ref{tab:ErrorPropagation}. For those measurements performed in the lab (e.g., L , w , t ), estimate the uncertainty. For the measurement equipment, refer to the manufacturer’s online datasheets.
+    \item Perform this analysis for three different masses $m$ = 0.4 kg, 1.0 kg, and 1.4 kg.
+    \item Use 1\% uncertainty in the mass
+    \item Use 0.001\% uncertainty in acceleration due to gravity
+    \item Use 1\% uncertainty in the $GF$
+    \item For uncertainty in the op-amp gain ($G$): use the propagation of error approach, with only the source of uncertainty being from the resistance used to set the gain on the instrumentation amplifier.
+    \item Uncertainty in the excitation voltage ($V_i$) is the resolution of the measurement system used
+    \item Uncertainty in $[G \delta V_o]_{avg}$: Uncertainty from resolution of the data acquisition system and zero-order uncertainty.
+\end{enumerate}
+
+\begin{table}[H]
+\caption{Table to calculate uncertainty in Young's modulus using error propagation approach. Fill in the separate tables for m = 0.4, 1.0, and 1.4 kg.}
+\label{tab:ErrorPropagation}
+\large
+\begin{tabular}{|p{5cm}| p{1cm}| p{1.1cm}| p{1cm}| p{1cm}| p{1cm}|p{1cm}| p{1cm}| p{1cm}| p{1.5cm}|}
+\toprule \toprule
+												& m (kg)   & g ($m/s^2$) & L(m) & t(m) & w(m)& GF & G  & $V_i$ (v) & $[G\delta V_o]_{avg}$ (v) \\ \toprule
+Variable mean value   							 &     0.4 &             &      &      &     &    &    &           &                \\ \hline
+Variable uncertainty                            &         &             &      &      &     &    &    &           &                \\ \hline
+Uncertainty propagated to Young's modulus (GPa) &         &             &      &      &     &    &    &           &                \\ \bottomrule
+Total uncertainty in Young's modulus (GPa)      & \multicolumn{8}{c}{}   & \\ \bottomrule \bottomrule
+\end{tabular}
+
+\vspace{0.2in}
+\begin{tabular}{|p{5cm}| p{1cm}| p{1.1cm}| p{1cm}| p{1cm}| p{1cm}|p{1cm}| p{1cm}| p{1cm}| p{1.5cm}|}
+\toprule \toprule
+												& m (kg)   & g ($m/s^2$) & L(m) & t(m) & w(m)& GF & G  & $V_i$ (v) & $[G\delta V_o]_{avg}$ (v) \\ \toprule
+Variable mean value   							 &     1.0 &             &      &      &     &    &    &           &                \\ \hline
+Vairable uncertainty                            &         &             &      &      &     &    &    &           &                \\ \hline
+Uncertainty propagated to Young's modulus (GPa) &         &             &      &      &     &    &    &           &                \\ \bottomrule
+Total uncertainty in Young's modulus (GPa)      & \multicolumn{8}{c}{}   & \\ \bottomrule \bottomrule
+\end{tabular}
+
+\vspace{0.2in}
+\begin{tabular}{|p{5cm}| p{1cm}| p{1.1cm}| p{1cm}| p{1cm}| p{1cm}|p{1cm}| p{1cm}| p{1cm}| p{1.5cm}|}
+\toprule \toprule
+												& m (kg)   & g ($m/s^2$) & L(m) & t(m) & w(m)& GF & G  & $V_i$ (v) & $[G\delta V_o]_{avg}$ (v) \\ \toprule
+Variable mean value   							 &     1.4 &             &      &      &     &    &    &           &                \\ \hline
+Vairable uncertainty                            &         &             &      &      &     &    &    &           &                \\ \hline
+Uncertainty propagated to Young's modulus (GPa) &         &             &      &      &     &    &    &           &                \\ \bottomrule
+Total uncertainty in Young's modulus (GPa)      & \multicolumn{8}{c}{}   & \\ \bottomrule \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Part 6: Compare  uncertainty analysis from two approaches}
+\begin{itemize}
+\item To estimate uncertainty in Young’s Modulus, you will use two approaches and compare results
+\begin{enumerate}
+\item Propagation of error
+Use the equation  \ref{fig:ErrEq}.
+\begin{equation}
+E = \frac{3mgLV_{i}G (GF)}{wt^2 \delta V_{o}}.
+\label{fig:ErrEq}
+\end{equation}
+\item Error from curve fit. The standard error of the slope can be found according to:
+\begin{equation}
+s_{a1} = s_{yx} \sqrt{ \frac{1}{\Sigma_{i=1}^{N} (x_i - \overline{x})^2}},
+\end{equation}
+where $s_{yx}$ is the standard error of the fit.
+\end{enumerate}
+\end{itemize}
+
+\textbf{Q:} In error propagation, which variables/uncertainties caused the most uncertainty in Young’s modulus? Knowing this, how could the certainty of your results be improved?\\
+
+\textbf{Q:} How do your error propagation and curve fit error results compare to each other? What might explain any differences?\\
+
+%Return lab space to prior condition
+%\begin{itemize}
+%\item Turn off the power supply.
+%\item Remove wires connecting the power supply to the breadboard and return to the wall
+%\item Remove all breadboard wires and place them back in the wire kit in an organized fashion.
+%\item Remove the connecting wires from the breadboard and set aside.
+%\item Log off the computer.
+%\item Make sure to copy the data to your harddrive.
+%\item {\bf Do this for every lab!}
+%\end{itemize}
+
+
+\section{Post-Laboratory}
+For this experiment, submit the following items on Canvas for your post-laboratory assignments.
+
+Week 1:
+\begin{enumerate}
+    \item Stress vs. Strain plot with linear regression. 
+    \begin{itemize}
+        \item Submit a single pdf figure with stress (in GPa) plotted vs strain.
+        \begin{itemize}
+            \item Using the ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 90}.
+        \end{itemize}
+        \item Include the linear regression line, of which the slope is Young’s modulus.
+        \item Use the text command to place your experimentally determined value (in GPa) for Young’s modulus on the plot.
+        \item The plot should be 6'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Stress vs Strain''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+    \end{itemize}
+    \item A straindata\_CB.m file. Save the files with your initials on the end and submit it on Canvas. Use your initials, not mine!
+    \item Answer all questions in the post-lab assessment on Canvas.
+\end{enumerate}
+
+Week 2:
+\begin{enumerate}
+    \item Submit the pdf file with your table for all hand calculation uncertainty propagation.
+    \item Answer all questions in the post-lab assessment on Canvas.
+\end{enumerate}
+
+%{\bf Post-Laboratory Report} \\
+%This experiment will be the subject of the 2nd of 3 Formal Reports. For this second report, start with the report draft/outline posted on Canvas.
+
+\end{document} 

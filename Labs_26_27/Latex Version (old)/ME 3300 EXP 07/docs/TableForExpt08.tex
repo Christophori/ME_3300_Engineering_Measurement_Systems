@@ -1,0 +1,59 @@
+\documentclass[12pt,a4paper,landscape]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{booktabs} % Required for the top and bottom rules in the table
+\usepackage{float} % Required for specifying the exact location of a figure or table
+\usepackage{wrapfig}
+\usepackage{multirow}
+\author{Dr. Vibhav Durgesh}
+\title{Table for experiment-8}
+\begin{document}
+Name: \underline{\hspace{2in}}\hfill Date: \underline{\hspace{1.0in}}\\
+
+\vspace{0.2in}
+Use the following equation for uncertainty calculations.
+\begin{equation*}
+E = \frac{3mgLV_{i}G (GF)}{wt^2 \delta V_{o}}.
+\label{fig:ErrEq}
+\end{equation*}
+See the experimental handout for variable description. Show all your derivations and hand calculations here for one selected weight.
+\begin{table}[!ht]
+\caption{Table to calculate uncertainty in Youngs modulus (E) using error propagation approach. Fill in the separate tables for m = 0.5, 1.0, and 1.5 kg.}
+\label{tab:ErrorPropagation}
+\large
+\begin{tabular}{|p{8cm}| p{1.5cm}| p{1.6cm}| p{1.5cm}| p{1.5cm}| p{1.5cm}|p{1.5cm}| p{1.5cm}| p{1.5cm}| p{1.75cm}|}
+\toprule \toprule
+												& m (kg)   & g ($m/s^2$) & L(m) & t(m) & w(m)& GF & G  & $V_i$ (v) & $[\delta V_o]_{avg}$ (v) \\ \toprule
+Variable mean value   							 &     0.5 &             &      &      &     &    &    &           &                \\ \hline
+Vairable uncertainty                            &         &             &      &      &     &    &    &           &                \\ \hline
+Uncertainty propagated to E (GPa) &         &             &      &      &     &    &    &           &                \\ \bottomrule 
+Total uncertainty in E (GPa)      & \multicolumn{8}{c}{}   & \\ \bottomrule \bottomrule             
+\end{tabular} 
+
+\vspace{0.2in}
+\begin{tabular}{|p{8cm}| p{1.5cm}| p{1.6cm}| p{1.5cm}| p{1.5cm}| p{1.5cm}|p{1.5cm}| p{1.5cm}| p{1.5cm}| p{1.75cm}|}
+\toprule \toprule
+												& m (kg)   & g ($m/s^2$) & L(m) & t(m) & w(m)& GF & G  & $V_i$ (v) & $[\delta V_o]_{avg}$ (v) \\ \toprule
+Variable mean value   							 &     1.0 &             &      &      &     &    &    &           &                \\ \hline
+Vairable uncertainty                            &         &             &      &      &     &    &    &           &                \\ \hline
+Uncertainty propagated to E (GPa) &         &             &      &      &     &    &    &           &                \\ \bottomrule 
+Total uncertainty in E (GPa)      & \multicolumn{8}{c}{}   & \\ \bottomrule \bottomrule             
+\end{tabular} 
+
+\vspace{0.2in}
+\begin{tabular}{|p{8cm}| p{1.5cm}| p{1.6cm}| p{1.5cm}| p{1.5cm}| p{1.5cm}|p{1.5cm}| p{1.5cm}| p{1.5cm}| p{1.75cm}|}
+\toprule \toprule
+												& m (kg)   & g ($m/s^2$) & L(m) & t(m) & w(m)& GF & G  & $V_i$ (v) & $[\delta V_o]_{avg}$ (v) \\ \toprule
+Variable mean value   							 &     1.5 &             &      &      &     &    &    &           &                \\ \hline
+Vairable uncertainty                            &         &             &      &      &     &    &    &           &                \\ \hline
+Uncertainty propagated to E (GPa) &         &             &      &      &     &    &    &           &                \\ \bottomrule 
+Total uncertainty in E (GPa)      & \multicolumn{8}{c}{}   & \\ \bottomrule \bottomrule             
+\end{tabular} 
+\end{table}
+
+
+\end{document}

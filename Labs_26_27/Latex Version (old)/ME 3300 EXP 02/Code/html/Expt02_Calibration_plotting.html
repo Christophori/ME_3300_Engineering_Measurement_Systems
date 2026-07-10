@@ -1,0 +1,178 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Expt02_Calibration_plotting</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-08-11"><meta name="DC.source" content="Expt02_Calibration_plotting.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">User have to manually add information- change x, y, and t_nuP values as required.</a></li><li><a href="#3">End of user information</a></li><li><a href="#4">Generating figure with specific size</a></li><li><a href="#5">Adding 95% confidence level lines in the plot</a></li><li><a href="#6">Adding legend and title</a></li><li><a href="#7">Adding text with relevant curvefitting information</a></li><li><a href="#8">Saving the files in png and pdf format</a></li></ul></div><pre class="codeinput"><span class="comment">% This is a generic program to generate calibration plot and provide slope</span>
+<span class="comment">% and intercept data; This code can be used for calibration for other</span>
+<span class="comment">% experiments too.</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Date: August 5th, 2020</span>
+<span class="comment">% Dr. Vibhav Durgesh</span>
+<span class="comment">% Rev 0.0</span>
+<span class="comment">% This is a basic program to demonstrate the use of polyfit command and</span>
+<span class="comment">% calculate norm and standard error of fit.</span>
+<span class="comment">% User has to provide appropriate information - see beginning of code</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+clear <span class="string">all</span>
+close <span class="string">all</span>
+clc
+</pre><h2 id="2">User have to manually add information- change x, y, and t_nuP values as required.</h2><pre class="codeinput">x = [3.8005 3.5127 3.2527 2.9704 2.6897 2.5767 2.465 2.206 1.9007 1.6289 1.3384]; <span class="comment">%Voltage Data</span>
+y = [-90 -70 -50 -30 -10 0 10 30 50 70 90]; <span class="comment">%Angular Location of Pendulum</span>
+t_nuP= 2.262; <span class="comment">%Value read from t-student's table</span>
+plotTitle = <span class="string">'Student''s Name calibration Plot'</span>;
+</pre><h2 id="3">End of user information</h2><pre class="codeinput">[p,s] = polyfit (x,y,1); <span class="comment">% Curve fitting with 1st order fit</span>
+xfit = x;<span class="comment">% Generating x-data for curve fitting</span>
+yfit = polyval(p,xfit);
+nu = s.df; <span class="comment">% Getting degree of freedom for the curve fit</span>
+norm = s.normr; <span class="comment">% Getting the norm of the curve fitting</span>
+syx = norm/sqrt(nu);
+</pre><h2 id="4">Generating figure with specific size</h2><pre class="codeinput">figure(1)
+set(gcf,<span class="string">'unit'</span>,<span class="string">'inches'</span>,<span class="string">'position'</span>,[0.50 0.50 6.50 3.50],<span class="keyword">...</span>
+    <span class="string">'defaultaxesfontsize'</span>,10,<span class="string">'defaultaxesfontname'</span>,<span class="string">'times'</span>);
+<span class="comment">% Plotting data</span>
+plot(xfit,yfit,<span class="string">'b-'</span>,<span class="string">'linewidth'</span>,2);hold <span class="string">on</span>
+plot(x,y,<span class="string">'ro'</span>,<span class="string">'markersize'</span>,9,<span class="string">'markerfacecolor'</span>,<span class="string">'r'</span>)
+xlabel(<span class="string">'Volts (v)'</span>)
+ylabel(<span class="string">'Angle (^{o})'</span>)
+</pre><img vspace="5" hspace="5" src="Expt02_Calibration_plotting_01.png" alt=""> <h2 id="5">Adding 95% confidence level lines in the plot</h2><pre class="codeinput">y_cl_low = yfit - t_nuP*syx; <span class="comment">% Using regression analysis</span>
+y_cl_up  = yfit + t_nuP*syx;
+plot(xfit,y_cl_low,<span class="string">'--'</span>,<span class="string">'color'</span>,[0.2 0.2 0.2], <span class="string">'HandleVisibility'</span>,<span class="string">'off'</span>);
+plot(xfit,y_cl_up,<span class="string">'--'</span>,<span class="string">'color'</span>,[0.2 0.2 0.2]);
+</pre><img vspace="5" hspace="5" src="Expt02_Calibration_plotting_02.png" alt=""> <h2 id="6">Adding legend and title</h2><pre class="codeinput">legend(<span class="string">'Curve fit'</span>,<span class="string">'Expt. data'</span>,<span class="string">'95% Cl range'</span>,<span class="string">'location'</span>,<span class="string">'Northeast'</span>)
+title(plotTitle)
+</pre><img vspace="5" hspace="5" src="Expt02_Calibration_plotting_03.png" alt=""> <h2 id="7">Adding text with relevant curvefitting information</h2><pre class="codeinput">text(3,10,sprintf(<span class="string">'y = %3.4fx+%3.4f'</span>,p(1),p(2)),<span class="string">'Fontname'</span>,<span class="string">'times'</span>)
+text(3,0,sprintf(<span class="string">'Norm = %3.4f'</span>,s.normr),<span class="string">'Fontname'</span>,<span class="string">'times'</span>)
+text(3,-10,sprintf(<span class="string">'s_{yx} = %3.4f'</span>,syx),<span class="string">'Fontname'</span>,<span class="string">'times'</span>)
+</pre><img vspace="5" hspace="5" src="Expt02_Calibration_plotting_04.png" alt=""> <h2 id="8">Saving the files in png and pdf format</h2><pre class="codeinput">figName = [<span class="string">'../Figures/Student_Name_Exp02_Part1'</span>];
+set(gcf,<span class="string">'PaperPositionMode'</span>,<span class="string">'auto'</span>)
+print(figName,<span class="string">'-dpng'</span>,<span class="string">'-r600'</span>)
+set(gcf,<span class="string">'PaperUnits'</span>,<span class="string">'inches'</span>,<span class="string">'Units'</span>,<span class="string">'inches'</span>);
+figpos = get(gcf,<span class="string">'Position'</span>);
+set(gcf,<span class="string">'Papersize'</span>,figpos(3:4),<span class="string">'Units'</span>,<span class="string">'inches'</span>);
+print(figName,<span class="string">'-dpdf'</span>,<span class="string">'-r600'</span>)
+</pre><img vspace="5" hspace="5" src="Expt02_Calibration_plotting_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% This is a generic program to generate calibration plot and provide slope
+% and intercept data; This code can be used for calibration for other
+% experiments too.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Date: August 5th, 2020
+% Dr. Vibhav Durgesh
+% Rev 0.0
+% This is a basic program to demonstrate the use of polyfit command and
+% calculate norm and standard error of fit.
+% User has to provide appropriate information - see beginning of code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clear all
+close all
+clc
+
+%% User have to manually add information- change x, y, and t_nuP values as required.
+x = [3.8005 3.5127 3.2527 2.9704 2.6897 2.5767 2.465 2.206 1.9007 1.6289 1.3384]; %Voltage Data
+y = [-90 -70 -50 -30 -10 0 10 30 50 70 90]; %Angular Location of Pendulum
+t_nuP= 2.262; %Value read from t-student's table
+plotTitle = 'Student''s Name calibration Plot';
+%% End of user information
+[p,s] = polyfit (x,y,1); % Curve fitting with 1st order fit
+xfit = x;% Generating x-data for curve fitting
+yfit = polyval(p,xfit);
+nu = s.df; % Getting degree of freedom for the curve fit 
+norm = s.normr; % Getting the norm of the curve fitting
+syx = norm/sqrt(nu);
+%% Generating figure with specific size
+figure(1)
+set(gcf,'unit','inches','position',[0.50 0.50 6.50 3.50],...
+    'defaultaxesfontsize',10,'defaultaxesfontname','times');
+% Plotting data
+plot(xfit,yfit,'b-','linewidth',2);hold on
+plot(x,y,'ro','markersize',9,'markerfacecolor','r')
+xlabel('Volts (v)')
+ylabel('Angle (^{o})')
+%% Adding 95% confidence level lines in the plot
+y_cl_low = yfit - t_nuP*syx; % Using regression analysis
+y_cl_up  = yfit + t_nuP*syx;
+plot(xfit,y_cl_low,'REPLACE_WITH_DASH_DASH','color',[0.2 0.2 0.2], 'HandleVisibility','off');
+plot(xfit,y_cl_up,'REPLACE_WITH_DASH_DASH','color',[0.2 0.2 0.2]);
+%% Adding legend and title
+legend('Curve fit','Expt. data','95% Cl range','location','Northeast')
+title(plotTitle)
+%% Adding text with relevant curvefitting information
+text(3,10,sprintf('y = %3.4fx+%3.4f',p(1),p(2)),'Fontname','times')
+text(3,0,sprintf('Norm = %3.4f',s.normr),'Fontname','times')
+text(3,-10,sprintf('s_{yx} = %3.4f',syx),'Fontname','times')
+%% Saving the files in png and pdf format
+figName = ['../Figures/Student_Name_Exp02_Part1'];
+set(gcf,'PaperPositionMode','auto')
+print(figName,'-dpng','-r600')
+set(gcf,'PaperUnits','inches','Units','inches');
+figpos = get(gcf,'Position');
+set(gcf,'Papersize',figpos(3:4),'Units','inches');
+print(figName,'-dpdf','-r600')
+##### SOURCE END #####
+--></body></html>

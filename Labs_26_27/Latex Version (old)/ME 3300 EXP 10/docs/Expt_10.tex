@@ -1,0 +1,224 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} % 'openany' here removes the gap page between days, erase it to restore this gap; 'oneside' can also be added to remove the shift that odd pages have to the right for easier reading
+
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+
+
+\section{Learning objective}
+The objectives of this experiment are to provide the student with an opportunity to:
+\begin{itemize}
+    \item Design, build, and test an active inverting low-pass filter circuit using a generic operational amplifier chip
+    \item Test the frequency response of the low-pass filter and compare to the theoretical equations.
+\end{itemize}
+
+\section{Required Equipment}
+\begin{multicols}{2}
+\begin{enumerate}
+    \item LM358AN Op-Amp
+    \item Powered breadboard
+    \item Digital Multi-meter
+    \item Wire kit and resistor kits
+    \item Screwdriver, pliers, wire stripper
+\end{enumerate}
+\end{multicols}
+
+\section{Introduction}
+In this experiment, you will construct and test an active, inverting low-pass filter circuit. With the circuit complete and properly functioning, you will test the output from the circuit for various input frequencies using the function generator. At each test frequency, you will record the low-pass filter circuit's magnitude ratio and time delay. In your laboratory notebooks, draw the circuit for the experiment and record the steps involved for the experiment. Ensure you include all the details, as you will need them for the post-laboratory assignment. Figure \ref{LowPassFilter} shows an active, inverting low-pass filter.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3in]{LowPassFilter.png}
+  \caption{Schematic of an active inverting low-pass filter circuit}\label{LowPassFilter}
+\end{figure}
+
+The magnitude ratio for a first-order system subjected to a simple period input is:
+\begin{equation}\label{Eq1}
+  M(\omega)=\frac{B}{KA}=\frac{1}{\sqrt{1+(\omega \tau)^2}},
+\end{equation}
+where $\tau$ is the time constant of your system(derived as $R_{2}C$). The phase shift is given by:
+
+\begin{equation}\label{Eq2}
+  \phi(\omega) = \beta_{1}\omega = -tan^{-1}(\omega \tau),
+\end{equation}
+where $\beta_{1}$ is the time delay in seconds.
+It is normal practice to design filters to attenuate signals around -3dB $(M(\omega)=\frac{1}{\sqrt{2}})$ for input signals at the cutoff frequency, $f_{c}$, of the active low-pass filter circuit. In this experiment, we will use $R_{1}=R_{2}=5M\Omega$ and $C=0.05\mu F$ for our resistors and capacitor respectively. The cutoff frequency for this circuit is determined as: 
+\begin{equation}\label{Eq3}
+  f_{c}=\frac{1}{2\pi R_{2}C}.
+\end{equation}
+
+\textbf{Q:} If you doubled the capacitance, what would be the effect on the cutoff frequency?
+
+\textbf{Q:} What role does the op-amp play in this low-pass filter compared to a simple RC filter?
+
+\clearpage
+\section{Laboratory instruction}
+
+\subsection{Part 1: Experimental circuit set up}
+
+\begin{enumerate}
+    \item Setup an active inverting low-pass filter circuit as shown in Fig. \ref{LowPassFilter} \& \ref{SampleCircuit} with a gain of G=1 on the breadboard. 
+    \begin{itemize}
+        \item Use $R_{1}=R_{2}=5M\Omega$ and $C=0.05\mu F$.
+        \item Measure the resistances and capacitance with the digital multimeter.
+        \item Reference figure \ref{SampleCircuit} to create circuit.
+    \end{itemize}
+    \item Calculate and record the filter cut-off frequency.
+    \item Calculate and record the static gain, \textit{K}, of the system (Note: Since your 2 resistors will not be exactly equal gain G won't exactly equal 1).
+    \item Reference the LM358 datasheet to recall how to connect the LM358 chip properly.
+    \item Use the breadboard power supply to provide +15V and -15V to the LM358 at the V+ and GND pins. (Note: the GND pin on the LM358 amplifier is not the signal ground).
+    \item The ground from the powered breadboard (\& DC power supply) should be connected to both the input ground (from the DC power supply) and the output ground from the op-amp circuit (the GND pin on the LM358 amplifier is not the signal ground).
+    \item Construct your circuit on the breadboard in a neat and organized manner.
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=0.55\textheight]{Lab10_Schematic2.png}
+  \caption{Active inverting low-pass circuit.}
+  \label{SampleCircuit}
+\end{figure}
+
+\subsection{Part 2: Test the frequency response of the low pass filter}
+\begin{enumerate}   
+    \item The DAQ's ``out" channel will be used to create signals you will provide to the input of the low-pass filter circuit. 
+    \item To record both the original and the filtered signal, you will also connect the ``out" channel to ``AI0", and the output from the low-pass filter circuit to ``AI1'' on the DAQ.
+    \item Check to see if the provided code has the following settings:
+    \begin{itemize}
+      \item Signal: Sine Wave
+      \item Offset: 2.5 VDC
+      \item Peak-to-Peak Voltage: 4 V
+      \item Frequency: 2000 mHz
+    \end{itemize}
+    \item Connect the input and output signal to the oscilloscope and observe the behavior of the input and output signal. 
+    \item Make sure to adjust divisions such that you observe 2-3 peaks in the oscilloscope display. 
+    \begin{itemize}
+        \item Check this before collecting data through the data acquisition device. 
+    \end{itemize}
+    \item Collect data for the following sine wave: 
+    \begin{itemize}
+        \item frequency 2000 mHz, 2.5VDC offset, \& $4V_{pp}$.
+        \item Make sure to capture 3-5 complete cycles by adjusting the time to acquire the data.
+    \end{itemize}   
+    \item Save your data file using this naming convention: \boldpurp{XXmHz.csv} where
+    \begin{itemize}
+        \item \texttt{XX} indicates the current frequency.
+    \end{itemize}
+    \item Collect the data for the following frequencies (with offset \& $4V_{pp}$ held constant): 
+    \begin{itemize}
+        \item 20, 40, 60, 80, 100, 200, 400, 600, 800, 1000, and 2000 mHz. 
+        \item Make sure to capture 3-5 complete cycles for each frequency. 
+        \item \textbf{Remember to save each data file as a different name!}
+        \item NOTE: For 2000 mHz, ensure the input and output do not have the same input and output frequency.
+        \item NOTE: For lower frequency, if the DAQ times out before it finishes, check to see if you have enough peaks to get the peak-to-peak of the input and output. If not, redo the current frequency.
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Q:} What visual differences should you expect to observe between the input and output waveforms as the input signal frequency increases?
+
+\subsection{Part 3: Generate table for frequency response of the low pass filter)}
+\begin{enumerate}
+    \item Starting at a very low frequency data file (20 mHz), open / plot the data and measure the following:
+    \begin{itemize}
+        \item Peak-to-Peak Input Voltage (A). This is the difference between the maximum value of your input and the minimum value of your input.
+        \item Peak-to-Peak Output Voltage (B). This is the difference between the maximum value of your output and the minimum value of your output.
+        \item Period of the Input Signal. This will be used to calculate the input frequency. The signal period can be determined by measuring the time between two successive peaks of the input signal. You can use the "Zoom" and "Data Cursor" tools in MATLAB's figure window to determine the location of consecutive peaks.
+        \item Time delay between input and output signals. This will be used to calculate the phase lag between input and output signals. The time delay can be determined by measuring the time between the successive zero crossings of the input and output signals. You will can use the "Zoom" tool to determine the location of each zero crossing.
+    \end{itemize}
+    \item Repeat the step above for the remaining data files: 40, 60, 80, 100, 200, 400, 600, 800, 1000, and 2000 mHz. Use Table \ref{Table1} as a reference.
+    \item Use this data to plot the magnitude ratio and phase shift for the filter as described in the next section. 
+    \item Evaluate your created plots and determine which additional data points (i.e., input frequencies) are needed to fill in your plots. Check with the lab proctor to see if you have enough data points. Depending on the corner frequency of your filter, the frequencies listed here may not be enough to create a complete plot!
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Response of the low pass filter at different frequencies.}
+\label{Table1}
+\begin{tabular}{|p{2.00cm}|p{2.00cm}|p{2.00cm}|p{2.00cm}|p{2.00cm}|p{2.00cm}|}
+\hline
+Frequency (mHz) & Peak-to-Peak Voltage (A) & Peak-to-Peak Voltage (B) & Period of Input Signal (s) & Time Delay (s)& M(f) \\ \hline
+10              &                          &                          &                            &              &  \\ \hline
+20              &                          &                          &                            &               & \\ \hline
+40              &                          &                          &                            &                &\\ \hline
+60              &                          &                          &                            &                &\\ \hline
+80              &                          &                          &                            &                &\\ \hline
+100             &                          &                          &                            &                &\\ \hline
+200             &                          &                          &                            &                &\\ \hline
+400             &                          &                          &                            &                &\\ \hline
+600             &                          &                          &                            &                &\\ \hline
+800             &                          &                          &                            &                &\\ \hline
+1000            &                          &                          &                            &                &\\ \hline
+2000            &                          &                          &                            &                &\\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Q:} If your measured magnitude ratio is greater than 1 at any frequency, what might that indicate about your setup or data?
+
+\subsection{Part 4: Plot Magnitude Ratio and Phase Shift response of the low pass filter}
+\begin{enumerate}
+  \item Calculate the experimental magnitude ratio. The magnitude ratio can be determined by measuring the input the output voltages (A and B in Part 3) of each signal and knowing the static gain, \textit{K}, of the system.
+  \item Plot magnitude ratio vs. frequency on a \textbf{log-log} graph using MATLAB. Plot these on the same figure as the theoretical relationship (you will need to create the data using the theoretical equation). See Eq \ref{Eq1}.
+  \item Plot phase lag (you will need to convert time delay to phase lag) vs. frequency on a \textbf{semi-log} graph using MATLAB. Plot these on the same figure as the theoretical relationship (you will need to create the data using the theoretical equation). See Eq. \ref{Eq2}
+   \item As needed, add additional data points to fill in the experimental vs. theoretical graphs for the Magnitude Ratio and Phase Lag plots. These will be the main outcomes for your post-laboratory assignment. Be sure to collect sufficient data to make robust statements about the relationship between theory and experimental results.
+\end{enumerate}
+
+\textbf{Q:} Compare the slope of the experimental curve beyond the cutoff to the theoretical -20 dB/decade slope. Is it consistent? Based on your plots, describe any likely sources of deviation between theory and the experimental results.
+
+\section{Post-Laboratory}
+For this experiment, submit the following items on Canvas for your post-laboratory assignment.
+\begin{enumerate}
+    \item \textbf{Magnitude Ratio Plot.} 
+    \begin{itemize}
+        \item Submit a single figure with both theoretical and experimental magnitude ratio plotted vs. frequency using a log-log scale.
+        \item The plot should be 3.5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Include legend of all different sampling types.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Magitude Ratio Plot''.
+        \end{itemize}
+        \item Use Fig. \ref{MagnitudeRatio} as a reference
+    \end{itemize}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=4.5in]{FirstName_LastName_Exp10_Part1}
+  \caption{Sample magnitude ratio plot}\label{MagnitudeRatio}
+\end{figure}
+    \item \textbf{Phase Shift Ratio Plot.}
+    \begin{itemize}
+        \item Submit a single figure with both theoretical and experimental phase lag plotted vs. frequency using a semi-log scale.
+        \item The plot should be 3.5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Include legend of all different sampling types.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Phase Shift Plot''.
+        \end{itemize}
+        \item Use Fig. \ref{PhaseLag} as a reference.
+    \end{itemize}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=4.5in]{FirstName_LastName_Exp10_Part2}
+  \caption{Sample phase lag plot}\label{PhaseLag}
+\end{figure}
+    \item Answer all questions in the post-lab assessment on Canvas.
+\end{enumerate}
+
+%\section{Appendix}
+
+%\subsection{Matlab program to acquire data for low-pass filter}
+%\label{app:mainDAQProgram}
+%\lstinputlisting{../Codes/mainAcqProgram_ForCollectingData_FA2020.m}
+
+%\clearpage
+%\subsection{Matlab program to open file}
+%\label{app:postLab}
+%\lstinputlisting{../Code/Lab10_OpenFile.m}
+%\clearpage
+%
+%\subsection{Matlab program to plot magnitude ratio and phase lag}
+%\lstinputlisting{../Codes/Lab10_PostLab.m}
+
+\end{document} 

@@ -1,0 +1,418 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} % 'openany' here removes the gap page between days, erase it to restore this gap; 'oneside' can also be added to remove the shift that odd pages have to the right for easier reading
+
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\section{Learning objective}
+The objectives of this experiment are to provide the student with an opportunity to:
+
+\begin{itemize}
+    \item Gain additional experience with Matlab.
+    \item Create a simple program for data acquisition using toolbox and National Instrument’s \href{https://www.ni.com/docs/en-US/bundle/mydaq-specs/page/specs.html}{NI-MyDAQ}.
+    \item Become familiar with breadboards, digital power supply, wiring, digital multi-meters, and other
+laboratory skills.
+    \item Perform calibration of a MEMS accelerometer and create the calibration plot.
+    \item Compare measured normal acceleration to acceleration calculated from angular velocity during fixed axis rotation.
+\end{itemize}
+
+\section{Required Equipment}
+\begin{multicols}{2}
+\begin{enumerate}
+    \item USB Data Acquisition Device (NI-MyDAQ)
+    \item Breadboard (MyDigital protoboard)
+    \item Pendulum with Potentiometer (10k$\Omega$ Bourns 6639s) and end-mounted accelerometer (MMA7361LC).
+    \item Needle-nose pliers \& wire strippers
+    \item Small flathead screwdriver
+    \item Digital multimeter (DMM)
+    \item Power supply and wire kit
+\end{enumerate}
+\end{multicols}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{Figures/Fig01.png}
+    \caption{Schematic of the experimental setup.}
+    \label{fig:PendulumDiagram}
+\end{figure}
+
+\section{Introduction}
+
+During rotation about a fixed axis, the normal acceleration of a point can be calculated from the angular velocity of the rotation motion according to the following formula:
+
+\begin{equation}
+a_{n} = -\dot{\theta}^2 r
+\label{Eq:NormAcc}
+\end{equation}
+
+\section{Laboratory instruction}
+In this experiment, you will build on your work from the previous week. In addition to measuring the pendulum angle with a calibrated potentiometer, you will also measure normal acceleration of the end of the pendulum using a MEMS accelerometer. The schematic is shown in figure \ref{fig:PendulumDiagram}. Start by setting up the NI MyDAQ to acquire data from the potentiometer and accelerometer. Next, you will calibrate the y-axis of the accelerometer. Finally, we will compare the measured normal acceleration of the pendulum end to the normal acceleration calculated from the derivative of the pendulum angle.
+
+\subsection{Data Acquisition with MATLAB’s Data Acquisition Toolbox}
+Utilize a similar MATLAB Data Acquisition Toolbox as experiment-02, but with the multichannel function activated. \boldpurp{MATLAB\_Data\_Acquisition.m}, is available on Canvas. The following instructions will guide you through preparing your own data acquisition programs.
+
+\section{Part 1: Prepare your MATLAB Program to Display and Record Data.}
+
+\begin{enumerate}
+    \item Launch MATLAB and prepare your code
+    \begin{itemize}
+        \item A main acquisition script \boldpurp{MATLAB\_Data\_Acquisition.m} is posted on canvas along with two supporting functions \boldpurp{plotdata2.m} \& \boldpurp{logData2.m}
+        \item Toggle ``inputChannels" between single channel and multiple channel to initially calibrate the accelerometer and then collect the potentiometer data from ``ai0" and accelerometer data from ``ai1".
+        \item You need to set the parameters for data acquisition in the main program. They are set near the top of the file.
+    \end{itemize} 
+    \item Set the value of Fs to set the sample rate (the number of samples to collect per second). 
+    \begin{itemize}
+        \item The MyDAQ can collect up to 200,000 samples per second, but this would produce a massive data file \& we don't need that much resolution to observe the pendulum swing. 
+        \item You will set this value differently for each part of the lab. Note what settings are best for different tasks. 
+        \item For the final data acquisition, set the sample rate to 1000 samples/sec. We will be calculating a discrete derivative of the pendulum angle, and a higher sample rate will reduce the noise from the process.
+        \item [\textbf{Q}] Why does a higher sample rate reduce the noise in the calculated derivative? Why does it increase the size of data files?
+    \end{itemize}
+    \item Set T to control the duration of your acquisition. This tells the DAQ how much time in seconds to collect data.
+    \item \boldblue{inputChannels} controls the collected input signals. An example of collecting 2 channels is provided.
+    \item The two boolean variables \boldblue{enableLogging} \& \boldblue{enableLogging} control if statements later in the code.
+    \begin{itemize}
+        \item These turn on\textbackslash off listener functions \boldpurp{logData.m} \& \boldpurp{plotData.m}. 
+        \item In other words, these are switches you can use to set your code to acquire data without saving it (useful for debugging your circuit) or acquire data without plotting it (can save CPU time, but is risky since you might not notice if something goes wrong with your recording). 
+    \end{itemize}  
+    \item \boldblue{Filename} \& \boldblue{header} set the file location for writing data, and the text to use for header columns. 
+    \begin{itemize}
+        \item You need to make sure to create the \boldpurp{.csv} file to write data to in advance of running this code.
+    \end{itemize}
+    \item  Please use the calibration equation from the previous laboratory experiment. If in doubt, please get in touch with the TAs for the correct calibration. The calibration should be able to convert the potentiometer output voltage to radians. Program this equation into the MATLAB acquisition program. Verify that the calibration is producing the correct output by moving the pendulum to several known angles.
+\end{enumerate}
+
+\textbf{Q:} What is the difference in functions \boldpurp{plotdata2.m} \& \boldpurp{logData2.m} different from \boldpurp{plotdata.m} \& \boldpurp{logData.m}?  
+
+\subsection{Part 2: Building the Accelerometer \& DAQ Circuit}
+Connect the y-axis accelerometer output to the data acquisition using a breadboard.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=2.20in, angle=-90,origin=c]{Fig02.png}
+    \caption{The MMA7361LC 3-axis accelerometer with voltage regulator.}
+    \label{fig:02}
+\end{figure}
+
+\begin{enumerate}
+\item For this experiment, a 3-axis accelerometer has been fixed to the end of the pendulum apparatus (see Figure \ref{fig:02}). The accelerometer has been configured for $\pm$6g operation. The y- axis of the pendulum points towards the pendulum rotation axis (see Figure 3). For more information about the accelerometer, see \href{https://www.pololu.com/product/1251}{Pololu}.
+    \item Connect the accelerometer to the breadboard using the provided 3-wire cable. See figure \ref{fig:fig03A}.
+    \item Connect the $V_{in}$ and GND pins on the accelerometer to the breadboard 5 Volt supply power (already used to power the potentiometer). See figure \ref{fig:fig03B} for reference.
+    \item Connect the y-axis accelerometer output to AI1 (Differential Analog Input 1). See figure \ref{fig:fig03B}.
+    \item Connect the DAQ GND, instead of the AI1-, to the ground on the breadboard. See figure \ref{fig:fig03B}.
+    \item With the tape measure, note in your logbook the length of the pendulum (in meters).
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\subfigure[Sample connection to the accelerometer.]{%
+\label{fig:fig03A}%
+\includegraphics[width=2.75in]{Lab03Fig01_B.png}}%
+\qquad
+\subfigure[Sample connection to the DAQ system using Digilent board .]{%
+\label{fig:fig03B}%
+\includegraphics[width=3.0in]{Lab03Fig02_B.png}}%
+\end{figure}
+
+%\begin{figure}[!ht]
+%\centering
+%\includegraphics[width=3.00in]{Lab03Fig02.png}
+%\caption{Connection to the NI-DAQ system.}
+%\label{fig:fig03C}
+%\end{figure}
+
+\subsection{Use your MATLAB program to Test the Circuit and Data Acquisition}
+To verify that your circuit is implemented correctly, test it by rotating the potentiometer and confirming the voltage changes as expected at each position. 
+
+\begin{enumerate}
+    \item Adjust Duration
+    \begin{itemize}
+        \item Change Duration to a value that fits your testing needs:
+        \begin{itemize}
+            \item Use a short duration for quick checks.
+            \item Use a longer duration if you want data collection  to run continuously. Note there isn't a built-in way to interrupt collection, so use good judgment! 
+        \end{itemize}
+    \end{itemize}
+    
+    \item Run Data Collection Program
+    \begin{itemize}
+        \item Run your MATLAB program by clicking the \textit{run} button arrow.
+    \end{itemize}
+    
+    \item Observe Output While Rotating the Pendulum
+    \begin{itemize}
+        \item While the program is running:
+        \begin{itemize}
+            \item Rotate the angular potentiometer.
+            \item Observe the real-time output on the display figure window.
+            \item Keep in mind that the DAQ system takes a few seconds to initialize. You might notice a delay while the simulation starts. 
+        \end{itemize}
+    \end{itemize}
+    
+    \item Verify Smooth Voltage Response
+    \begin{itemize}
+        \item Ensure the voltage changes smoothly over the $360^\circ$ range.
+        \item Check to see if voltage for accelerometer at $-90^\circ$ and $90^\circ$ are the same.
+        \item If you notice a sudden jump or drop in voltage:
+        \begin{itemize}
+            \item The potentiometer may be misaligned.
+            \item To fix it, ask your TA for help, they can with loosen the grub screw, rotate the potentiometer until the voltage varies smoothly (jump should occur around $+180^\circ$), then re-tighten it.
+            \item Re-test to confirm smooth output over the test range.
+            \item[\textbf{Q}] The accelerometer has x-, y-, and z-axes, but in this lab, we only connect the y-axis output. When the pendulum swings, which component (normal or tangential) of acceleration is the y-axis actually sensing, and why is this the most useful axis for comparing to the calculated normal acceleration?
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+
+\subsection{Part 3: Calibration}
+When the pendulum is held still, the only acceleration the accelerometer feels is gravity. The voltage read by the accelerometer can be linearly related to acceleration. In this step, you will perform a calibration using four positions & corresponding to the y-axis accelerometer voltage outputs.
+
+\begin{enumerate}
+    \item Create the table below in your logbook by rotating the pendulum to the four shown positions and recording the output voltages on the y-axis of the accelerometer. 
+    \item Collect the \textbf{single-channel} voltage output from the accelerometer (``AI1"); use 0 or 1 for channel names.
+    \begin{itemize}
+        \item Duration: 20 seconds
+        \item Sample rate: 20 samples per second
+        \item Ensure that you have proper slope=1 and intercept=0.
+    \end{itemize}
+    
+    \item Record data at each angle. Each run:
+    \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Save a data file using this naming convention: \boldpurp{Ang\_(p/n)XXDeg.csv} where
+            \begin{itemize}
+                \item \texttt{XX} indicates angle.
+                \item \texttt{p/n} indicates sign (positive or negative).
+                \item For example: for $-90^\circ$, use \boldpurp{Ang\_n45Deg.mat}.
+            \end{itemize}
+            \item Update the file name before each run to avoid overwriting data.
+        \end{itemize}
+        
+        \item Record the angular position (in degrees):
+        \begin{itemize}
+            \item Reference experiment-02 to match angular position.
+        \end{itemize}
+
+        \item Compute the Average Voltage:
+        \begin{itemize}
+            \item Write a MATLAB script to calculate the mean voltage from each data file.
+            \item Record the result with at least two decimal places.
+        \end{itemize}
+    \end{enumerate}
+    
+    \item Plot the data points from the above table in order to create calibration equations for the y-axis acceleration measurements. Specifically, Plot $ay_g$ vs. $ay_{v,avg}$ to find y-axis acceleration (in $m/s^2$) as a function of sensor voltage.
+\end{enumerate}
+
+\begin{table}[!hb]
+\centering
+\caption{Sample calibration data for experiment 2.}
+\begin{tabular}{c|c c c}
+\toprule
+Pendulum & & y-axis acceleration & Average output voltage  \\
+orientation &Schematic &$ay_{g}$ ($m/s^2$) & $ay_{v,avg}$ (v) \\ \toprule
+Right& \includegraphics[width=0.40in]{Fig03A} & 0.00 & \\ \hline
+Up   & \includegraphics[width=0.30in]{Fig03B} & 9.81 & \\ \hline
+Left & \includegraphics[width=0.35in]{Fig03D} & 0.00 & \\ \hline
+Down & \includegraphics[width=0.35in]{Fig03C} &-9.81& \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{enumerate}[resume]
+    \item Plot Your Calibration Data
+    \begin{itemize}
+        \item Use MATLAB to create a scatter plot:
+        \begin{itemize}
+            \item X-axis: average voltage
+            \item Y-axis: acceleration
+        \end{itemize}
+        \item Change $t_{\nu,p}$ value in the MATLAB script.
+        \item Format the plot clearly and include appropriate axis labels, title, and units.
+        \item Refer back to formatting guidelines from Lab~01 and the requirements below under \textit{Post Laboratory Assignment}.
+    \end{itemize}
+    \item Fit a Linear Calibration Model
+    \begin{itemize}
+        \item Use the \boldpurp{polyfit} command in MATLAB to compute a linear regression of the form: \[y = {a_0} + {a_1}x\]. where $y$ is the pendulum angle (degrees) and $x$ is the measured voltage (V).
+    \end{itemize}
+    \item Ensure Fit Quality
+    \begin{itemize}
+        \item Record the \textbf{norm of the residuals} from \boldpurp{polyfit}.
+        \item Use this value to calculate the \textbf{standard error of the fit,} $s_{yx}$.
+    \end{itemize}
+    \item Create and Save Calibration Plot
+    \begin{itemize}
+        \item Refer to Lab-02 to modify the calibration plot code you created previously.
+        \item Save your plot with \textbf{at least 600~dpi resolution.}
+        \item Reference figure \ref{fig:cal} for proper figure creation.
+        \item{\textbf{Q}} When the pendulum is held still at each test angle, why should the accelerometer voltage be proportional to the component of gravity along the y-axis? What does this tell you about why a linear calibration equation makes sense? Would a linear fit make sense for a calibration of pendulum angle to voltage?
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[origin=c]{Student_Name_Exp03_Calibration.png}
+\caption{Calibration of the accelerometer.}
+\label{fig:cal}
+\end{figure}
+
+\subsection{Part 4: Modifying acquisition code}
+\emph {Now add your calibration equation to the acquisition program to display the pendulum angle in degrees during the data acquisition process and the acceleration values in $m/s^2$. }
+\begin{enumerate}
+    \item Toggle the multi-channel acquisition: potentiometer (``ai0") and accelerometer (``ai1").
+    \begin{itemize}
+        \item Duration: 20 seconds
+        \item Sample rate: 1000 samples per second
+    \end{itemize}
+    \item Make sure the output file is named as ``Expt\_03\_FirstName\_Lastname.csv''
+    \item Change the slope and intercept values in \boldpurp{MATLAB\_Data\_Acquisition.m}.
+    \item Run the program and record a full pendulum swing.
+    \begin{itemize}
+        \item Start your MATLAB program and release the pendulum from a horizontal position ($90^\circ$).
+        \item Check to see if recorded data of the angle (in degrees, from your calibration equation) and acceleration (in $m/s^2$, from your calibration equation) versus time.  
+    \end{itemize}
+    \item Show your program and results to the TAs to verify your program. {\bf If the program is working properly, proceed to collect data.}
+    \item[\textbf{Q}] After adding your calibration equation to the MATLAB code, what's the advantage of seeing the pendulum angle in degrees and acceleration in $m/s^2$ instead of raw voltages during data collection?
+\end{enumerate}
+
+\subsection{Part 5: Normal acceleration experiment}
+\emph {Procedure for collecting data.}
+\begin{enumerate}
+    \item Move the pendulum to the horizontal position ($90^\circ$).
+    \item Start the acquisition program.
+    \item Release the pendulum.
+    \item Ensure the pendulum comes to a complete stop before your acquisition program ends. 
+    \item Make sure the plot shows pendulum angular location and pendulum normal acceleration.
+    \item Open your output file and check the data.
+    \item Output file should have three columns of data. The first column will have information about time, the second column will have the angular position of the pendulum in degrees, and the third column will have the acceleration value of the accelerometer in $m/s^2$.
+\end{enumerate}
+
+\subsection{Part 6: Plotting data}
+\emph{Post processing of the data.}
+\begin{enumerate}
+\item Download \boldpurp{PostProcess.m} which has the following skeleton code prepared:
+\begin{itemize}
+    \item Load your recorded \boldpurp{.csv} file in MATLAB.
+    \item Convert the angle value in radians.
+    \item Remove the acceleration due to gravity from the accelerometer data.
+\end{itemize}
+\item Use Lab 01 and Lab 02 to plot the normal acceleration data from the accelerometer and normal acceleration using equation \ref{Eq:NormAcc} in a single plot.
+\item Plot the noisiest data first (this way the other data will remain visible). 
+\item Sample plot is shown in Figure \ref{fig:postPr}.
+\begin{itemize}
+    \item Here you have to use free-body diagram to identify the contribution from acceleration due to gravity
+    \item Use the angular value for pendulum to accurately identify the position of the pendulum.
+    \item The result will be the measured normal acceleration of the pendulum due to angular velocity.
+\end{itemize}
+\end{enumerate}
+
+\textbf{Q:} 
+When you plot normal acceleration from the accelerometer and from angular velocity, they won’t match perfectly. List at least two reasons why differences might appear (for example, sensor alignment, noise, or assumptions in the equations). Why is the acceleration from the angular position noisier than the accelerometer data?  
+
+\begin{figure}
+\centering
+\includegraphics[width=6.00in]{Firstname_Lastname_Expt02_Postprocess.png}
+\caption{Sample post-process plot.}
+\label{fig:postPr}
+\end{figure}
+
+\subsection*{Part 7: Return Lab Space to Prior Condition}
+\begin{enumerate}
+    \item Remove all breadboard wires and place them back in the wire kit in an organized fashion.
+    \item Remove the pendulum wires from the breadboard and set them aside.
+    \item Confirm your data files are saved to OneDrive.
+    \begin{enumerate}[label=\alph*.]
+        \item Check that files are available online using your phone or personal laptop to confirm.
+        \item Make sure that all team members have access to experiment files, including data and scripts.
+    \end{enumerate}
+    \item Log off the computer.
+\end{enumerate}
+
+\section{Post-Lab Assignment}
+For this experiment, submit the following items as PDF files on Canvas:
+
+\begin{enumerate}
+    \item \textbf{Accelerometer Calibration Plot}
+    \begin{itemize}
+        \item The calibration plot should include:
+        \begin{itemize}
+            \item Using ``scatter" plot function, raw data points as red circle markers with \texttt{MarkerSize = 90}.
+            \item A solid blue line showing the linear calibration curve with a 2~pt linewidth.
+            \item Dashed black lines showing the 95\% confidence interval (compute using the standard error of the fit, $s_{yx}$).
+        \end{itemize} 
+        \item The plot should be 5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Calibration Plot''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+        \item Using the \boldpurp{text} command, place the following on the plot (use Greek symbols where appropriate):
+        \begin{itemize}
+            \item The calibration equation with 4 decimal places for each number.
+            \item The norm of the residuals of your linear regression.
+            \item The standard error of the fit for your calibration equation.
+            \item Include units where appropriate.
+        \end{itemize}
+    \end{itemize}
+ 
+    \item \textbf{Normal Acceleration Plot}
+    \begin{itemize}
+        \item Submit a time series plot showing normal acceleration vs. time calculated in the two ways described in Part 6.
+        \begin{enumerate}
+            \item Normal acceleration measured from the accelerometer vs. time.
+            \item Normal acceleration calculated from the equation $a_n = \dot{\theta}^2r$ .
+        \end{enumerate}
+        \item The plot should be 5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Normal Acceleration Plot''.
+        \end{itemize}
+    \end{itemize}
+    
+
+\item \textbf{Answer All Questions in the Post-Lab Canvas Assignment}
+    \begin{itemize}
+        \item Compare your plots to the example plots shown in Figure \ref{fig:postPr} to confirm that you have completed the assignment correctly. Note that your values will differ, but your formatting and annotation should match.
+    \end{itemize}
+\end{enumerate}
+
+
+%-----------------------------------------
+%\clearpage
+%\section{Appendix}
+%Sample code for data acquisition using Matlab
+%\lstinputlisting{../MatlabProgram/mainAcqProgram-NousMacBookPro.m}
+%\clearpage
+%\lstinputlisting{../MatlabProgram/plotAndLogData.m}
+%\clearpage
+
+%\clearpage
+%\section{Appendix}
+%\subsection{Matlab program to test the circuit}
+%\label{app:testingCode}
+%\lstinputlisting{../MatlabProgram/Ver01/mainAcqProgram_ForTesting.m}
+%\clearpage
+
+%\subsection{Matlab program to acquire data for calibration}
+%\label{app:calibCode}
+%\lstinputlisting{../Code/Expt03_Calibration.m}
+
+%\clearpage
+%\subsection{Matlab program to generate calibration plot}
+%\label{app:genCalib}
+%\lstinputlisting{../Code/Expt03_Calibration_plotting.m}
+
+%\clearpage
+%\subsection{Matlab program to acquire data}
+%\label{app:acqCode}
+%\lstinputlisting{../Code/Expt03_Data_aquisition.m}
+
+%\clearpage
+%\subsection{Matlab program to plot acceleration data}
+%\label{app:plotAccData}
+%\lstinputlisting{../Code/Expt03_PostProcess.m}
+
+\end{document} 

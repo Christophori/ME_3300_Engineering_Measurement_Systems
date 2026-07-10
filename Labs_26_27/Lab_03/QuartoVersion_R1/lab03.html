@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-03: Multichannel Measurement and Normal Acceleration of a Rotating Pendulum</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab03_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab03_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="lab03_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="lab03_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab03_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab03_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab03_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab03_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab03_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab03_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab03_files/libs/bootstrap/bootstrap-116e70cef452b7a205deb158d40a82d5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="lab03_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="lab03_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="lab03_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning Objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#extend-your-folder-structure" id="toc-extend-your-folder-structure" class="nav-link" data-scroll-target="#extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</a></li>
+  <li><a href="#add-the-pydwf-package" id="toc-add-the-pydwf-package" class="nav-link" data-scroll-target="#add-the-pydwf-package"><span class="header-section-number">2.2</span> Add the pydwf Package</a></li>
+  <li><a href="#read-the-background-section" id="toc-read-the-background-section" class="nav-link" data-scroll-target="#read-the-background-section"><span class="header-section-number">2.3</span> Read the Background Section</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.4</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#python-quick-reference-new-this-lab" id="toc-python-quick-reference-new-this-lab" class="nav-link" data-scroll-target="#python-quick-reference-new-this-lab"><span class="header-section-number">2.5</span> Python Quick Reference: New This Lab</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background"><span class="header-section-number">4</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#normal-acceleration-of-a-rotating-point" id="toc-normal-acceleration-of-a-rotating-point" class="nav-link" data-scroll-target="#normal-acceleration-of-a-rotating-point"><span class="header-section-number">4.1</span> Normal Acceleration of a Rotating Point</a></li>
+  <li><a href="#what-the-accelerometer-measures" id="toc-what-the-accelerometer-measures" class="nav-link" data-scroll-target="#what-the-accelerometer-measures"><span class="header-section-number">4.2</span> What the Accelerometer Measures</a></li>
+  <li><a href="#gravity-as-a-calibration-reference" id="toc-gravity-as-a-calibration-reference" class="nav-link" data-scroll-target="#gravity-as-a-calibration-reference"><span class="header-section-number">4.3</span> Gravity as a Calibration Reference</a></li>
+  <li><a href="#from-gui-to-code-the-pydwf-device-model" id="toc-from-gui-to-code-the-pydwf-device-model" class="nav-link" data-scroll-target="#from-gui-to-code-the-pydwf-device-model"><span class="header-section-number">4.4</span> From GUI to Code: the pydwf Device Model</a></li>
+  </ul></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">5</span> Part-1: Build the Two-Sensor Circuit</a></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">6</span> Part-2: First Contact with pydwf</a>
+  <ul class="collapse">
+  <li><a href="#connection-test" id="toc-connection-test" class="nav-link" data-scroll-target="#connection-test"><span class="header-section-number">6.1</span> Connection Test</a></li>
+  <li><a href="#a-single-channel-read" id="toc-a-single-channel-read" class="nav-link" data-scroll-target="#a-single-channel-read"><span class="header-section-number">6.2</span> A Single-Channel Read</a></li>
+  </ul></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">7</span> Part-3: Automated Accelerometer Calibration</a>
+  <ul class="collapse">
+  <li><a href="#acquire-the-four-calibration-points" id="toc-acquire-the-four-calibration-points" class="nav-link" data-scroll-target="#acquire-the-four-calibration-points"><span class="header-section-number">7.1</span> Acquire the Four Calibration Points</a></li>
+  <li><a href="#fit-and-plot-the-calibration" id="toc-fit-and-plot-the-calibration" class="nav-link" data-scroll-target="#fit-and-plot-the-calibration"><span class="header-section-number">7.2</span> Fit and Plot the Calibration</a></li>
+  <li><a href="#example-result" id="toc-example-result" class="nav-link" data-scroll-target="#example-result"><span class="header-section-number">7.3</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-4" id="toc-sec-part-4" class="nav-link" data-scroll-target="#sec-part-4"><span class="header-section-number">8</span> Part-4: Record the Swing (Scope Record Mode)</a></li>
+  <li><a href="#sec-part-5" id="toc-sec-part-5" class="nav-link" data-scroll-target="#sec-part-5"><span class="header-section-number">9</span> Part-5: Post-Process — Two Roads to Normal Acceleration</a>
+  <ul class="collapse">
+  <li><a href="#load-both-calibrations-and-the-swing" id="toc-load-both-calibrations-and-the-swing" class="nav-link" data-scroll-target="#load-both-calibrations-and-the-swing"><span class="header-section-number">9.1</span> Load Both Calibrations and the Swing</a></li>
+  <li><a href="#trim-to-the-release-a-better-detector" id="toc-trim-to-the-release-a-better-detector" class="nav-link" data-scroll-target="#trim-to-the-release-a-better-detector"><span class="header-section-number">9.2</span> Trim to the Release — a Better Detector</a></li>
+  <li><a href="#compute-both-normal-accelerations" id="toc-compute-both-normal-accelerations" class="nav-link" data-scroll-target="#compute-both-normal-accelerations"><span class="header-section-number">9.3</span> Compute Both Normal Accelerations</a></li>
+  <li><a href="#plot-the-comparison" id="toc-plot-the-comparison" class="nav-link" data-scroll-target="#plot-the-comparison"><span class="header-section-number">9.4</span> Plot the Comparison</a></li>
+  <li><a href="#example-result-1" id="toc-example-result-1" class="nav-link" data-scroll-target="#example-result-1"><span class="header-section-number">9.5</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">10</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#submission-items" id="toc-submission-items" class="nav-link" data-scroll-target="#submission-items"><span class="header-section-number">10.1</span> Submission Items</a></li>
+  <li><a href="#calibration-plot-requirements" id="toc-calibration-plot-requirements" class="nav-link" data-scroll-target="#calibration-plot-requirements"><span class="header-section-number">10.2</span> Calibration Plot Requirements</a></li>
+  <li><a href="#comparison-plot-requirements" id="toc-comparison-plot-requirements" class="nav-link" data-scroll-target="#comparison-plot-requirements"><span class="header-section-number">10.3</span> Comparison Plot Requirements</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">10.4</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave" id="toc-before-you-leave" class="nav-link" data-scroll-target="#before-you-leave"><span class="header-section-number">11</span> Before You Leave</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lab03.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-03: Multichannel Measurement and Normal Acceleration of a Rotating Pendulum</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning Objective</h2>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li>Measure <strong>two sensors at once</strong>: the Lab 02 potentiometer plus a MEMS accelerometer, acquired on two differential channels</li>
+<li>Write your <strong>first Python automation</strong> of the ADS using <code>pydwf</code>, replacing a repetitive GUI task (a multi-point calibration) with a script</li>
+<li><strong>Calibrate a MEMS accelerometer</strong> using gravity as the reference, via a four-orientation static calibration</li>
+<li><strong>Reuse a saved calibration</strong>: load your Lab 02 potentiometer coefficients from file instead of re-calibrating</li>
+<li>Use the WaveForms Scope <strong>Record mode</strong> to capture a long, fast (1 kHz), two-channel recording</li>
+<li>Compute angular velocity by <strong>numerical differentiation</strong> (<code>np.gradient</code>) and understand why differentiation amplifies noise</li>
+<li><strong>Cross-check a measurement two independent ways</strong>: compare normal acceleration measured by the accelerometer against <span class="math inline">\(-\dot{\theta}^2 r\)</span> calculated from the differentiated angle signal</li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="hardware-instruments" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
+<ul>
+<li>What does a MEMS accelerometer actually measure? Why does a <em>stationary</em> accelerometer read ±9.81 m/s² instead of zero?</li>
+<li>Why can gravity serve as a calibration reference for an accelerometer?</li>
+<li>Why do both ADS channels need their − input referenced (to GND) in this circuit?</li>
+<li>What is the difference between the Scope’s normal acquisition and <strong>Record mode</strong>? When do you need Record?</li>
+<li>Why must WaveForms be closed before a <code>pydwf</code> script can run?</li>
+</ul>
+</section>
+<section id="programming" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.2</span> Programming</h4>
+<ul>
+<li>What does a <code>while</code> loop do, and how does <code>break</code> exit one? Why does DAQ code poll a status flag in a loop?</li>
+<li>What does <code>input()</code> do, and why is it useful in an acquisition script?</li>
+<li>How does <code>zip</code> let you loop over two lists in parallel? What does <code>.append</code> do?</li>
+<li>What is the difference between <code>np.diff</code> (Lab 02) and <code>np.gradient</code>? Why does <code>np.gradient</code> return the same number of points as its input?</li>
+<li>How do you load a saved calibration file whose header line starts with <code>#</code>?</li>
+<li>Which <code>pydwf</code> object corresponds to the WaveForms Scope? To the Supplies?</li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>Why is the accelerometer’s raw signal a <em>combination</em> of normal acceleration and gravity? How do you separate them?</li>
+<li>Why is acceleration calculated from the differentiated angle much noisier than the directly measured acceleration?</li>
+<li>Why do we record the swing at 1000 Hz here, when 100 Hz was fine in Lab 02?</li>
+<li>When two independent measurements of the same quantity disagree, what kinds of error should you suspect?</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section.</p>
+<section id="extend-your-folder-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</h3>
+<p>Add a Lab_03 folder set to your <code>ME3300</code> folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href="#cb1-1"></a>ME3300/</span>
+<span id="cb1-2"><a href="#cb1-2"></a>├── Lab_01/</span>
+<span id="cb1-3"><a href="#cb1-3"></a>├── Lab_02/</span>
+<span id="cb1-4"><a href="#cb1-4"></a>├── Lab_03/</span>
+<span id="cb1-5"><a href="#cb1-5"></a>│   ├── Code/</span>
+<span id="cb1-6"><a href="#cb1-6"></a>│   │   ├── Lab03_Prelab_Walkthrough.ipynb</span>
+<span id="cb1-7"><a href="#cb1-7"></a>│   │   └── FirstName_LastName_Lab03.ipynb</span>
+<span id="cb1-8"><a href="#cb1-8"></a>│   ├── Data/</span>
+<span id="cb1-9"><a href="#cb1-9"></a>│   └── Figures/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="add-the-pydwf-package" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="add-the-pydwf-package"><span class="header-section-number">2.2</span> Add the pydwf Package</h3>
+<p>This lab introduces <code>pydwf</code>, the Python interface to the WaveForms SDK. Add it to your course environment: open a terminal in your <code>ME3300</code> folder and run</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">uv</span> add pydwf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can verify the install with <code>uv run python -c "import pydwf; print(pydwf.__version__)"</code>. Note that <code>pydwf</code> talks to the same WaveForms <em>runtime</em> the GUI uses, so having WaveForms installed (Lab 01) is required.</p>
+</section>
+<section id="read-the-background-section" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.3</span> Read the Background Section</h3>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It explains what the accelerometer measures, derives the gravity-correction equation you will implement, and introduces the pydwf device model.</p>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.4</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Download <code>Lab03_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_03/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> Python skills using simulated signals (no hardware needed at home):</p>
+<ul>
+<li><code>while</code> loops, <code>break</code>, and the status-polling pattern DAQ code uses</li>
+<li>pausing a script for the user with <code>input()</code></li>
+<li>building lists with <code>.append</code> and looping over pairs with <code>zip</code></li>
+<li>numerical differentiation with <code>np.gradient</code> (and how it differs from <code>np.diff</code>)</li>
+<li>combining arrays into columns with <code>np.column_stack</code></li>
+<li>loading files with <code>#</code> header lines using <code>np.loadtxt(..., comments='#')</code></li>
+</ul>
+<p>As always, report the <strong>checkpoint</strong> values in the <strong>Prelab 03 quiz on Canvas</strong> before your lab session. Skills from Labs 01–02 (loading CSVs, <code>polyfit</code>, fit statistics, <code>for</code>/<code>enumerate</code>, f-strings, <code>.iloc</code>, plot formatting) are not retaught.</p>
+</section>
+<section id="python-quick-reference-new-this-lab" class="level3" data-number="2.5">
+<h3 data-number="2.5" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.5</span> Python Quick Reference: New This Lab</h3>
+<table class="caption-top table">
+<caption>New Python syntax and functions introduced in Lab 03</caption>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Loop until a condition</td>
+<td><code>while True:</code> … <code>if done: break</code></td>
+</tr>
+<tr class="even">
+<td>Pause for the user</td>
+<td><code>input('Press Enter to continue...')</code></td>
+</tr>
+<tr class="odd">
+<td>Grow a list</td>
+<td><code>values = []</code> then <code>values.append(x)</code></td>
+</tr>
+<tr class="even">
+<td>Loop over pairs</td>
+<td><code>for pos, accel in zip(positions, known_accel):</code></td>
+</tr>
+<tr class="odd">
+<td>Derivative (same length as input)</td>
+<td><code>np.gradient(theta, dt)</code></td>
+</tr>
+<tr class="even">
+<td>Stack arrays as columns</td>
+<td><code>np.column_stack([t, x, y])</code></td>
+</tr>
+<tr class="odd">
+<td>Load CSV, skipping <code>#</code> lines</td>
+<td><code>np.loadtxt('file.csv', delimiter=',', comments='#')</code></td>
+</tr>
+<tr class="even">
+<td>Open the ADS from Python</td>
+<td><code>with openDwfDevice(dwf) as device:</code></td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<caption>The pydwf device model: every GUI instrument is an object in code</caption>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>WaveForms GUI instrument</th>
+<th>pydwf object</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scope / Logger (analog inputs)</td>
+<td><code>device.analogIn</code></td>
+</tr>
+<tr class="even">
+<td>Wavegen (signal generator)</td>
+<td><code>device.analogOut</code></td>
+</tr>
+<tr class="odd">
+<td>Supplies (power)</td>
+<td><code>device.analogIO</code></td>
+</tr>
+<tr class="even">
+<td>Static I/O (digital pins)</td>
+<td><code>device.digitalIO</code></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>In Lab 02 you completed the full measurement chain for one sensor: build, verify, calibrate, measure, model. This lab scales that chain up in three directions at once.</p>
+<ul>
+<li><strong>Two sensors, two channels.</strong> You will measure the pendulum’s angle (potentiometer, Channel 1) and the acceleration at its tip (MEMS accelerometer, Channel 2) <em>simultaneously</em>. Multichannel measurement is the norm in real experiments — one signal alone rarely tells the whole story.</li>
+<li><strong>Your first DAQ automation.</strong> The accelerometer calibration requires holding the pendulum in four orientations and recording each one. In Lab 02 you did this kind of repetitive record–export–rename loop by hand, eleven times. This week, a short <code>pydwf</code> script does the repetition for you: it prompts you for each position, records, and averages, all in one run. This is the course’s automation philosophy from here forward: <strong>use the GUI where it makes sense</strong> (one-off captures, live exploration) <strong>and Python where tasks repeat</strong>. By Lab 10 you will be able to script complete experiments — a skill that carries directly into capstone and industry work.</li>
+<li><strong>Independent cross-checks.</strong> You will determine the pendulum tip’s normal acceleration two completely independent ways — measured directly by the accelerometer, and calculated from the differentiated potentiometer angle — and compare them. Agreement between independent methods is one of the strongest forms of experimental evidence; their <em>disagreement</em> teaches you about noise, alignment, and modeling assumptions.</li>
+</ul>
+</section>
+<section id="sec-background" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-background"><span class="header-section-number">4</span> Background</h2>
+<section id="normal-acceleration-of-a-rotating-point" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="normal-acceleration-of-a-rotating-point"><span class="header-section-number">4.1</span> Normal Acceleration of a Rotating Point</h3>
+<p>For rotation about a fixed axis, a point at radius <span class="math inline">\(r\)</span> from the pivot has a <strong>normal acceleration</strong> directed from the point toward the pivot:</p>
+<p><span id="eq-normal-accel"><span class="math display">\[a_n = -\dot{\theta}^2 r \tag{1}\]</span></span></p>
+<p>where <span class="math inline">\(\dot\theta\)</span> is the angular velocity in rad/s. The minus sign reflects our sign convention: the accelerometer’s <strong>+y axis points from the sensor toward the pivot</strong> (see <a href="#fig-orientations" class="quarto-xref">Figure&nbsp;2</a>), and the centripetal acceleration a swinging pendulum tip experiences points that same way. You will measure <span class="math inline">\(\dot\theta\)</span> by numerically differentiating the potentiometer angle, and <span class="math inline">\(r\)</span> with a tape measure (pivot to accelerometer center).</p>
+</section>
+<section id="what-the-accelerometer-measures" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="what-the-accelerometer-measures"><span class="header-section-number">4.2</span> What the Accelerometer Measures</h3>
+<p>The MEMS accelerometer (MMA7361, mounted at the pendulum tip; see <a href="#fig-accel-board" class="quarto-xref">Figure&nbsp;3</a>) contains a microscopic proof mass on silicon springs. It measures <strong>proper acceleration</strong> — the deflection of that mass — which includes gravity. A stationary accelerometer with its +y axis pointing straight up reads +9.81 m/s², not zero, because the springs must hold the proof mass up against gravity.</p>
+<p>For our swinging pendulum, the y-axis therefore senses <em>both</em> effects at once:</p>
+<p><span id="eq-accel-reading"><span class="math display">\[a_y = \underbrace{-\dot{\theta}^2 r}_{\text{normal accel.}} \; \underbrace{- \, g\cos\theta}_{\text{gravity component}} \tag{2}\]</span></span></p>
+<p>where <span class="math inline">\(\theta\)</span> is the pendulum angle measured from straight down. The gravity term follows from the free-body diagram in <a href="#fig-gravity-fbd" class="quarto-xref">Figure&nbsp;1</a>: the component of <span class="math inline">\(g\)</span> along the +y direction (tip toward pivot) is <span class="math inline">\(-g\cos\theta\)</span> — largest in magnitude when hanging straight down (<span class="math inline">\(\theta = 0\)</span>), zero when horizontal. In Part 5 you will <em>subtract</em> this term from the measured signal to isolate the normal acceleration and enable a fair comparison with <a href="#eq-normal-accel" class="quarto-xref">Equation&nbsp;1</a>.</p>
+<div id="fig-gravity-fbd" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gravity-fbd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Accel_Gravity_FBD.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Free-body diagram of the accelerometer at angle \theta. The +y axis points from the sensor toward the pivot; the gravity component along +y is -g\cos\theta."><img src="figures/Accel_Gravity_FBD.png" class="img-fluid figure-img" style="width:45.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gravity-fbd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Free-body diagram of the accelerometer at angle <span class="math inline">\(\theta\)</span>. The +y axis points from the sensor toward the pivot; the gravity component along +y is <span class="math inline">\(-g\cos\theta\)</span>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="gravity-as-a-calibration-reference" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="gravity-as-a-calibration-reference"><span class="header-section-number">4.3</span> Gravity as a Calibration Reference</h3>
+<p>Equation <a href="#eq-accel-reading" class="quarto-xref">Equation&nbsp;2</a> also hands us a free calibration standard. When the pendulum is held <em>still</em>, <span class="math inline">\(\dot\theta = 0\)</span> and the sensor feels only the gravity component — which we know exactly at four easy-to-set orientations:</p>
+<div id="fig-orientations" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-orientations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Accel_Calibration_Orientations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: The four calibration orientations. At each, the known gravity component along +y is the calibration reference."><img src="figures/Accel_Calibration_Orientations.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-orientations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The four calibration orientations. At each, the known gravity component along +y is the calibration reference.
+</figcaption>
+</figure>
+</div>
+<p>The sensor output voltage is linear in acceleration, so as in Lab 02 a linear calibration</p>
+<p><span id="eq-accel-cal"><span class="math display">\[a = a_1 V + a_0 \tag{3}\]</span></span></p>
+<p>is appropriate — now mapping volts to m/s² instead of degrees. Four points spanning ±1 g are enough to pin down the line, and the fit-quality statistics are computed exactly as in Lab 02 (norm of residuals, <span class="math inline">\(s_{yx}\)</span>, 95% CI, <span class="math inline">\(S_{a_1}\)</span> — see Lab 02 Eqs. 7–9), just with different units.</p>
+</section>
+<section id="from-gui-to-code-the-pydwf-device-model" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="from-gui-to-code-the-pydwf-device-model"><span class="header-section-number">4.4</span> From GUI to Code: the pydwf Device Model</h3>
+<p><code>pydwf</code> exposes every WaveForms instrument as a Python object (see the quick-reference table above). Setting a sample rate in code, <code>ai.frequencySet(1000)</code>, does <em>exactly</em> what typing 1000 Hz into the GUI does — same instrument, same hardware, different interface. Because you drove these instruments by hand in Lab 02, none of this is magic; it is the same knobs, turned programmatically. One consequence: <strong>only one program can hold the device at a time</strong>, so WaveForms must be closed before a pydwf script runs (and vice versa).</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">5</span> Part-1: Build the Two-Sensor Circuit</h2>
+<p>Your guides are the annotated photos in <a href="#fig-accel-board" class="quarto-xref">Figure&nbsp;3</a> and <a href="#fig-circuit-build" class="quarto-xref">Figure&nbsp;4</a>. The potentiometer circuit is identical to Lab 02; the accelerometer adds three wires.</p>
+<div id="fig-accel-board" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-accel-board-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Accel_Board_Photo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: The MMA7361 accelerometer board mounted at the pendulum tip, with its 3-wire cable."><img src="figures/Accel_Board_Photo.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-accel-board-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The MMA7361 accelerometer board mounted at the pendulum tip, with its 3-wire cable.
+</figcaption>
+</figure>
+</div>
+<div id="fig-circuit-build" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-circuit-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Accel_Circuit_Build_ADS.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Both sensors wired to the ADS breadboard."><img src="figures/Accel_Circuit_Build_ADS.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-circuit-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Both sensors wired to the ADS breadboard.
+</figcaption>
+</figure>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Connection</th>
+<th>ADS pin</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pot V+ end terminal</td>
+<td>3.3 V (V+)</td>
+<td>Divider supply (Lab 02)</td>
+</tr>
+<tr class="even">
+<td>Pot GND end / Signal −</td>
+<td>GND</td>
+<td>Divider ground</td>
+</tr>
+<tr class="odd">
+<td>Pot wiper</td>
+<td><strong>1+</strong></td>
+<td>Angle signal</td>
+</tr>
+<tr class="even">
+<td>GND rail</td>
+<td><strong>1−</strong></td>
+<td>Ch. 1 reference</td>
+</tr>
+<tr class="odd">
+<td>Accel VIN (red)</td>
+<td>3.3 V rail</td>
+<td>Sensor supply (shared with pot)</td>
+</tr>
+<tr class="even">
+<td>Accel GND (black)</td>
+<td>GND rail</td>
+<td>Sensor ground</td>
+</tr>
+<tr class="odd">
+<td>Accel Y-OUT (signal)</td>
+<td><strong>2+</strong></td>
+<td>Acceleration signal</td>
+</tr>
+<tr class="even">
+<td>GND rail</td>
+<td><strong>2−</strong></td>
+<td>Ch. 2 reference</td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>Re-wire the potentiometer exactly as in Lab 02 and confirm with your DMM that the wiper voltage varies smoothly over the swing range. (Sudden jumps? Same grub-screw fix as Lab 02 — ask your TA.)</li>
+<li>Add the accelerometer connections per the table. The accelerometer board has X, Y, and Z outputs; <strong>only the Y axis is used</strong> — it is the axis aligned with the pendulum arm, pointing toward the pivot.</li>
+<li>Enable the 3.3 V supply (Supplies instrument, as in Lab 02) and verify with your DMM: supply at the accelerometer VIN pin, and a Y-OUT voltage that <em>changes</em> as you slowly rotate the pendulum.</li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q1.</strong> Measure and record: the Y-OUT voltage with the pendulum hanging straight down, and pointing straight up. Are they symmetric about the mid-supply voltage? What acceleration does each correspond to?</p>
+<p><strong>Q2.</strong> Measure the distance <span class="math inline">\(r\)</span> from the pivot axis to the center of the accelerometer package with the tape measure. Record it in meters — you will need it in Part 5.</p>
+<p><strong>Q3.</strong> The pendulum swings through ±90°. The accelerometer y-axis senses the <em>normal</em> direction. Using <a href="#fig-gravity-fbd" class="quarto-xref">Figure&nbsp;1</a>, explain in a sentence why the y-axis (not x or z) is the right output to compare with <a href="#eq-normal-accel" class="quarto-xref">Equation&nbsp;1</a>.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">6</span> Part-2: First Contact with pydwf</h2>
+<p>Open your notebook <code>FirstName_LastName_Lab03.ipynb</code> (kernel: your <code>.venv</code>). A starter notebook is on Canvas as usual.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Close WaveForms first!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Close WaveForms first!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The ADS accepts only one controlling program at a time. If WaveForms is open, every pydwf call will fail with a device-busy error. Close WaveForms (fully — check the system tray) before running pydwf cells, and close your notebook’s device connection before reopening WaveForms.</p>
+</div>
+</div>
+<section id="connection-test" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="connection-test"><span class="header-section-number">6.1</span> Connection Test</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">from</span> pydwf <span class="im">import</span> DwfLibrary, DwfState</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="im">from</span> pydwf.utilities <span class="im">import</span> openDwfDevice</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="im">import</span> time</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a>dwf <span class="op">=</span> DwfLibrary()</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb3-9"><a href="#cb3-9"></a>    <span class="bu">print</span>(<span class="st">"Connected to:"</span>, device.name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>with ... as device:</code> block should look familiar — it is the same <em>context manager</em> pattern <code>pandas</code> uses internally for files: the device is opened at the top of the block and <strong>automatically closed</strong> when the block exits, even if your code errors partway through. That auto-close matters here: a crashed script that leaves the device claimed would lock you out until you unplug it.</p>
+<p>Run the cell. If it prints a device name, you are connected (see <a href="#fig-pydwf-test" class="quarto-xref">Figure&nbsp;5</a>). If it errors, check that WaveForms is closed and the USB cable is seated, then ask your TA.</p>
+<div id="fig-pydwf-test" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pydwf-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Pydwf_Test_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Successful pydwf connection test in VS Code."><img src="figures/Pydwf_Test_Output.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pydwf-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Successful pydwf connection test in VS Code.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="a-single-channel-read" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="a-single-channel-read"><span class="header-section-number">6.2</span> A Single-Channel Read</h3>
+<p>Now read real voltage. With your circuit powered, this cell records 2 seconds of the potentiometer channel and prints statistics:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>fs       <span class="op">=</span> <span class="dv">1000</span>                 <span class="co"># sample rate (Hz)</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>duration <span class="op">=</span> <span class="fl">2.0</span>                  <span class="co"># seconds</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>n        <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)   <span class="co"># number of samples</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    ai <span class="op">=</span> device.analogIn            <span class="co"># the Scope/Logger instrument</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a>    ai.channelEnableSet(<span class="dv">0</span>, <span class="va">True</span>)    <span class="co"># enable channel 1 (pydwf counts from 0)</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>    ai.channelRangeSet(<span class="dv">0</span>, <span class="fl">5.0</span>)      <span class="co"># +/-5 V input range</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>    ai.frequencySet(fs)             <span class="co"># sample rate</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>    ai.bufferSizeSet(n)             <span class="co"># how many samples to capture</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a>    ai.configure(<span class="va">False</span>, <span class="va">True</span>)       <span class="co"># arm and start the acquisition</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a>    <span class="cf">while</span> <span class="va">True</span>:                     <span class="co"># poll until the buffer is full</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a>        status <span class="op">=</span> ai.status(<span class="va">True</span>)</span>
+<span id="cb4-17"><a href="#cb4-17"></a>        <span class="cf">if</span> status <span class="op">==</span> DwfState.Done:</span>
+<span id="cb4-18"><a href="#cb4-18"></a>            <span class="cf">break</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a>        time.sleep(<span class="fl">0.01</span>)</span>
+<span id="cb4-20"><a href="#cb4-20"></a></span>
+<span id="cb4-21"><a href="#cb4-21"></a>    volts <span class="op">=</span> np.array(ai.statusData(<span class="dv">0</span>, n))</span>
+<span id="cb4-22"><a href="#cb4-22"></a>    <span class="bu">print</span>(<span class="ss">f"mean = </span><span class="sc">{</span>volts<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> V, std = </span><span class="sc">{</span>volts<span class="sc">.</span>std(ddof<span class="op">=</span><span class="dv">1</span>)<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Two things here are new Python (both practiced in the prelab):</p>
+<ul>
+<li><strong>The <code>while True:</code> polling loop.</strong> Data acquisition takes time — 2 seconds, here — and the script must <em>wait</em> for the hardware to finish. The loop asks the device for its status over and over; when the status becomes <code>Done</code>, <strong><code>break</code></strong> exits the loop and the code continues to collect the data. The <code>time.sleep(0.01)</code> keeps the loop from hammering the USB connection thousands of times per second. This wait-until-ready pattern appears in virtually all instrument-control code you will ever write.</li>
+<li><strong>Channel numbering.</strong> pydwf counts channels from 0, so GUI “Channel 1” is <code>0</code> in code and “Channel 2” is <code>1</code>. This off-by-one is the single most common pydwf wiring bug — label your notebook cells clearly.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q4.</strong> Rotate the pendulum to a few angles and re-run the cell. Does the mean track your Lab 02 calibration’s predictions? What is the std of the reading at a fixed angle, and what does it tell you about the ADS noise floor?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-3" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">7</span> Part-3: Automated Accelerometer Calibration</h2>
+<p>Here is the payoff of scripting. The calibration needs four held-orientation recordings (<a href="#fig-orientations" class="quarto-xref">Figure&nbsp;2</a>). Instead of four manual record–export–load cycles, one script prompts you through all four and computes the means directly.</p>
+<section id="acquire-the-four-calibration-points" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="acquire-the-four-calibration-points"><span class="header-section-number">7.1</span> Acquire the Four Calibration Points</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>positions   <span class="op">=</span> [<span class="st">'right'</span>, <span class="st">'up'</span>, <span class="st">'left'</span>, <span class="st">'down'</span>]</span>
+<span id="cb5-2"><a href="#cb5-2"></a>known_accel <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">9.81</span>, <span class="fl">0.0</span>, <span class="op">-</span><span class="fl">9.81</span>]     <span class="co"># m/s^2, from Fig. 4</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>mean_voltages <span class="op">=</span> []                         <span class="co"># empty list, filled in the loop</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a>fs, duration <span class="op">=</span> <span class="dv">20</span>, <span class="fl">10.0</span>                    <span class="co"># 20 Hz for 10 s per hold</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb5-7"><a href="#cb5-7"></a></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    ai <span class="op">=</span> device.analogIn</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    ai.channelEnableSet(<span class="dv">1</span>, <span class="va">True</span>)           <span class="co"># accelerometer on channel 2 -&gt; index 1</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>    ai.channelRangeSet(<span class="dv">1</span>, <span class="fl">5.0</span>)</span>
+<span id="cb5-12"><a href="#cb5-12"></a>    ai.frequencySet(fs)</span>
+<span id="cb5-13"><a href="#cb5-13"></a>    ai.bufferSizeSet(n)</span>
+<span id="cb5-14"><a href="#cb5-14"></a></span>
+<span id="cb5-15"><a href="#cb5-15"></a>    <span class="cf">for</span> pos, accel <span class="kw">in</span> <span class="bu">zip</span>(positions, known_accel):</span>
+<span id="cb5-16"><a href="#cb5-16"></a>        <span class="bu">input</span>(<span class="ss">f"Hold pendulum '</span><span class="sc">{</span>pos<span class="sc">}</span><span class="ss">' (</span><span class="sc">{</span>accel<span class="sc">:+.2f}</span><span class="ss"> m/s^2), then press Enter..."</span>)</span>
+<span id="cb5-17"><a href="#cb5-17"></a></span>
+<span id="cb5-18"><a href="#cb5-18"></a>        ai.configure(<span class="va">False</span>, <span class="va">True</span>)</span>
+<span id="cb5-19"><a href="#cb5-19"></a>        <span class="cf">while</span> ai.status(<span class="va">True</span>) <span class="op">!=</span> DwfState.Done:</span>
+<span id="cb5-20"><a href="#cb5-20"></a>            time.sleep(<span class="fl">0.05</span>)</span>
+<span id="cb5-21"><a href="#cb5-21"></a></span>
+<span id="cb5-22"><a href="#cb5-22"></a>        volts <span class="op">=</span> np.array(ai.statusData(<span class="dv">1</span>, n))</span>
+<span id="cb5-23"><a href="#cb5-23"></a>        mean_voltages.append(volts.mean())</span>
+<span id="cb5-24"><a href="#cb5-24"></a>        <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>pos<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>mean_voltages[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span>
+<span id="cb5-25"><a href="#cb5-25"></a></span>
+<span id="cb5-26"><a href="#cb5-26"></a>mean_voltages <span class="op">=</span> np.array(mean_voltages)</span>
+<span id="cb5-27"><a href="#cb5-27"></a></span>
+<span id="cb5-28"><a href="#cb5-28"></a><span class="co"># Save the raw calibration table for your records</span></span>
+<span id="cb5-29"><a href="#cb5-29"></a>np.savetxt(<span class="st">'../Data/accel_calibration_data.csv'</span>,</span>
+<span id="cb5-30"><a href="#cb5-30"></a>           np.column_stack([known_accel, mean_voltages]),</span>
+<span id="cb5-31"><a href="#cb5-31"></a>           header<span class="op">=</span><span class="st">'accel_m_per_s2,voltage_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>New syntax, in the order it appears:</p>
+<ul>
+<li><strong><code>mean_voltages = []</code> and <code>.append(...)</code></strong> — a <em>list</em> you grow one element at a time. In Lab 02 you pre-allocated a NumPy array with <code>np.zeros</code> and filled slots by index; a list plus <code>append</code> is the more natural choice when results simply arrive one after another. The <code>np.array(...)</code> at the end converts it for math.</li>
+<li><strong><code>zip(positions, known_accel)</code></strong> — loops over two lists <em>in parallel</em>, handing you one matched pair (<code>pos</code>, <code>accel</code>) per pass. Compare with <code>enumerate</code>, which pairs each element with its <em>index</em>; <code>zip</code> pairs elements with <em>each other</em>.</li>
+<li><strong><code>input(...)</code></strong> — prints a prompt and <strong>pauses the script</strong> until you press Enter. That pause is what turns this from a program into a <em>procedure</em>: the script does the recording and bookkeeping; you do the physical positioning. (In VS Code notebooks the prompt appears in a box at the top of the window.)</li>
+<li><strong><code>np.column_stack([...])</code></strong> — glues equal-length arrays side-by-side into columns, ready for <code>np.savetxt</code>. This is how you will save multi-column results all semester.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q5.</strong> Copy the four mean voltages into a table in your logbook alongside the known accelerations. Are ‘right’ and ‘left’ nearly equal? Should they be?</p>
+<p><strong>Q6.</strong> In one sentence: what did the script automate, and what did it leave to you? Why is this a sensible division of labor?</p>
+</div>
+</div>
+</section>
+<section id="fit-and-plot-the-calibration" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="fit-and-plot-the-calibration"><span class="header-section-number">7.2</span> Fit and Plot the Calibration</h3>
+<p>Nothing new here — this is Lab 02’s calibration analysis with different units. Fit <a href="#eq-accel-cal" class="quarto-xref">Equation&nbsp;3</a> with <code>np.polyfit</code> (voltage in, acceleration out), compute the norm of residuals, <span class="math inline">\(s_{yx}\)</span>, the 95% CI (with <span class="math inline">\(\nu = N - 2 = 2\)</span> — note how few degrees of freedom four points leave!), and <span class="math inline">\(S_{a_1}\)</span>, then build the calibration plot to match <a href="#fig-example-cal" class="quarto-xref">Figure&nbsp;6</a>. Annotate the equation and fit statistics with units, save <strong>.pdf</strong> and <strong>.png</strong> at 600 DPI, and save the coefficients:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>np.savetxt(<span class="st">'../Data/accel_calibration_coeffs.csv'</span>, coeffs_acc,</span>
+<span id="cb6-2"><a href="#cb6-2"></a>           header<span class="op">=</span><span class="st">'a1 ((m/s^2)/V), a0 (m/s^2)'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q7.</strong> Record your accelerometer calibration equation with units. With <span class="math inline">\(\nu = 2\)</span>, the Student’s t-value is large (<span class="math inline">\(t_{2,95\%} = 4.303\)</span>). What does that say about the confidence you can claim from a four-point calibration, and what would adding intermediate orientations buy you?</p>
+</div>
+</div>
+</section>
+<section id="example-result" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="example-result"><span class="header-section-number">7.3</span> Example Result</h3>
+<div id="fig-example-cal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-cal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab03_AccelCalibration.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Example accelerometer calibration plot (made-up data). Your values will differ, but formatting and annotations should match."><img src="figures/Python/FirstName_LastName_Lab03_AccelCalibration.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-cal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Example accelerometer calibration plot (made-up data). Your values will differ, but formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-4" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-part-4"><span class="header-section-number">8</span> Part-4: Record the Swing (Scope Record Mode)</h2>
+<p>The swing capture is a <em>one-off</em> task, so the GUI is the right tool. But it is also a demanding capture — two channels for ~15 seconds at 1000 Hz — which exceeds what the Logger (built for slow trend logging) or a single Scope buffer can hold. WaveForms’ <strong>Record mode</strong> streams samples to the computer for exactly this situation.</p>
+<p>Why 1000 Hz, when 100 Hz resolved the swing fine in Lab 02? Because this week you will <strong>differentiate</strong> the angle signal. Differentiation is exquisitely sensitive to how well the samples trace the true curve; a densely-sampled signal gives the difference quotient a fighting chance. (It also multiplies file size ×10 — engineering is trade-offs.)</p>
+<ol type="1">
+<li>Close your notebook’s device connection (re-run any cell <em>outside</em> a <code>with</code> block, or restart the kernel) and open <strong>WaveForms</strong>.</li>
+<li>Open <strong>Scope</strong>, enable <strong>both channels</strong> (Ch1 pot, Ch2 accel), range ±5 V.</li>
+<li>Switch the acquisition <strong>Mode</strong> to <strong>Record</strong>, set <strong>Rate</strong> to 1 kHz and the sample count for ~15 s; match <a href="#fig-record-setup" class="quarto-xref">Figure&nbsp;7</a>.</li>
+<li>One partner holds the pendulum at <strong>+90°</strong>; start the recording; release smoothly after a second or two; let it ring down.</li>
+<li>Stop, then <strong>File → Export</strong> the record as CSV to <code>ME3300/Lab_03/Data/FirstName_LastName_Lab03_Swing.csv</code>; match <a href="#fig-record-export" class="quarto-xref">Figure&nbsp;8</a>. Open it in VS Code: confirm three columns (time, Ch1, Ch2) and count the <code>#</code> header lines for <code>skiprows</code>.</li>
+</ol>
+<div id="fig-record-setup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-record-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Scope_Record_Setup.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Scope Record mode configured for the two-channel swing capture."><img src="figures/Scope_Record_Setup.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-record-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Scope Record mode configured for the two-channel swing capture.
+</figcaption>
+</figure>
+</div>
+<div id="fig-record-export" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-record-export-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Scope_Record_Export.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Exporting the recorded acquisition to CSV."><img src="figures/Scope_Record_Export.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-record-export-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Exporting the recorded acquisition to CSV.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q8.</strong> Approximately how many samples does this capture produce, and how large is the CSV file? Compare with your Lab 02 swing file.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-5" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-part-5"><span class="header-section-number">9</span> Part-5: Post-Process — Two Roads to Normal Acceleration</h2>
+<p>Back in your notebook (close WaveForms again if you reopen the device — though this part needs no hardware).</p>
+<section id="load-both-calibrations-and-the-swing" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="load-both-calibrations-and-the-swing"><span class="header-section-number">9.1</span> Load Both Calibrations and the Swing</h3>
+<p>You calibrated the potentiometer <em>last week</em>. Good calibrations are assets — load, don’t redo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Saved calibrations: '#' header lines are skipped via comments='#'</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>pot_coeffs <span class="op">=</span> np.loadtxt(<span class="st">'../../Lab_02/Data/calibration_coeffs.csv'</span>,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>                        delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)   <span class="co"># [deg/V, deg]</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>acc_coeffs <span class="op">=</span> np.loadtxt(<span class="st">'../Data/accel_calibration_coeffs.csv'</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>                        delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)   <span class="co"># [(m/s^2)/V, m/s^2]</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-8"><a href="#cb7-8"></a>swing <span class="op">=</span> pd.read_csv(<span class="st">'../Data/FirstName_LastName_Lab03_Swing.csv'</span>, skiprows<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb7-9"><a href="#cb7-9"></a>t_raw <span class="op">=</span> swing.iloc[:, <span class="dv">0</span>].values</span>
+<span id="cb7-10"><a href="#cb7-10"></a>v_pot <span class="op">=</span> swing.iloc[:, <span class="dv">1</span>].values</span>
+<span id="cb7-11"><a href="#cb7-11"></a>v_acc <span class="op">=</span> swing.iloc[:, <span class="dv">2</span>].values</span>
+<span id="cb7-12"><a href="#cb7-12"></a></span>
+<span id="cb7-13"><a href="#cb7-13"></a>angle_deg <span class="op">=</span> np.polyval(pot_coeffs, v_pot)   <span class="co"># volts -&gt; degrees</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>accel_ms2 <span class="op">=</span> np.polyval(acc_coeffs, v_acc)   <span class="co"># volts -&gt; m/s^2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>np.loadtxt(..., comments='#')</code> is the counterpart to the <code>header='...'</code> you passed <code>np.savetxt</code>: lines starting with <code>#</code> are treated as comments and skipped automatically. (As always: <code>skiprows</code> for the swing file must match <em>your</em> export — open it and count.)</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q9.</strong> Why is loading last week’s calibration legitimate here — and what changes to the setup <em>would</em> force you to re-calibrate? Name two.</p>
+</div>
+</div>
+</section>
+<section id="trim-to-the-release-a-better-detector" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="trim-to-the-release-a-better-detector"><span class="header-section-number">9.2</span> Trim to the Release — a Better Detector</h3>
+<p>In Lab 02 you found the release by thresholding <code>np.diff</code> of the voltage. <strong>At 1000 Hz that method breaks</strong>: with 10× more samples, the <em>change per sample</em> shrinks by 10× while the noise per sample stays the same — so the release-induced steps hide below the noise floor. Instead of detecting <em>change between samples</em>, detect <em>departure from the held position</em>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>hold_mean <span class="op">=</span> angle_deg[:<span class="dv">500</span>].mean()       <span class="co"># average angle during the hold</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>moved <span class="op">=</span> np.<span class="bu">abs</span>(angle_deg <span class="op">-</span> hold_mean) <span class="op">&gt;</span> <span class="fl">2.0</span>    <span class="co"># more than 2 degrees away</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>idx0  <span class="op">=</span> np.argmax(moved)                 <span class="co"># first True = release</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a>t     <span class="op">=</span> t_raw[idx0:] <span class="op">-</span> t_raw[idx0]</span>
+<span id="cb8-6"><a href="#cb8-6"></a>theta <span class="op">=</span> np.radians(angle_deg[idx0:])     <span class="co"># radians from here on</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>a_meas <span class="op">=</span> accel_ms2[idx0:]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Same <code>np.argmax</code>-on-a-boolean-array trick as Lab 02 — only the <em>condition</em> is smarter. A 2° threshold is far above the angle noise but far below the swing amplitude, so it cannot misfire. This is a general lesson: <strong>detection thresholds must be designed against the noise level</strong>, and a detector that worked at one sample rate can fail at another.</p>
+</section>
+<section id="compute-both-normal-accelerations" class="level3" data-number="9.3">
+<h3 data-number="9.3" class="anchored" data-anchor-id="compute-both-normal-accelerations"><span class="header-section-number">9.3</span> Compute Both Normal Accelerations</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>r  <span class="op">=</span> <span class="fl">0.216</span>            <span class="co"># m — YOUR measured pivot-to-accelerometer distance (Q2)</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>g  <span class="op">=</span> <span class="fl">9.81</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>dt <span class="op">=</span> t[<span class="dv">1</span>] <span class="op">-</span> t[<span class="dv">0</span>]</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Road 1: from the differentiated angle (Eq. 1)</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>theta_dot <span class="op">=</span> np.gradient(theta, dt)       <span class="co"># angular velocity (rad/s)</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a>a_calc    <span class="op">=</span> <span class="op">-</span>(theta_dot<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> r</span>
+<span id="cb9-8"><a href="#cb9-8"></a></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co"># Road 2: from the accelerometer, gravity removed (Eq. 2 rearranged)</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>a_meas_n  <span class="op">=</span> a_meas <span class="op">+</span> g <span class="op">*</span> np.cos(theta)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>np.gradient(theta, dt)</code></strong> computes the derivative using <em>central</em> differences — each point’s slope uses its neighbors on both sides — and returns an array the <strong>same length</strong> as the input (unlike <code>np.diff</code>, which is one short and half a sample shifted). That makes it the right tool whenever the derivative must line up sample-for-sample with other signals, as here.</li>
+<li>The gravity removal is <a href="#eq-accel-reading" class="quarto-xref">Equation&nbsp;2</a> solved for the normal term: <span class="math inline">\(-\dot\theta^2 r = a_y + g\cos\theta\)</span>. Note it uses <span class="math inline">\(\theta\)</span> from the <em>potentiometer</em> — the two sensors literally cooperate in this correction.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q10.</strong> Derive the gravity-removal line yourself: starting from <a href="#eq-accel-reading" class="quarto-xref">Equation&nbsp;2</a>, show the algebra that isolates <span class="math inline">\(-\dot\theta^2 r\)</span>. Sketch the FBD (<a href="#fig-gravity-fbd" class="quarto-xref">Figure&nbsp;1</a>) in your logbook as part of the derivation.</p>
+</div>
+</div>
+</section>
+<section id="plot-the-comparison" class="level3" data-number="9.4">
+<h3 data-number="9.4" class="anchored" data-anchor-id="plot-the-comparison"><span class="header-section-number">9.4</span> Plot the Comparison</h3>
+<p>Build the comparison figure to match <a href="#fig-example-comp" class="quarto-xref">Figure&nbsp;9</a>. <strong>Plot the noisier signal first</strong> (<code>a_calc</code>, blue) so the cleaner accelerometer trace stays visible on top — a small trick that makes crowded plots readable. Annotate, format per the Post-Lab requirements, and save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q11.</strong> Which signal is noisier, and <em>why</em>? Connect your answer to the differentiation step and the sample rate.</p>
+<p><strong>Q12.</strong> At what pendulum angle and time is the normal acceleration largest in magnitude? Does that match your physical intuition for where the pendulum moves fastest?</p>
+<p><strong>Q13.</strong> The two signals will not agree perfectly. List at least two physical (not noise) reasons — think sensor mounting alignment, the measured <span class="math inline">\(r\)</span>, calibration errors, and the assumptions behind <a href="#eq-normal-accel" class="quarto-xref">Equation&nbsp;1</a>.</p>
+</div>
+</div>
+</section>
+<section id="example-result-1" class="level3" data-number="9.5">
+<h3 data-number="9.5" class="anchored" data-anchor-id="example-result-1"><span class="header-section-number">9.5</span> Example Result</h3>
+<div id="fig-example-comp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab03_NormalAccel.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Example normal acceleration comparison (made-up data). The calculated signal’s noise is real and expected — your plot should show the same character."><img src="figures/Python/FirstName_LastName_Lab03_NormalAccel.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Example normal acceleration comparison (made-up data). The calculated signal’s noise is real and expected — your plot should show the same character.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">10</span> Post-Lab Assignment</h2>
+<p>Upload your submissions to Canvas. <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u> A full example solution notebook is posted after all sections have met; check your approach against it, but submit your own work.</p>
+<section id="submission-items" class="level3" data-number="10.1">
+<h3 data-number="10.1" class="anchored" data-anchor-id="submission-items"><span class="header-section-number">10.1</span> Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook (<code>FirstName_LastName_Lab03.ipynb</code>), restarted and run top-to-bottom (acquisition cells may show their saved outputs)</li>
+<li>Accelerometer calibration plot, <strong>.pdf</strong></li>
+<li>Normal acceleration comparison plot, <strong>.pdf</strong></li>
+<li>Answers to the post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="calibration-plot-requirements" class="level3" data-number="10.2">
+<h3 data-number="10.2" class="anchored" data-anchor-id="calibration-plot-requirements"><span class="header-section-number">10.2</span> Calibration Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>Major and minor grids on; top and right spines removed</li>
+<li>Calibration data: red circle markers, size 75</li>
+<li>Linear fit: solid blue, 2 pt; 95% CI: dashed black, 1 pt</li>
+<li>Axis labels with units; title “FirstName LastName’s Accelerometer Calibration Plot” with the date</li>
+<li><code>ax.text</code> annotation (4 decimals, units): calibration equation, norm of residuals, <span class="math inline">\(s_{yx}\)</span>, <span class="math inline">\(S_{a_1}\)</span></li>
+</ul>
+</section>
+<section id="comparison-plot-requirements" class="level3" data-number="10.3">
+<h3 data-number="10.3" class="anchored" data-anchor-id="comparison-plot-requirements"><span class="header-section-number">10.3</span> Comparison Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>Major and minor grids on; top and right spines removed</li>
+<li>Calculated signal (<span class="math inline">\(-\dot\theta^2 r\)</span>): blue line, 1 pt, drawn <strong>first</strong></li>
+<li>Measured signal (gravity-removed accelerometer): red line, 1.5 pt, drawn on top</li>
+<li>Time axis starts at release (<span class="math inline">\(t=0\)</span>); legend placed clear of the data</li>
+<li>Axis labels with units; title “FirstName LastName’s Normal Acceleration Plot” with the date</li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="10.4">
+<h3 data-number="10.4" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">10.4</span> Post-Lab Questions</h3>
+<ol type="1">
+<li>Report your accelerometer calibration equation with units, and its norm of residuals and <span class="math inline">\(s_{yx}\)</span>.</li>
+<li>What pydwf call sets the sample rate, and what is its GUI equivalent?</li>
+<li>Why does the gravity-subtraction step matter? Describe what your comparison plot would look like without it.</li>
+<li>Why is the calculated normal acceleration noisier than the measured one? Would recording at 100 Hz have made it better or worse? Explain.</li>
+<li>Which of the two methods do you trust more, and why?</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="before-you-leave"><span class="header-section-number">11</span> Before You Leave</h2>
+<ul>
+<li>Show your comparison plot to a TA before tearing down — it is much easier to re-record now than next week.</li>
+<li>Remove all jumper wires and return them to the wire bin, sorted by color; discard damaged wires.</li>
+<li>Disconnect both sensor leads and return the apparatus, DMM, and tools to their stations.</li>
+<li>Confirm your data files have synced to OneDrive (check on a second device) and that <strong>both</strong> partners have everything.</li>
+<li>Clean the station, collect your belongings, and log off.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

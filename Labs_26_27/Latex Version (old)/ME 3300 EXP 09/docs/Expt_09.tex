@@ -1,0 +1,336 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} % 'openany' here removes the gap page between days, erase it to restore this gap; 'oneside' can also be added to remove the shift that odd pages have to the right for easier reading
+
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\section{Learning objective}
+The objectives of this experiment are to provide the student with an opportunity to:
+
+\begin{enumerate}
+    \item Learn how to use a thermocouple to measure temperatures
+    \item Estimate the time constant of a thermocouple based on its step input response using two different methods
+    \begin{itemize}
+        \item Using error fraction method
+        \item Using time required to reach 62.3\% of the final response
+    \end{itemize}
+\end{enumerate}
+
+\section{Required Equipment}
+\begin{multicols}{2}
+\begin{enumerate}
+    \item AD595AQ Thermocouple Instrumentation Amplifier
+    \item K-Type Thermocouple
+    \item LM358 Op-Amp
+    \item Powered breadboard
+    \item Digital Multi-meter
+    \item Wire kit and resistor kits
+    \item Screwdriver, pliers, wire stripper
+    \item Hot plate, beaker, stirrer, stands, and clamps
+    \item Liquid-In-Glass Thermometer (LIGT)
+\end{enumerate}
+\end{multicols}
+
+\section{Introduction}
+In many applications, it is necessary to make measurements of a quantity that is rapidly changing with time. In order to do this, we have to know how the measurement system being used will respond to such dynamic inputs. The ability of a measurement system to respond to a time-varying input is called its dynamic response. We will be studying a thermocouple, which can be modeled as a first-order system. \\
+
+First-order dynamic response is characterized by one parameter, $\tau$, the time constant. The physical meaning of a temperature device's time constant is most easily seen when it is exposed to a step change in temperature. In this case, the time constant describes the time required for the indicated temperature of the device to change 63.2\% of the way from its initial to the final temperature. The time constant of a temperature-measuring device will be a function of the device's physical properties and the heat transfer characteristics of the measured medium.
+
+\section{Laboratory instruction}
+For this experiment, you will use Analog Device's ``AD595AQ" Monolithic Thermocouple Amplifier with Cold Junction Compensation (see appendix \ref{ap:AD594}). This 14-pin chip combines an ice point reference with a pre-calibrated amplifier to produce a high-level voltage (10mV/C) output directly from a K-Type (chromel-alumel) thermocouple. Because the output from the AD595AQ has low impedance, we will buffer the output from the AD595AQ to isolate it from the input side of the NI-MyDAQ USB data acquisition device using a voltage follower circuit.
+
+A voltage follower or buffer amplifier circuit is commonly used to isolate the impedance load from other stages of the circuit or measurement system. In this experiment, it will be used to provide the same voltage output from the thermocouple amplifier to the data acquisition system. A voltage follower circuit is shown in Fig. \ref{fig:5}. For the op-amp pins and circuit, refer to the previous experiments with op-amps.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=3in]{VoltageFollower.png}
+    \caption{A typical voltage follower circuit}
+    \label{fig:5}
+\end{figure}
+
+\subsection{Part 1: Experimental Circuit Setup}
+
+\begin{enumerate}
+    \item Set up a heated water bath as shown in Fig. \ref{fig:1}.
+    \item Identify any safety issues with the use of water and electrical components, as well as boiling water. 
+    \begin{itemize}
+        \item Avoid touching the beaker and the hot plate.
+        \item If you need to move the hotplate or beaker, ask a TA for assistance.
+    \end{itemize}
+    \item Place the stirrer into the beaker and adjust the stir setting to achieve a high speed without splashing.
+    \item Make sure that the liquid-in-glass thermometer is at the appropriate calibration depth. 
+    \item At the beginning of the lab, immediately turn on the heating element to save time. 
+    \item Once the water is boiling, reduce the heat to achieve a stable simmer. 
+    \begin{itemize}
+        \item At this point, set the stirrer to a low setting.
+    \end{itemize}
+    \item Construct the circuit shown in Fig \ref{fig:2}. Use the \href{https://www.adafruit.com/product/1778?srsltid=AfmBOoqEDJf5GsTsR4Gr9LmLwYLw-Nv4yd97p6g4jvmZ-DXAxlDykVBP}{Adafruit Analog Output K-Type Thermocouple Amplifier - AD8495 Breakout} to measure the temperature. Use the powered breadboard to make it easier to integrate it with the voltage follower circuit. 
+    \item Notes for AD8495:
+    \begin{itemize}
+        \item +5V from DC power supply is supplied to V+
+        \item Out is connceted to AI0
+        \item A +5V source has a temperature range from: -250°C to +750°C
+    \end{itemize}
+    \item When data collection is running, hold the thermocouple wire in a constant location in the heated bath. 
+    \item Make sure that the thermocouple does not touch the beaker as it may produce inaccurate measurements.
+\end{enumerate}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=3in]{TestSetup.png}
+    \caption{Heat bath for thermocouple experiment.}
+    \label{fig:1}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=6.0in]{IMG_1189.jpg}
+    \caption{Sample circuit for the thermocouple chip and voltage follower circuit.}
+    \label{fig:2}
+\end{figure}
+
+
+\subsection{Part 2: Thermocouple calibration (2-point calibration)}
+\begin{enumerate}
+    \item Update the code \boldpurp{MATLAB\_Data\_Acquisition.m} to match the provided code on Canvas and with the following settings.
+    \begin{itemize}
+        \item Reference \boldpurp{MATLAB\_Data\_Acquisition.m} from lab 2.
+    \end{itemize}
+    \item Collect the single-channel voltage from analog-in ([0]).
+    \begin{itemize}
+        \item Duration: 10 seconds
+        \item Sample rate: 50 samples per second
+        \item Change slope = 1 and bias = 0.
+    \end{itemize}
+    \item Leave the LIGT away from the hot plate and beaker.
+    \item Record the thermocouple measurement (volts) and the LIGT measurement of the ambient air temperature. 
+    \begin{itemize}
+        \item Note the unit of temperature used.
+    \end{itemize}
+    \item Hang the LIGT from the laboratory stand in the slow-boiling water (with the stirrer on low).
+    \item Record the thermocouple measurement and the LIGT measurement of the slow boiling water. 
+    \begin{itemize}
+        \item Note the unit of temperature used.
+    \end{itemize}
+    \item Remove the thermocouple from the heated bath and allow it to return to room temperature.
+    \item Use the two data points and perform linear regression analysis calibrate the thermocouple measurement system. 
+\end{enumerate}
+
+\textbf{Q:} How accurate is the sensitivity and bias of the AD8495? Is the two-point calibration sufficient? Does it match the provided calibration from Adafruit? \\
+
+\subsection{Part 3: Thermocouple Step Response}
+\begin{enumerate}
+    \item On your \boldpurp{MATLAB\_Data\_Acquisition.m} code, change the slope and intercept values acquired from the calibration step (part 2).  
+    \begin{itemize}
+        \item Check your code:
+        \begin{itemize}
+            \item Measure room temperature and it should match the LIGT temperature.
+            \item The modified Matlab program should output temperature rather than the volts.
+            \item Measure heat bath temperature and it should match the LIGT temperature.
+        \end{itemize}
+    \end{itemize}
+    \item Collect the single-channel voltage output from ([0]).
+    \begin{itemize}
+        \item Duration: 5 seconds
+        \item Sample rate: 1000 samples per second
+        \item Change the slope = \# and bias = \#.
+    \end{itemize}
+    \item For the main experiment, high sample rate is necessary because you will be capturing the dynamic response of the thermocouple.
+    \item Steps for the main experiment:
+    \begin{itemize}
+        \item Keep thermocouple tip a few inches away from the beaker.
+        \item Start the data acquisition program.
+        \item Once the figure pops up, immediately (but safely) plunge the thermocouple into the heated bath.
+        \item Save a data file using this naming convention: \boldpurp{Plunge\_XX.csv} where
+        \begin{itemize}
+            \item \texttt{XX} indicates the current dynamic measurement.
+        \end{itemize}
+        \item Update the file name before each run to avoid overwriting data.
+        \item Repeat for three successful runs. (review ``List of common mistakes" to determine success of the run) 
+        \item Ensure that the thermocouple reaches room temperature before repeating the steps.
+    \end{itemize}
+    \item Record the heated bath temperature of the LIGT for each run in your log book.
+    \item List of common mistakes:
+    \begin{itemize}
+        \item Gage the success of the experiment by observing the output plot.
+        \item The plot should follow the exponential curve as seen in Fig.\ref{fig:3}.
+        \item Mistake 1: The exponential curve has a larger-than-expected initial bump caused by the steam coming from the boiling water.
+        \begin{itemize}
+            \item Resolution: ask the TA to add more water to your beaker; there might not be enough.
+        \end{itemize}
+        \item Mistake 2: The exponential curve is inconsistent due to the thermocouple not being submerged at a proper depth.
+        \begin{itemize}
+            \item Resolution: ask a TA to add more water to your beaker.
+            \item Resolution: Bring the circuit a little closer to the beaker to make it easier to submerge the thermocouple completely.
+        \end{itemize}
+        \item Mistake 3: Measured initial temperature is significantly above room temperature.
+        \begin{itemize}
+            \item Resolution: Let the thermocouple cool off before repeating the experiment.
+        \end{itemize}
+        \item If success is not apparent, repeat the above steps.
+    \end{itemize}
+    \item Save your data for use in the Post-Laboratory report. 
+    \item For each of these experimental data sets, plot the raw temperature vs. time, with the following steps: 
+    \begin{itemize}
+        \item Identify the start time of the step input (when the thermocouple entered the boiling water, not the steam).
+        \begin{itemize}
+            \item Open variable with time and temperature.
+            \item Use the list of temperatures to find the proper index and find the matching time.
+        \end{itemize}
+        \item Plot all 3 on a single graph, with the time adjusted so that all 3 dynamic responses begin at $t=0$.
+        \item Set your x-axis limits to show a small portion of the data before the plunge and the transient responses until the convergence is clear (do not plot the full time of recording).
+    \end{itemize}   
+\end{enumerate}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=5.5in]{PostLabPlot_Part1.png}
+    \caption{Step response plot of thermocouple for different test runs}
+    \label{fig:3}
+\end{figure}
+
+\subsection{Part 4: Time constant analysis-method-01}
+Here we will perform the time-constant calculation using the two different approaches. The first approach will utilize the time required to reach 63.2\% of the steady state value, and the second approach will use the error fraction method.
+
+\begin{enumerate}
+    \item Plot the temperature vs time data (all three runs). 
+    \item Ensure that at t=0s the temperature of the thermocouple starts to rise. (Talk to TAs; if you are not sure of the steps)
+    \begin{itemize}
+        \item The current method depends on whether t=0s being correct to implement correctly.
+        \item Find the temperature at t=0s ($T_o$).
+        \item Find the temperature at the steady state ($T_{ss}$).
+        \item Open csv file, ``data" variable, or figure of data to find these values.
+    \end{itemize}
+    \item Use the following equation to find temperature needed to reach 63.2\% of the steady:
+    \begin{equation}
+        T(\tau)=T_o+0.632(T_{ss}-T_o)
+    \end{equation}
+    \item Identify the time required to reach 63.2\% of the steady state value. Here you may have to zoom in to get accurate value of time constant.
+    \item Complete this for the three data sets.
+\end{enumerate}
+
+\subsection{Part 4: Time constant analysis-method-02}
+Select one of your best data sets for time constant estimation using the error fraction method. Here, you have to modify the MATLAB code submitted during the pre-lab assignment.
+\begin{enumerate}
+    \item Modify the code provided, \boldpurp{MATLAB\_Error\_fraction\_vs\_time.m}, to calculate the error fraction ($\Gamma$) and plot the natural log of $\Gamma$ as a function of time.
+    \item For calculating $\Gamma$ you have to identify the initial temperature ($T_{o}$) and ($T_{ss}$). 
+    \begin{itemize}
+        \item Find index value of the ($T_{o}$) and ($T_{ss}$).
+        \item Make sure to reference the $T_{ss}$ value from the LIGT.
+    \end{itemize}
+    \item For this analysis you have to only use range of data set that shows exponential trend. 
+    \begin{itemize}
+        \item With the found index, modify the MATLAB program with the index values of the ($T_{o}$) and ($T_{ss}$).
+        \item Afterward, reduce the index for ($T_{ss}$) so that you appropriate range of data.
+        \item Talk to TAs' about this if you are confused.
+    \end{itemize}
+    \item Perform linear regression analysis to determine the slope of the line (Hint: ln($\Gamma$) as the dependent variable and \textit{t} as the independent variable).
+    \item Plot $ln(\Gamma)$ vs. time and the resulting curve fit (from linear regression analysis).
+    \item Time constant is given as $\tau = -1/\textrm{Slope}$
+\end{enumerate}
+
+\textbf{Q:}  Compare time constant using this method to the time constant calculated form Method-1. Do they match? Why? Why not?
+
+\textbf{Q:}  What is the impact of selecting a different range of data for this analysis? %May address this in your report.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=5.5in]{PostLabPlot_Part2.png}
+    \caption{Sample error fraction plot for one test runs.}
+    \label{fig:4}
+\end{figure}
+
+Equation showing the relationship between $\Gamma$ and the time constant ($\tau$).
+\begin{eqnarray*}\label{1}
+    % \nonumber % Remove numbering (before each equation)
+ln \Gamma &=& -\frac{1}{\tau}t \\
+ln \left( \frac{T(t)-T_{ss}}{T_{o}-T_{ss}} \right) &=& -\frac{1}{\tau}t
+\end{eqnarray*}
+
+\clearpage
+\section{Post-Laboratory}
+For this experiment, submit the following items on Canvas for your post-laboratory assignment.
+\begin{enumerate}
+    \item \textbf{Step response plot of thermocouple for different test runs}
+    \begin{itemize}
+        \item Submit a single figure with temperature plotted ($^{o}C$) vs. time (seconds) for all three step responses.
+        \item The step response data should be time shifted so that the step time for all 3 occurs at $t=0$.
+        \item The plot should focus on the transient response, and should include a small amount of data before the step input change.
+        \begin{itemize}
+            \item Using ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 10}.
+        \end{itemize} 
+        \item The plot should be 3.5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Include legend of all different sampling types.
+        \item Text should be included of the individual time constants and the averaged time constant.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Temperature Plot''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+    \end{itemize}
+    \item \textbf{Sample error fraction plot} 
+    \begin{itemize}
+        \item Submit a single figure for one of the temperature plots  with the natural logarithm of error fraction vs time.
+        \item Compare the time constant acquired using this method to the time constant acquired using the step response plot.
+        \begin{itemize}
+            \item Using ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 10}.
+        \end{itemize} 
+        \item The plot should be 3.5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Text should be included of the individual time constants.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Error Fraction Plot''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+    \end{itemize}
+    \item Answer all questions in the post-lab assessment on Canvas.
+\end{enumerate}
+
+%{\bf Post-Laboratory Report} \\
+%This experiment will be the subject of the 3rd of 3 Formal Reports. For this third report, start with the report draft/outline posted on Canvas.
+\clearpage
+
+\section{Appendix}
+\label{ap:AD594}
+%\subsection{Matlab program to acquire data for thermocouple during the experiment}
+%\label{app:mainDAQProgram}
+%\lstinputlisting{../Code/mainAcqProgram_ForCollectingData.m}
+%\clearpage
+
+%\subsection{Matlab program to acquire data for thermocouple during the calibration}
+%\label{app:calDAQProgram}
+%\lstinputlisting{../Code/mainAcqProgram_ForCalibration.m}
+%\clearpage
+
+%\subsection{Matlab program to plot calibration data}
+%\label{app:calPlotProgram}
+%\lstinputlisting{../Code/generate_CalibrationPlot.m}
+%\clearpage
+
+%\subsection{Matlab program to plot temperature vs time }
+%\label{app:postLab}
+%\lstinputlisting{../Code/Lab09_PostLab_Part1.m}
+%\clearpage
+
+%\subsection{Matlab program to plot Error fraction vs time }
+%\label{app:postLab}
+%\lstinputlisting{../Code/Lab09_PostLab_Part2.m}
+%\clearpage
+%
+\subsection{AD594/AD595}
+The AD594/AD595 is a complete instrumentation amplifier and thermocouple cold junction compensator on a monolithic chip.It combines an ice point reference with a precalibrated amplifierto produce a high level (10 mV/$^oC$) output directly from a thermocouple signal. Pin-strapping options allow it to be used as alinear amplifier-compensator or as a switched output setpoint controller using either fixed or remote setpoint control. It can be used to amplify its compensation voltage directly, thereby converting it to a stand-alone Celsius transducer with a low impedance voltage output.The AD594/AD595 includes a thermocouple failure alarm that indicates if one or both thermocouple leads become open. The alarm output has a flexible format which includes TTL drive capability.The AD594/AD595 can be powered from a single ended supply(including +5 V) and by including a negative supply, temperatures below 0$^oC$ can be measured. To minimize self-heating, an unloaded AD594/AD595 will typically operate with a total supply current 160 $\mu A$, but is also capable of delivering in excess of $\pm$5 mA to a load. Detail information can be found at \href{https://www.sparkfun.com/datasheets/IC/AD595.pdf}{Sparkfun website}. A general schematic of the AD595 is shown in figure \ref{fig:AD595}.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=3.0in]{AD594Schematic.png}
+\caption{Schematic showing single supply operation.}
+\label{fig:AD595}
+\end{figure}
+
+
+
+\end{document} 

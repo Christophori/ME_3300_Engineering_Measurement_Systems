@@ -1,0 +1,308 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} % 'openany' here removes the gap page between days, erase it to restore this gap; 'oneside' can also be added to remove the shift that odd pages have to the right for easier reading
+
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\section{Learning Objectives}
+Your objectives of this experiment are to:
+
+\begin{enumerate}
+\item Gain additional experience with MATLAB.
+\item Create a simple program for data acquisition using MATLAB's Data aquisition toolbox and National Instrument’s \href{https://www.ni.com/docs/en-US/bundle/mydaq-specs/page/specs.html}{NI-MyDAQ}.
+\item Become familiar with breadboards, wiring, digital multi-meters, oscilloscopes, function generators, and other basic laboratory equipment and skills.
+\end{enumerate}
+
+\section{Required Equipment}
+\begin{multicols}{2}
+\begin{enumerate}
+    \item USB Data Acquisition Device (NI-MyDAQ)
+    \item Breadboard (MyDigital protoboard)
+    \item Digital Multimeter (both handheld and table-top)
+    \item DC Power Supply
+    \item Function Generator
+    \item Oscilloscope
+    \item Needle-nose pliers \& wire strippers
+    \item Small flathead screwdriver
+    \item Digital multimeter (DMM)
+    \item Power supply and wire kit
+    \item BNC T-Connectors
+\end{enumerate}
+\end{multicols}
+
+\section{Introduction}
+In this experiment, you will compare the measured signals from multiple sources including: an oscilloscope, a digital multimeter, a table-top digital multi-meter, and the NI-MyDAQ data acquisition device to view both DC and AC signals through a voltage divider circuit. 
+
+A typical AC signal is shown in figure \ref{fig:demoSignal}. The DC offset component is the offset of the reference signal (that is, zero volts) and $V_{pp}$ is the difference between the maximum and minimum voltage in the AC signal. Therefore; in the provided example, the offset and $V_{pp}$ would be 2 volts and 6 volts, respectively.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=6.00 in]{demoSignal}
+\caption{V$_{pp}$ and DC offset in a typical AC signal. }
+\label{fig:demoSignal}
+\end{figure}
+
+\clearpage
+\section{Laboratory instruction}
+
+\subsection{Part 1: Prepare MATLAB for data acquisition}
+
+Update the MATLAB code, \boldpurp{MATLAB\_Data\_Acquisition.m}, with the instructions provided in this section.
+
+\begin{enumerate}
+    \item Collect the single-channel voltage output from (``AI0").
+    \begin{itemize}
+        \item Duration: 5 seconds
+        \item Sample rate: 1000 samples per second
+    \end{itemize}
+    \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Save a data file using this naming convention: \boldpurp{Volt\_XX.csv} where
+            \begin{itemize}
+                \item \texttt{XX} indicates voltage.
+            \end{itemize}
+            \item Update the file name before each run to avoid overwriting data.
+        \end{itemize}
+        
+        \item Compute the Average Voltage:
+        \begin{itemize}
+            \item Write a MATLAB script to calculate the mean voltage from each data file.
+            \item Record the result with at least eight decimal places.
+        \end{itemize}
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Part 2: Set up the breadboard}
+
+\emph{Connect one ``source'' (power supply) to four measurement instruments: NI My-DAQ, oscilloscope, hand-held DMM, and table-top DMM}
+\begin{enumerate}
+    \item Connect the output of the digital power supply to the breadboard.  
+    \begin{itemize}
+        \item Use the breadboard to distribute the source signal to the various measurement devices.
+        \item The required cables are located on the center column of the lab.
+    \end{itemize}
+    \item From the breadboard, connect the output (source and ground) of the digital power supply to the handheld DMM, table-top DMM, NI-MyDAQ, and oscilloscope. See figure \ref{fig:SSMeas}.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6in]{Lab04Fig01_new.png}
+\caption{Sample connection from breadboard to four different measurement instrument.}
+\label{fig:SSMeas}
+\end{figure}
+
+\subsection{Part 3: Measure static voltages with four different methods}
+\begin{enumerate}
+    \item In this part of the lab, you will measure the output of the power supply from 0 to 5 V in 1 V increments.
+    \begin{itemize}
+        \item \textbf{Only connect yout DC power supply to the breadboard.}
+    \end{itemize}
+    \item Begin data collection:
+    \begin{itemize}
+        \item At each input setting, measure the voltage using the following four instruments:
+        \begin{enumerate}
+            \item	Table-top digital multimeter (DMM).
+            \item	Hand-held DMM.  Be mindful of the selected input range.
+            \item	Oscilloscope. Use the ``average voltage'' function on the oscilloscope.
+            \item	NI data acquisition (DAQ) system. Configure your program to display average values with at least 8 decimal places. 
+        \end{enumerate}
+    \end{itemize}
+    \item For each input voltage, record all four measured values in your lab notebook. Note which method appears to be the most \textbf{accurate} and the most \textbf{precise}. 
+    \item \textbf{Post-lab assignment:} Create a plot of voltage error (measured value – input value) vs. input voltage for all four measurement methods on the same figure. Use different markers or line styles to clearly distinguish between the measurement methods. See figure \ref{fig:Static_Signal_Rrror_Plot}.
+    \item On the oscilloscope, reduce the time scale to a very small value. 
+    
+    \item[\textbf{Q:}] Do you observe any dynamic (time-varying) component in the power supply output? Discuss what might cause this. Could it be due to aliasing or another source of noise? 
+    \item[\textbf{Q:}] What are the steps to set up the oscilloscope to report ``average voltage''?  \\
+    \item[\textbf{Q:}] What is the resolution for each measurement instrument?  
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{Student_Name_Exp04_Part1.png}
+\caption{Sample plot of static signal post lab.}
+\label{fig:Static_Signal_Rrror_Plot}
+\end{figure}
+
+%\begin{wrapfigure}{r}{0.20\textwidth}
+%\includegraphics[width=1.25in]{Lab04Fig02.png}
+%\caption{BNC T-connector.}
+%\label{fig:BNC}
+%\end{wrapfigure}
+
+\newpage
+\subsection{Part 4: Dynamic Signal Measurements}
+\emph{Connect one source function generator to two 1) NI My-DAQ, and, 2)oscilloscope.}
+\begin{enumerate}
+    \item \textbf{Disconnect the power supply from the breadboard.}
+    \item \textbf{Disconnect table-top DMM and hand-held DMM from the breadboard.}
+    \item Connect the output of the function generator to the NI My-DAQ and the oscilloscope. You will need the BNC T-Adapter (T connector located in the resistor kit).  See figure \ref{fig:dynSignal}.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=4.5in]{Lab04Fig02.png}
+\caption{Figure showing connection for acquiring dynamic signal.}
+\label{fig:dynSignal}
+\end{figure}
+
+\newpage
+\subsection{Part 5: Measure dynamic signals with two different methods.}
+\begin{enumerate}
+    \item Dial in the following AC signal on the function generator: $y(t) =2.5+ 2sin(2 \pi 0.5 t)$
+    \item Collect the single-channel voltage output from (``AI1").
+    \begin{itemize}
+        \item Duration: 5 times the time period of the function $y(t)$
+        \begin{itemize}
+            \item \textbf{Do not sample below 0.2 seconds.}
+        \end{itemize}
+        \item Sample rate: 1000 samples per second.
+        \begin{itemize}
+            \item \textbf{NOTE: this sample rate will remain constant but the frequency in function generator will be varied.}
+        \end{itemize}
+    \end{itemize}
+    \item Use the zoom X-axis button on the \textbf{oscilloscope} to zoom until 2-5 waves are visible. (You may have to modify this for every new signal)
+    \item \textbf{Practice changing the function generator}: increase the input frequency, the frequency of the function generator $y(t)$, incrementally starting from 0.5 Hz to 1,125 Hz.
+
+    \item \textbf{For your post-lab}, save the acquired data for $y(t)$ at the following five frequencies (relative to the Nyquist frequency $f_N$):
+        \begin{itemize}
+            \item $0.2 f_N$: Well below the Nyquist limit. The signal should be sampled accurately without distortion.
+            \begin{itemize}
+                \item Note: find $f_N$ based on 1000 Hz and this will remain constant for the remaining frequencies.
+            \end{itemize}
+            
+            \item $0.9 f_N$: Still below Nyquist, but close enough that the sampled signal will look ``blocky'' or discretized due to limited time resolution.
+            
+            \item $1.0 f_N$: At the Nyquist frequency. The signal may appear distorted or ambiguous. This is the critical point where aliasing begins.
+            
+            \item $1.10 f_N$: Slightly above Nyquist. Determine both the predicted alias frequency (using the folding formula) and the actual observed alias frequency.
+            
+            \item $2.25 f_N$: Well above Nyquist. Again, determine both the predicted alias frequency and the actual observed alias frequency.
+        \end{itemize}
+    
+    \item Show your results to the TA to confirm you have collected all required data for the post-lab assignment.     
+    \item Modify the provided sample code: \boldpurp{MATLAB\_Dynamic\_plot.m}.
+\end{enumerate}
+
+\textbf{Q:} What are the maximum sample rate for the MyDAQ and oscilloscope? Which is better for high-frequency measurements? \\
+
+\section{Part 6: Return Lab Space to Prior Condition}
+\begin{enumerate}
+    \item Remove all breadboard wires and place them back in the wire kit in an organized fashion.
+    \item Confirm your data files are saved to OneDrive.
+    \begin{enumerate}[label=\alph*.]
+        \item Check that files are available online using your phone or personal laptop to confirm.
+        \item Make sure that all team members have access to experiment files, including data and scripts.
+    \end{enumerate}
+    \item Log off the computer.
+\end{enumerate}
+
+\newpage
+\section{Post-Laboratory Assignment}
+For this experiment, submit the following items on Canvas for your post-laboratory assessment. 
+\begin{enumerate}
+    \item \textbf{Static Voltage Measurement Plot}
+    \begin{itemize}
+        \item The calibration plot should include:
+        \begin{itemize}
+            \item Using ``scatter" plot function, raw data points should be with \texttt{MarkerSize = 90}.
+            \item Unique markers and colors should be used for each sampling type.
+        \end{itemize} 
+        \item The plot should be 5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \item Include legend of all different sampling types.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Static Voltage Measurements''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+    \end{itemize}
+    \item \textbf{Aliasing Figure}
+    \begin{itemize}
+        \item Use Subplot to create a single figure with 5 plots (5 rows, 1 column).
+        \item Make sure the plot shows only first 3 to 4 peaks.
+        \item Make sure to annotate each Subplot with the measured frequency (the actual frequency from the function generator) and the Alias frequency (the frequency recorded).
+        \item See the sample plot and code. See sample plot in figure \ref{fig:dynSignalPlot} (Note that example shows three signals only).
+        \item Make sure to change the title on each figure to show correct values of sampling frequency, signal generator frequency, and Acquired data frequency. 
+        \item The plot should be 5'' tall and 6.5'' wide.
+    \end{itemize}
+    \item \textbf{Answer All Questions in the Post-Lab Canvas Assignment}
+    \begin{itemize}
+        \item Compare your plots to the example plots shown in figure \ref{fig:Static_Signal_Rrror_Plot} and \ref{fig:dynSignalPlot} to confirm that you have completed the assignment correctly. Note that your values will differ, but your formatting and annotation should match.
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.5in]{Firstname_Lastname_Exp04_Part2.png}
+\caption{Sample plot dynamic signal post lab.}
+\label{fig:dynSignalPlot}
+\end{figure}
+
+
+\clearpage
+\section{Appendix}
+%
+%
+%\subsection{Matlab program to acquire static data using DAQ}
+%\label{app:staticCode}
+%\lstinputlisting{../Code/Expt04_Data_aquisition_static.m}
+%
+%\clearpage
+%\subsection{Matlab program to acquire dynamic data using DAQ}
+%\label{app:dynaCode}
+%\lstinputlisting{../Code/Expt04_Data_aquisition_dynamic.m}
+%
+%\clearpage
+%\subsection{Matlab program to plot static data for post-lab}
+%\label{app:postLabStat}
+%\lstinputlisting{../Code/Expt04_Static_plot.m}
+
+%\clearpage
+%\subsection{Matlab program to plot dynamic data for post-lab}
+%\label{app:postLabDyna}
+%\lstinputlisting{../Code/Expt04_Dynamic_plot.m}
+
+
+\subsection{Keithley Function Generator}
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=6.0in]{KeithleyFuncGen2.png}
+\caption{Keithley function generator}
+\end{figure}
+{\bf FREQUENCY}: To set the frequency to the required frequency press the first gray button on the left-hand side on the function generator.\\
+{\bf PEAK-TO-PEAK}: In order to set the peak-to-peak voltage to the required peak-to-peak voltage press the second button starting from the left and turn the knob until we get the desired peak-to-peak voltage.\\
+{\bf DC OFFSET}:To set the DC offset to the desired offset press the third button starting from left and turn the knob until you get the desired value as required by the experiment being performed.
+
+\subsection{Tektronix Function Generator}
+\begin{figure}[!hb]
+\centering
+\includegraphics[width=6.0in]{TektronixFuncGen2.png}
+\caption{Tektronics function generator}
+\end{figure}
+{\bf FREQUENCY}:	To set the frequency to the desired frequency press the frequency button and use the knob to adjust the frequency to the desired value.\\
+{\bf PEAK-TO-PEAK}:	In order to set the DC offset to the required offset press the offset button and use the knob to adjust the offset to the desired value.\\
+{\bf DC OFFSET}:	To set the peak-to-peak voltage to the required value press the amplitude button and use the knob to set it to the desired value.
+
+\subsection{Oscilloscope}
+There are two oscilloscope brands that will be used in the lab: the Agilent and the Hewlett Packard oscilloscopes. They have the same general functionality but the buttons are in different places. The following are basic instructions for each.
+\begin{figure}[!hb]
+\centering
+\includegraphics[width=5.6in]{TektronixOscilloscope02.png}
+\caption{Oscilloscope keypad layout}
+\end{figure}
+To setup for a measurement, turn the appropriate channel(s) on (if only using one channel, turn the other off).  Press the corresponding Channel Button to access the options for that channel. The channel is on when the button is green.  Press the button once to turn it on, press it again to turn it off.
+The Function Buttons change their function based on the current operation. Their current function is displayed on the side of the screen next to the corresponding button. For example, when you press one of the Channel Buttons, the function buttons will change to the options available for that particular channel.\\
+
+To manually set the scale the display, use the corresponding {\bf Voltage Scale} and the {\bf Time Scale} adjustments. They are labeled Volts/div and Time/div respectively. The voltage is displayed on the y-axis and the time is displayed on the x-axis. The current voltage scale is listed in the top left corner of the screen, and the current time scale is listed in the top center of the screen. The display area is split into a grid for both axes. The number displayed for each scale corresponds to the amount of voltage or time represented by each grid space. Adjust each scale to a value that makes sense for the signal being measured (remember that frequency = 1/time). The voltage scale must be set for each channel independently. \\
+
+The {\bf Ground Shift} adjustment controls where the incoming signal ground is referenced to. It is labeled Position, and is adjusted independently for each channel. This acts as a voltage offset for the display, and allows a signal to be viewed even if that signal has voltages that would be out of the range of the display when ground is referenced to 0V. For most measurements, start by bringing the ground to 0V. A number on the side of the screen indicates where the ground currently is. \\
+
+The {\bf Time Shift} does the same thing for time that the ground shift does for voltage. For most measurements, bring it to 0.  A number at the top of the screen indicates the current position. \\
+
+For more display options, press the Main/Delayed button and adjust the settings using the Function Buttons (see function button note). The Main option (selected by default) keeps the signal stationary and traces its path across the screen. The Roll option keeps the trace stationary and scrolls the signal across the screen. Sometimes it is easier to use Roll to verify that the scope is still updating, when Main seems to be unchanging.
+
+\end{document}

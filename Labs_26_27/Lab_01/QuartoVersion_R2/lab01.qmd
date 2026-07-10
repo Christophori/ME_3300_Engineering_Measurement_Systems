@@ -12,6 +12,7 @@ format:
       papersize: letter
       fontsize: 12pt
       geometry: margin=.5in
+      lightbox: true
 ---
 
 {{< pagebreak >}}

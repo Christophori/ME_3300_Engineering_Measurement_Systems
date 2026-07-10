@@ -1,0 +1,93 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Standard LaTeX Preamble for My Projects
+% Author: Christopher Bitikofer
+% Purpose: Centralized formatting and packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%------------------------------
+% Page Layout
+%------------------------------
+\usepackage[margin=0.5in]{geometry} % Set margins
+\setlength\parindent{0pt} % Remove paragraph indents
+\usepackage{parskip} % Add space between paragraphs
+
+%------------------------------
+% Columns & Formatting
+%------------------------------
+\usepackage{multicol} % Support for multiple columns
+\usepackage{booktabs} % Nicer horizontal rules in tables
+\usepackage{float}    % Exact placement of figures/tables
+\usepackage{graphicx} % For including images
+\usepackage{multirow} 
+\graphicspath{{../Figures/}} % Default figure path
+
+%------------------------------
+% Colors & Highlighting
+%------------------------------
+\usepackage{xcolor}
+\usepackage{soul} % Highlighting
+
+% Custom highlight colors
+\definecolor{lightgray}{RGB}{220,220,220}
+\definecolor{lightblue}{RGB}{173,216,230}
+\definecolor{lightred}{RGB}{255,127,127}
+
+% Microsoft Word Standard Colors
+\definecolor{WordBlack}{RGB}{0,0,0}
+\definecolor{WordDarkRed}{RGB}{192,0,0}
+\definecolor{WordRed}{RGB}{255,0,0}
+\definecolor{WordOrange}{RGB}{255,192,0}
+\definecolor{WordYellow}{RGB}{255,255,0}
+\definecolor{WordLightGreen}{RGB}{146,208,80}
+\definecolor{WordGreen}{RGB}{0,176,80}
+\definecolor{WordLightBlue}{RGB}{0,176,240}
+\definecolor{WordBlue}{RGB}{0,112,192}
+\definecolor{WordDarkBlue}{RGB}{0,32,96}
+\definecolor{WordPurple}{RGB}{112,48,160}
+
+% Highlighting commands
+\newcommand{\hlgray}[1]{\sethlcolor{lightgray}\hl{#1}}
+\newcommand{\hlblue}[1]{\sethlcolor{lightblue}\hl{#1}}
+\newcommand{\hlred}[1]{\sethlcolor{lightred}\hl{#1}}
+
+% Text formatting commands
+\newcommand{\boldblue}[1]{\textbf{\textcolor{WordBlue}{#1}}}
+\newcommand{\boldorange}[1]{\textbf{\textcolor{WordOrange}{#1}}}
+\newcommand{\boldpurp}[1]{\textbf{\textcolor{WordPurple}{#1}}}
+\newcommand{\boldred}[1]{\textbf{\textcolor{WordRed}{#1}}}
+
+%------------------------------
+% Math & Symbols
+%------------------------------
+\usepackage{amsmath,amssymb} % Math packages
+\usepackage{enumitem}        % Custom lists
+
+% Checklist item (with checkmark in box)
+\newcommand{\checkeditem}{%
+  \item[\refstepcounter{enumi}$\text{\rlap{$\checkmark$}}\square$]}
+
+%------------------------------
+% Hyperlinks & References
+%------------------------------
+\usepackage[
+  backref=page,
+  pdfpagelabels=true,
+  plainpages=false,
+  colorlinks=true,
+  bookmarks=true,
+  pdfview=FitB
+]{hyperref}
+
+% Setup link colors
+\hypersetup{
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=blue,
+    urlcolor=blue
+}
+
+%------------------------------
+% Utility
+%------------------------------
+\usepackage{verbatim} % Block comments
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Horizontal rule

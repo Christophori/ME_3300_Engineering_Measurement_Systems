@@ -1,0 +1,441 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article} 
+\input{preamble.tex}  % Pulls in standardized preamble
+\begin{document}
+\input{titlepage.tex}
+
+\clearpage
+
+\section{Learning Objectives}
+Your objectives for this laboratory session are to:
+\begin{enumerate}
+    \item Become familiar with Waveform’s data acquisition toolbox.
+    \item Create a simple program for data acquisition using MATLAB and the \href{https://www.ni.com/docs/en-US/bundle/mydaq-specs/page/specs.html}{NI-MyDAQ} and \href{https://www.ni.com/en-us/shop/model/digilent-mydigital.html}{MyDigital} protoboard.
+    \item Gain hands-on experience with breadboards, digital power supply, digital multi-meter, and laboratory tools.
+    \item Calibrate a potentiometer angle measurement system and create an angle vs.\ volts calibration plot.
+    \item Record and plot angle vs.\ time data for the swing motion of the pendulum system.
+    \item Compare your pendulum’s recorded motion to the theoretical motion for a simple pendulum.
+\end{enumerate}
+
+\section{Required Equipment}
+\begin{multicols}{2}
+\begin{enumerate}
+    \item USB Data Acquisition Device (NI-MyDAQ)
+    \item Breadboard (MyDigital protoboard)
+    \item Pendulum with Potentiometer (10k$\Omega$ Bourns 6639s)
+    \item Needle-nose pliers \& wire strippers
+    \item Small flathead screwdriver
+    \item Digital multimeter (DMM)
+    \item Protractor
+    \item Power supply and wire kit
+\end{enumerate}
+\end{multicols}
+
+\section{Introduction}
+For this experiment, you will connect a simple angle sensor (angular potentiometer) to a data-acquisition (DAQ) device and collect digital data using MATLAB’s data acquisition toolbox. You will collect data to create a calibration equation to convert the output voltage from the angular potentiometer to the pendulum angle. You will then validate your calibration by comparing the results of a free swing experiment to a theoretical prediction using a simple pendulum model solved using MATLAB’s ODE45 solver. 
+
+\subsection{Pendulum Model}
+An ideal planar pendulum consists of a body suspended from a light rod of length $l$ pinned to a frictionless pivot, which allows it to swing back and forth under the influence of gravity. The dynamics of a pendulum can be simplified significantly by making the following assumptions:
+\begin{enumerate}
+    \item The mass of the pendulum is concentrated at the swinging end.
+    \item The pendulum rod is rigid and massless.
+\end{enumerate}
+These assumptions result in what is called the model of a "simple pendulum". They will limit the accuracy of the model, but how much error will be introduced? We can use experimental measurements to compare. 
+
+To derive the differential equation of motion for the simple pendulum, refer to Figure \ref{fig:PendulumDiagram}.
+The torque about the pivot point P is
+\begin{equation}
+    {{\bf{\mathord{\buildrel{\lower3pt\hbox{$\scriptscriptstyle\rightharpoonup$}} 
+\over \tau } }}_p} = {{\bf{\mathord{\buildrel{\lower3pt\hbox{$\scriptscriptstyle\rightharpoonup$}} 
+\over r} }}_{p,m}} \times m{\bf{g}} + {\tau _f} = L{\bf{\hat r}} \times mg\left( {\cos \theta {\bf{\hat r}} - \sin \theta {\bf{\hat \theta }}} \right) - b\dot \theta {\bf{\hat k}} =  - Lmg\sin \theta {\bf{\hat k}} - b\dot \theta {\bf{\hat k}}
+\end{equation}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{Figures/PendulumDiagram.png}
+    \caption{Coordinate System and Torque diagram for a simple pendulum.}
+    \label{fig:PendulumDiagram}
+\end{figure}
+
+So the z-component of torque about the pivot P  may be written as
+\begin{equation}
+    {\left( {{\tau _P}} \right)_z} =  - mgL\sin \theta  - b\dot \theta 
+\end{equation}
+
+Applying the parallel axis theorem, the moment of inertia of a point mass about the pivot is   so the rotational equation of motion is found as 
+\begin{equation}
+\begin{array}{l}
+{\left( {{\tau _P}} \right)_z} = {I_P}{\alpha _z} = {I_P}\ddot \theta \\
+ - mgL\sin \theta  - b\dot \theta  = m{L^2}\ddot \theta .
+\end{array}
+\end{equation}
+
+One can rearrange to find the standard form as a second-order nonlinear ODE
+\begin{equation}
+\begin{array}{l}
+\ddot \theta  + 2\zeta {\omega _n}\dot \theta  + {\omega _n}^2\sin (\theta ) = 0\\
+{\rm{where:}}\\
+\begin{array}{*{20}{c}}
+{\zeta  = \frac{b}{{2m{L^2}{\omega _n}}},}&{{\omega _n} = \sqrt {\frac{g}{L}} }
+\end{array}.
+\end{array}
+\end{equation}
+
+MATLAB’s ODE 45 can be used to simulate the response of this system, given estimates of the parameters   and   as well as the initial condition (IC) for \boldpurp{Pendulum\_Simulation.m} provides a sample script showing how to implement a simulation of this pendulum model. 
+
+\subsection{Data Acquisition with MATLAB’s Data Acquisition Toolbox}
+Throughout the semester, we will use MATLAB’s Data Acquisition Toolbox for data collection. This package integrates DAQs with MATLAB. To get you started, an example MATLAB script, \boldpurp{MATLAB\_Data\_Acquisition.m}, is available on Canvas. The following instructions will guide you through preparing your own data acquisition programs.
+
+\section{Laboratory Instructions}
+In this experiment, you will connect a simple angle sensor (angular potentiometer) to the NI USB-6008 data acquisition device and collect digital data using a custom MATLAB data acquisition program. Then, you will collect data to create a calibration equation to convert the output voltage from the angular potentiometer to the pendulum angle. Finally, you will apply the calibration data to collect a recording of the pendulum swinging under the influence of gravity and compare the results to a model pendulum.
+
+\subsection{Part 1: Prepare your MATLAB Program to Display and Record Data.}
+\begin{enumerate}
+    \item Launch MATLAB and prepare your code
+    \begin{itemize}
+        \item A main acquisition script \boldpurp{MATLAB\_Data\_Acquisition.m} is posted on canvas along with two supporting functions \boldpurp{plotdata.m} \& \boldpurp{logData.m}
+        \item You need to set the parameters for data acquisition in the main program. They are set near the top of the file.
+    \end{itemize} 
+    \item Set the value of Fs to set the sample rate (the number of samples to collect per second). 
+    \begin{itemize}
+        \item The MyDAQ can collect up to 200,000 samples per second, but this would produce a massive data file \& we don't need that much resolution to observe the pendulum swing. 
+        \item You will set this value differently for each part of the lab. Note what settings are best for different tasks. 
+    \end{itemize}
+    \item Set T to control the duration of your acquisition. This tells the DAQ how much time in seconds to collect data.
+    \item \boldblue{inputChannels} controls the collected input signals. An example of collecting 2 channels is provided.
+    \item The two boolean variables \boldblue{enableLogging} \& \boldblue{enablePlotting} control if statements later in the code.
+    \begin{itemize}
+        \item These turn on\textbackslash off listener functions \boldpurp{logData.m} \& \boldpurp{plotData.m}. 
+        \item In other words, these are switches you can use to set your code to acquire data without saving it (useful for debugging your circuit) or acquire data without plotting it (can save CPU time, but is risky since you might not notice if something goes wrong with your recording). 
+    \end{itemize}  
+    \item \boldblue{Filename} \& \boldblue{header} set the file location for writing data, and the text to use for header columns. 
+    \begin{itemize}
+        \item You need to make sure to create the \boldpurp{.csv} file to write data to in advance of running this code.
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Q:} How could you improve the code to automatically create an output .csv file?  
+
+\subsection{Part 2: Building the Angular Potentiometer \& DAQ Circuit}
+Next, we will connect the potentiometer to power and the DAQ for data acquisition.
+
+\begin{enumerate}
+    \item Connect the potentiometer to power
+    \begin{itemize}
+        \item Connect the leads labeled \texttt{+5V / gnd} to the 5-Volt reference signal and the reference ground.
+        \item Refer to Figure \ref{fig:Circuit_Build} for wiring layout.
+    \end{itemize}
+    
+    \item Connect signal to the NI-MyDAQ
+    \begin{itemize}
+        \item Connect potentiometer leads labeled \texttt{Signal / gnd} as follows:
+        \begin{itemize}
+            \item Red wire $\rightarrow$ \texttt{AI0+} (positive analog input)
+            \item Black wire $\rightarrow$ \texttt{AI0-} (negative analog input)
+        \end{itemize}
+        \item See Figure \ref{fig:Circuit_Build} to confirm the correct pin connections.
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figures/Circuit_Diagram_Figs.png}
+    \caption{Circuit built on NI-MyDAQ, LEFT, Potentiometer Circuit Diagram, CENTER. This setup forms a voltage divider where R1 and R2 vary with wiper angle, RIGHT.}
+    \label{fig:Circuit_Build}
+\end{figure}
+
+\subsection{Use your MATLAB program to Test the Circuit and Data Acquisition}
+To verify that your circuit is implemented correctly, test it by rotating the potentiometer and confirming the voltage changes as expected at each position. 
+
+\begin{enumerate}
+    \item Adjust Duration
+    \begin{itemize}
+        \item Change Duration to a value that fits your testing needs:
+        \begin{itemize}
+            \item Use a short duration for quick checks.
+            \item Use a longer duration if you want data collection  to run continuously. Note there isn't a built-in way to interrupt collection, so use good judgment! 
+        \end{itemize}
+    \end{itemize}
+    
+    \item Run Data Collection Program
+    \begin{itemize}
+        \item Run your MATLAB program by clicking the \textit{run} button arrow.
+    \end{itemize}
+    
+    \item Observe Output While Rotating the Pendulum
+    \begin{itemize}
+        \item While the program is running:
+        \begin{itemize}
+            \item Rotate the angular potentiometer.
+            \item Observe the real-time output on the display figure window.
+            \item Keep in mind that the DAQ system takes a few seconds to initialize. You might notice a delay while the simulation starts. 
+        \end{itemize}
+    \end{itemize}
+    
+    \item Verify Smooth Voltage Response
+    \begin{itemize}
+        \item Ensure the voltage changes smoothly over the $\pm 90^\circ$ range.
+        \item If you notice a sudden jump or drop in voltage:
+        \begin{itemize}
+            \item The potentiometer may be misaligned.
+            \item To fix it, ask your TA for help, they can with loosen the grub screw, rotate the potentiometer until the voltage varies smoothly (jump should occur around $+180^\circ$), then re-tighten it.
+            \item Re-test to confirm smooth output over the test range.
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Part 4: Create Calibration Equation to Output Pendulum Angle}
+Next, you will perform a calibration with 10 or more angles. At each angle, you will hold the pendulum steady and collect a short data set. You will repeat this process to sweep the pendulum through the full $\pm 90^\circ$ range incrementally.  
+
+\begin{enumerate}
+    \item Determine a reliable method to measure the pendulum angle. Options include:
+    \begin{itemize}
+        \item The supplied protractor.
+        \item A smartphone app such as \textit{Bubble Level}.
+    \end{itemize}
+
+    \item Configure your acquisition program by setting:
+    \begin{itemize}
+        \item Duration: 5 seconds
+        \item Sample Rate: 20 samples per second
+    \end{itemize}
+    \item Create a table in your logbook using the format shown in Table \ref{tab:calibration} to log your calibration measurements.  
+    \item Record data at each angle. Each run:
+    \begin{enumerate}[label=\alph*.]
+        \item Run your program:
+        \begin{itemize}
+            \item Save a data file using this naming convention: \boldpurp{Ang\_(p/n)XXDeg.csv} where
+            \begin{itemize}
+                \item \texttt{XX} indicates angle.
+                \item \texttt{p/n} indicates sign (positive or negative).
+                \item For example: for $-45^\circ$, use \boldpurp{Ang\_n45Deg.mat}.
+            \end{itemize}
+            \item Update the file name before each run to avoid overwriting data.
+        \end{itemize}
+
+        \item Record the angular position (in degrees):
+        \begin{itemize}
+            \item Use the right-hand rule: point your right thumb out from the potentiometer shaft (see Figure \ref{fig:ZeroPosition}) to determine the positive direction.
+            \item Zero degrees is defined as the pendulum pointing straight down.
+        \end{itemize}
+
+        \item Compute the Average Voltage:
+        \begin{itemize}
+            \item Write a MATLAB script to calculate the mean voltage from each data file.
+            \item Record the result with at least two decimal places.
+        \end{itemize}
+    \end{enumerate}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.25\linewidth]{Figures/Pendulum_Zero_Position_.png}
+    \caption{Right-hand rule and pendulum zero position.}
+    \label{fig:ZeroPosition}
+\end{figure}
+
+\begin{table}[h!]
+\centering
+\caption{Sample calibration data for Lab-02.}
+\begin{tabular}{cc}
+\toprule
+\textbf{Pendulum Angle (Degrees)} & \textbf{Average Output Voltage (V)} \\
+\midrule
+$-90^\circ$ & 1.21 \\
+$-70^\circ$ & 1.43 \\
+$-50^\circ$ & 1.65 \\
+$-30^\circ$ & 2.00 \\
+$-10^\circ$ & 2.31 \\
+$0^\circ$   & 2.50 \\
+$10^\circ$  & 2.55 \\
+$30^\circ$  & 2.82 \\
+$50^\circ$  & 3.20 \\
+$70^\circ$  & 3.51 \\
+$90^\circ$  & 3.74 \\
+\bottomrule
+\end{tabular}
+\label{tab:calibration}
+\end{table}
+
+\begin{enumerate}[resume]
+    \item Plot Your Calibration Data
+    \begin{itemize}
+        \item Use MATLAB to create a scatter plot:
+        \begin{itemize}
+            \item X-axis: average voltage
+            \item Y-axis: angle in degrees
+        \end{itemize}
+        \item Format the plot clearly and include appropriate axis labels, title, and units.
+        \item Refer back to formatting guidelines from Lab~01 and the requirements below under \textit{Post Laboratory Assignment}.
+    \end{itemize}
+    \item Fit a Linear Calibration Model
+    \begin{itemize}
+        \item Use the \boldpurp{polyfit} command in MATLAB to compute a linear regression of the form: \[y = {a_0} + {a_1}x\]. where $y$ is the pendulum angle (degrees) and $x$ is the measured voltage (V).
+    \end{itemize}
+    \item Ensure Fit Quality
+    \begin{itemize}
+        \item Record the \textbf{norm of the residuals} from \boldpurp{polyfit}.
+        \item Use this value to calculate the \textbf{standard error of the fit,} $s_{yx}$.
+    \end{itemize}
+    \item Create and Save Calibration Plot
+    \begin{itemize}
+        \item Refer to the sample plot in Figure \ref{fig:ExSwing} and code from Lab-01 to create your own calibration plot code.
+        \item Save your plot with \textbf{at least 600~dpi resolution.}
+    \end{itemize}
+\end{enumerate}
+\textbf{Q:} Briefly describe in your lab logbook what the norm of residuals and standard error of the fit tell you about the quality of the fit.
+
+\subsection{Part 5: Add Calibration Equation to Acquisition program and Collect Swing Data}
+In this step, you will record and plot the pendulum’s free oscillation using a calibrated data collection program.  
+
+\begin{enumerate}
+    \item Update the slope and intercept values in your acquisition program to reflect your calibration results.
+    \item Set an appropriate recording duration
+    \begin{itemize}
+        \item Choose a duration long enough to capture the transient response (the full oscillation time) of the pendulum.
+        \item Start with at least 15 seconds, and adjust as needed to allow the pendulum to settle during your recording.
+    \end{itemize}
+    \item Run the program and record a full pendulum swing.
+    \begin{itemize}
+        \item Start your MATLAB program and release the pendulum from a horizontal position ($90^\circ$).
+        \item Record the angle (in degrees, from your calibration equation) versus time.  
+    \end{itemize}
+    \item Confirm that your data file is stored correctly.
+ \end{enumerate}
+
+\subsection{Part 6: Analyze the oscillation in MATLAB}
+    \begin{enumerate}
+        \item Load your recorded \boldpurp{.csv} file in MATLAB.
+        \item Plot angle vs. time results
+        \begin{itemize}
+            \item Use MATLAB to plot the pendulum angle versus time.  
+            \item Apply the following formatting:
+            \begin{itemize}
+                \item Line color: solid red.  
+                \item Line width: 2~pt.
+            \end{itemize}
+            \item Trim the data so that the plot starts at the moment the pendulum is released, setting this point as $t = 0$.
+        \end{itemize}   
+    \item Use your plot to determine:
+        \begin{itemize}
+            \item The oscillation period, $T_d$.
+            \item The corresponding damped oscillation frequency, $\omega_d$.
+        \end{itemize}
+    \end{enumerate}
+
+\subsection{Part 7: Overlay a model estimate of pendulum oscillation. }
+For this part, you will match a model pendulum simulation to your recorded swing data.
+
+\begin{enumerate}
+    \item Open the Provided MATLAB Script
+    \begin{itemize}
+        \item Refer to \boldpurp{Pendulum\_Simulation.m} for this part.
+        \item This script uses \boldpurp{ode45} to simulate a model pendulum’s motion.
+    \end{itemize}
+
+    \item Set pendulum length
+    \begin{itemize}
+        \item Measure your pendulum’s length using a ruler or tape measure.
+    \end{itemize}
+
+    \item Set initial parameter estimates
+    \begin{itemize}
+        \item Without direct measurement, we do not know the values of mass $m$ or the damping coefficient $b$.
+        \item Start with a reasonable guess of $m$ and $b$.
+    \end{itemize}
+
+    \item Simulate Response with ODE45
+    \begin{itemize}
+        \item Use \boldpurp{ode45} to simulate the pendulum response using these initial values.
+    \end{itemize}
+
+    \item Overlay the model on your pendulum swing plot.
+    \begin{itemize}
+        \item Use a blue dashed line with a 2~pt linewidth.
+    \end{itemize}
+    
+    \item Refine your model parameters
+    \begin{itemize}
+        \item Iteratively adjust values for $m$ and $b$ to bring the model into "close" alignment with your experimental data.
+        \item You may also need to adjust the model’s initial conditions if your recording did not start with the pendulum at exactly $90^\circ$.
+    \end{itemize}
+\end{enumerate}
+\noindent\textbf{Note:} It is normal for the model and data to show some differences. Aim for approximate alignment, not perfection.
+
+\textbf{Q:} Identify a few reasons why there might be errors between your model and experimental data.
+
+\subsection*{Part 8: Return Lab Space to Prior Condition}
+\begin{enumerate}
+    \item Remove all breadboard wires and place them back in the wire kit in an organized fashion.
+    \item Remove the pendulum wires from the breadboard and set them aside.
+    \item Confirm your data files are saved to OneDrive.
+    \begin{enumerate}[label=\alph*.]
+        \item Check that files are available online using your phone or personal laptop to confirm.
+        \item Make sure that all team members have access to experiment files, including data and scripts.
+    \end{enumerate}
+    \item Log off the computer.
+\end{enumerate}
+
+\section{Post-Lab Assignment}
+For this experiment, submit the following items as PDF files on Canvas:
+
+\begin{enumerate}
+    \item \textbf{Calibration Plot}
+    \begin{itemize}
+        \item The calibration plot should include:
+        \begin{itemize}
+            \item Raw data points as red circle markers with \texttt{MarkerSize = 9}.
+            \item A solid blue line showing the linear calibration curve with a 2~pt linewidth.
+            \item Dashed black lines showing the 95\% confidence interval (compute using the standard error of the fit, $s_{yx}$).
+        \end{itemize}
+        \item The plot should be 5'' tall and 6.5'' wide.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Calibration Plot''.
+        \end{itemize}
+        \item Set axis grid lines on, box off, and figure background color to white.
+        \item Using the \boldpurp{text} command, place the following on the plot (use Greek symbols where appropriate):
+        \begin{itemize}
+            \item The calibration equation with 4 decimal places for each number.
+            \item The norm of the residuals of your linear regression.
+            \item The standard error of the fit for your calibration equation.
+            \item Include units where appropriate.
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Pendulum Swing Plot}
+    \begin{itemize}
+        \item The Pendulum Swing plot is the time series showing the trajectory of your pendulum swinging from a horizontal starting position. It should include:
+        \begin{itemize}
+            \item Experimental data plotted with a solid red line, 2~pt linewidth.
+            \item Your best-fitting model as a dashed blue line, 1~pt linewidth.
+        \end{itemize}
+        \item The plot should be 5'' tall and 6.5'' wide.
+        \item Set axis grid lines on, box off, and figure background color to white.
+        \item Properly annotate your plot: axis labels, title, legend, etc.
+        \begin{itemize}
+            \item Use title: ``FirstName LastName's Pendulum Swing Plot''.
+        \end{itemize}
+        \item Using the \boldpurp{text} command in MATLAB, place the following on the plot (use Greek symbols where appropriate):
+        \begin{itemize}
+            \item The period of the oscillations, $T_d$.
+            \item The frequency of the oscillations, $\omega_d$.
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Answer All Questions in the Post-Lab Canvas Assignment}
+    \begin{itemize}
+        \item Compare your plots to the example plots shown in Figure \ref{fig:ExSwing} to confirm that you have completed the assignment correctly. Note that your values will differ, but your formatting and annotation should match.
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.75\linewidth]{Figures/Example_Calibration_Plot.png}
+    \includegraphics[width=.75\linewidth]{Figures/Example_Swing_Plot.png}
+    \caption{Example Results Plots}
+    \label{fig:ExSwing}
+\end{figure}
+
+
+\end{document} 

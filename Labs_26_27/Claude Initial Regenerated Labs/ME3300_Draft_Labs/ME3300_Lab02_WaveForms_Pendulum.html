@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>me3300_lab02_waveforms_pendulum</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="ME3300_Lab02_WaveForms_Pendulum_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ME3300_Lab02_WaveForms_Pendulum_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="ME3300_Lab02_WaveForms_Pendulum_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="ME3300_Lab02_WaveForms_Pendulum_files/libs/quarto-html/popper.min.js"></script>
+<script src="ME3300_Lab02_WaveForms_Pendulum_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ME3300_Lab02_WaveForms_Pendulum_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ME3300_Lab02_WaveForms_Pendulum_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ME3300_Lab02_WaveForms_Pendulum_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ME3300_Lab02_WaveForms_Pendulum_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ME3300_Lab02_WaveForms_Pendulum_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ME3300_Lab02_WaveForms_Pendulum_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="me-3300-lab-02-introduction-to-hardware-and-data-acquisition" class="level1">
+<h1>ME 3300 — Lab 02: Introduction to Hardware and Data Acquisition</h1>
+<section id="waveforms-gui-pendulum-calibration-and-experimental-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="waveforms-gui-pendulum-calibration-and-experimental-modeling">WaveForms GUI, Pendulum Calibration, and Experimental Modeling</h2>
+<p><strong>Author:</strong> Dr.&nbsp;Christopher Bitikofer<br>
+<strong>Course:</strong> ME 3300 — Mechanical Measurements</p>
+</section>
+<section id="learning-objective" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objective">Learning Objective</h2>
+<section id="objectives" class="level3">
+<h3 class="anchored" data-anchor-id="objectives">Objectives:</h3>
+<p>By the end of this lab, you should be able to:</p>
+<ul>
+<li>Connect a sensor to the Analog Discovery Studio (ADS) using a breadboard</li>
+<li>Use the WaveForms oscilloscope GUI to observe and interpret a live voltage signal</li>
+<li>Use the WaveForms Logger to record time-series data and export it as a CSV</li>
+<li>Calibrate an angular potentiometer and produce a calibration equation with confidence intervals</li>
+<li>Record and plot a pendulum’s free swing using your calibrated sensor</li>
+<li>Compare experimental pendulum data to a simulated model using <code>scipy.integrate.solve_ivp</code></li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3">
+<h3 class="anchored" data-anchor-id="check-your-understanding">Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to independently answer the following questions</p>
+<ul>
+<li>What is a voltage divider, and what determines the output voltage of a potentiometer?</li>
+<li>How do you set the voltage scale (V/div) and time scale (s/div) on the WaveForms oscilloscope?</li>
+<li>What does the WaveForms Logger instrument do, and how do you export its data?</li>
+<li>How do you apply a calibration equation to convert raw voltage readings to physical units in Python?</li>
+<li>What is <code>scipy.integrate.solve_ivp</code>, and what inputs does it require?</li>
+<li>Why does the simple pendulum model diverge from experimental data over time?</li>
+</ul>
+</section>
+</section>
+<section id="required-equipment" class="level2">
+<h2 class="anchored" data-anchor-id="required-equipment">Required Equipment</h2>
+<ul>
+<li>Analog Discovery Studio (ADS) with USB cable</li>
+<li>Pendulum apparatus with angular potentiometer (10 kΩ)</li>
+<li>Breadboard and jumper wire kit</li>
+<li>Digital multimeter (DMM)</li>
+<li>Protractor or smartphone level app</li>
+</ul>
+<hr>
+</section>
+<section id="software-required" class="level2">
+<h2 class="anchored" data-anchor-id="software-required">Software Required</h2>
+<ul>
+<li>WaveForms</li>
+<li>VS Code with your <code>me3300</code> conda environment active</li>
+<li>Python packages: <code>numpy</code>, <code>scipy</code>, <code>matplotlib</code>, <code>pandas</code></li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>WaveForms Reference:</strong> Full documentation for the WaveForms software is available at<br>
+<a href="https://digilent.com/reference/software/waveforms/waveforms-3/start">https://digilent.com/reference/software/waveforms/waveforms-3/start</a>.<br>
+You do not need to read it all, but specific sections are referenced throughout this lab.</p>
+</blockquote>
+<hr>
+</section>
+<section id="lab-introduction" class="level2">
+<h2 class="anchored" data-anchor-id="lab-introduction">Lab Introduction</h2>
+<p>This lab has two major goals. The first is to further acclimate you to working with the WaveForms software and the Analog Discovery Studio hardware. The second is to complete your first full measurement workflow: connect a sensor, calibrate it, collect experimental data, and compare the result to a theoretical model. Thirdly, you will analyze your data</p>
+<p>In this lab you will learn this process using the WaveForms GUIdo no new Python programming in the first half of this lab. Instead, you will use the WaveForms GUI to observe, record, and understand the signals from your sensor before automating anything. In Lab 03, you will replace the GUI steps with Python code, and by then, the code should no longer feel like magic because you will have already seen exactly what it produces.</p>
+<hr>
+</section>
+<section id="background-the-pendulum-apparatus" class="level2">
+<h2 class="anchored" data-anchor-id="background-the-pendulum-apparatus">Background: The Pendulum Apparatus</h2>
+<p>The lab pendulum consists of a rigid arm pinned to an angular potentiometer base, with a mass at the swinging end. The potentiometer acts as a voltage divider: as the arm rotates, the wiper position changes, and the output voltage changes proportionally to the angle.</p>
+<p>The output voltage of the potentiometer is:</p>
+<p><span class="math display">\[V_{out} = \frac{\theta}{\theta_{max}} \cdot V_{supply}\]</span></p>
+<p>In practice, the relationship between angle and voltage is very nearly linear over the operating range, so a linear calibration equation of the form</p>
+<p><span class="math display">\[\theta = a_1 V + a_0\]</span></p>
+<p>is appropriate and will be determined experimentally.</p>
+<section id="simple-pendulum-model" class="level3">
+<h3 class="anchored" data-anchor-id="simple-pendulum-model">Simple Pendulum Model</h3>
+<p>The equation of motion for a damped simple pendulum is:</p>
+<p><span class="math display">\[\ddot{\theta} + 2\zeta\omega_n\dot{\theta} + \omega_n^2 \sin(\theta) = 0\]</span></p>
+<p>where the natural frequency is <span class="math inline">\(\omega_n = \sqrt{g/L}\)</span>, <span class="math inline">\(L\)</span> is the pendulum length, and <span class="math inline">\(\zeta\)</span> is the damping ratio. This second-order ODE will be simulated using <code>scipy.integrate.solve_ivp</code> and overlaid on your experimental data.</p>
+<hr>
+</section>
+</section>
+<section id="part-1-introduction-to-the-analog-discovery-studio-and-waveforms" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-introduction-to-the-analog-discovery-studio-and-waveforms">Part 1 — Introduction to the Analog Discovery Studio and WaveForms</h2>
+<section id="connect-the-ads" class="level3">
+<h3 class="anchored" data-anchor-id="connect-the-ads">1.1 Connect the ADS</h3>
+<ol type="1">
+<li>Connect the ADS to the lab computer via USB. The power LED should illuminate.</li>
+<li>Open <strong>WaveForms</strong> on the lab computer.</li>
+<li>WaveForms should detect your device automatically. If prompted, select <strong>Analog Discovery Studio</strong>.</li>
+<li>The WaveForms <strong>Welcome</strong> screen shows all available instruments as tiles. Take a moment to identify:
+<ul>
+<li><strong>Scope</strong> (oscilloscope) — reads analog voltage vs.&nbsp;time</li>
+<li><strong>Wavegen</strong> (waveform generator / AWG) — outputs a programmable signal</li>
+<li><strong>Logger</strong> — records data continuously to a file</li>
+<li><strong>Supplies</strong> — controls the ±12 V and 3.3 V/5 V power outputs</li>
+</ul></li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> Match each WaveForms instrument tile to its hardware counterpart on the ADS. Note your answers in your lab notebook. You will reference this in Lab 03 when you use <code>pydwf</code> to access these same instruments in Python.</p>
+</blockquote>
+</section>
+<section id="enable-the-power-supply" class="level3">
+<h3 class="anchored" data-anchor-id="enable-the-power-supply">1.2 Enable the Power Supply</h3>
+<p>The potentiometer requires a reference voltage. You will use the ADS 3.3 V supply.</p>
+<ol type="1">
+<li>Open <strong>Supplies</strong> in WaveForms.</li>
+<li>Enable the <strong>3.3 V</strong> fixed supply. Leave the ±12 V supplies off for now.</li>
+<li>Verify the output with your DMM: measure between the <strong>V+</strong> pin (3.3 V) and <strong>GND</strong> on the ADS header.</li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> What voltage does your DMM read? Is it exactly 3.3 V? Record the value and note what this tells you about the accuracy of the supply.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="part-2-wiring-the-potentiometer-circuit" class="level2">
+<h2 class="anchored" data-anchor-id="part-2-wiring-the-potentiometer-circuit">Part 2 — Wiring the Potentiometer Circuit</h2>
+<section id="circuit-description" class="level3">
+<h3 class="anchored" data-anchor-id="circuit-description">2.1 Circuit Description</h3>
+<p>The potentiometer has three terminals:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Terminal</th>
+<th style="text-align: left;">Connection</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">V+ (end terminal)</td>
+<td style="text-align: left;">3.3 V from ADS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GND (end terminal)</td>
+<td style="text-align: left;">GND on ADS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Wiper (center terminal)</td>
+<td style="text-align: left;">Analog Input CH1+ (1+) on ADS</td>
+</tr>
+</tbody>
+</table>
+<p>The ADS analog inputs are differential. Connect the wiper to <strong>1+</strong> and connect <strong>GND</strong> to <strong>1−</strong> (or to any GND pin on the ADS).</p>
+</section>
+<section id="build-the-circuit" class="level3">
+<h3 class="anchored" data-anchor-id="build-the-circuit">2.2 Build the Circuit</h3>
+<ol type="1">
+<li>Place the potentiometer wires on the breadboard.</li>
+<li>Use jumper wires to connect:
+<ul>
+<li>Potentiometer V+ → 3.3 V rail on breadboard → <strong>V+</strong> pin on ADS</li>
+<li>Potentiometer GND → GND rail on breadboard → <strong>GND</strong> pin on ADS</li>
+<li>Potentiometer wiper → <strong>1+</strong> (Analog In Channel 1 positive) on ADS</li>
+<li>GND rail → <strong>1−</strong> (Analog In Channel 1 negative) on ADS</li>
+</ul></li>
+<li>Double-check each connection with your DMM before proceeding.</li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> Draw the schematic of this circuit in your lab notebook. Label all voltages and signal names.<br>
+<strong>Q:</strong> Slowly rotate the pendulum by hand while measuring the wiper voltage with your DMM. Does the voltage change smoothly from near 0 V to near 3.3 V? If not, ask your TA — the potentiometer may need alignment.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="part-3-observing-the-signal-with-the-waveforms-oscilloscope" class="level2">
+<h2 class="anchored" data-anchor-id="part-3-observing-the-signal-with-the-waveforms-oscilloscope">Part 3 — Observing the Signal with the WaveForms Oscilloscope</h2>
+<section id="configure-the-scope" class="level3">
+<h3 class="anchored" data-anchor-id="configure-the-scope">3.1 Configure the Scope</h3>
+<ol type="1">
+<li>Open <strong>Scope</strong> in WaveForms.</li>
+<li>Ensure <strong>Channel 1</strong> is enabled (button should be highlighted).</li>
+<li>Set the following:
+<ul>
+<li><strong>Voltage scale (V/div):</strong> 0.5 V/div</li>
+<li><strong>Time scale (s/div):</strong> 0.2 s/div</li>
+<li><strong>Offset:</strong> 0 V</li>
+</ul></li>
+<li>Press <strong>Run</strong> (the play button).</li>
+</ol>
+<p>You should see the voltage trace updating in real time.</p>
+</section>
+<section id="explore-the-signal" class="level3">
+<h3 class="anchored" data-anchor-id="explore-the-signal">3.2 Explore the Signal</h3>
+<ol start="5" type="1">
+<li>Slowly rotate the pendulum through its full range (approximately −90° to +90°).
+<ul>
+<li>Observe the voltage trace on the scope.</li>
+<li>Confirm that the voltage changes smoothly and covers most of the 0–3.3 V range.</li>
+</ul></li>
+<li>Give the pendulum a gentle push and let it swing freely.
+<ul>
+<li>Observe the oscillating voltage trace.</li>
+<li>Use <strong>Stop</strong> to freeze the display and examine the waveform shape.</li>
+</ul></li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> Does the signal look like a sine wave? Is the amplitude constant or does it decay? Sketch the waveform in your lab notebook and label the approximate period.<br>
+<strong>Q:</strong> On the frozen scope display, use the cursor tool (Cursor menu) to measure the approximate period of one oscillation. Record this value.</p>
+</blockquote>
+</section>
+<section id="measure-average-voltage-at-known-angles" class="level3">
+<h3 class="anchored" data-anchor-id="measure-average-voltage-at-known-angles">3.3 Measure Average Voltage at Known Angles</h3>
+<p>Hold the pendulum stationary at 0° (straight down). Use the scope’s <strong>Measurements</strong> panel to display the <strong>Mean</strong> voltage.</p>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> What is the mean voltage at 0°? What would you expect it to be based on the circuit geometry?</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="part-4-calibration-using-waveforms-logger" class="level2">
+<h2 class="anchored" data-anchor-id="part-4-calibration-using-waveforms-logger">Part 4 — Calibration Using WaveForms Logger</h2>
+<section id="set-up-the-logger" class="level3">
+<h3 class="anchored" data-anchor-id="set-up-the-logger">4.1 Set Up the Logger</h3>
+<ol type="1">
+<li>Open <strong>Logger</strong> in WaveForms.</li>
+<li>Add a channel: click <strong>+</strong> and select <strong>Scope Channel 1 (Voltage)</strong>.</li>
+<li>Set the <strong>Sample Rate</strong> to <strong>20 Hz</strong> and <strong>Duration</strong> to <strong>10 seconds</strong>.</li>
+<li>Set the export format to <strong>CSV</strong>.</li>
+</ol>
+</section>
+<section id="collect-calibration-data" class="level3">
+<h3 class="anchored" data-anchor-id="collect-calibration-data">4.2 Collect Calibration Data</h3>
+<p>You will hold the pendulum at 10 or more known angles and record the mean voltage at each angle. Use the supplied protractor or a smartphone level app to set each angle accurately.</p>
+<p>Collect data at a <strong>minimum</strong> of these angles (add more for better accuracy):</p>
+<p>−90°, −70°, −50°, −30°, −10°, 0°, 10°, 30°, 50°, 70°, 90°</p>
+<p><strong>For each angle:</strong></p>
+<ol type="1">
+<li>Set the pendulum to the target angle and hold it steady.</li>
+<li>Start a new Logger recording. Name the file using the convention <code>Ang_p45Deg.csv</code> (positive) or <code>Ang_n45Deg.csv</code> (negative) — replace 45 with the actual angle.</li>
+<li>After 10 seconds, stop the recording. WaveForms will prompt you to save the CSV.</li>
+<li>Save the file to <code>ME3300/Lab_02/Data/</code>.</li>
+<li>Record the target angle and the approximate mean voltage in your lab notebook using the table format below.</li>
+</ol>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Angle (°)</th>
+<th style="text-align: center;">Mean Voltage (V)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">−90</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">−70</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">…</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">90</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> Before fitting, look at your table. Is the relationship between angle and voltage linear? Does it make sense given the circuit?</p>
+</blockquote>
+</section>
+<section id="build-the-calibration-equation-in-python" class="level3">
+<h3 class="anchored" data-anchor-id="build-the-calibration-equation-in-python">4.3 Build the Calibration Equation in Python</h3>
+<p>Open VS Code and create <code>FirstName_LastName_Lab02.py</code> in <code>ME3300/Lab_02/Code/</code>.</p>
+<p><strong>1. Load and average each calibration file</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'font.family'</span>] <span class="op">=</span> <span class="st">'serif'</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'font.serif'</span>] <span class="op">=</span> [<span class="st">'Times New Roman'</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'font.size'</span>] <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Known angles (degrees) — update to match your actual calibration angles</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>angles_deg <span class="op">=</span> np.array([<span class="op">-</span><span class="dv">90</span>, <span class="op">-</span><span class="dv">70</span>, <span class="op">-</span><span class="dv">50</span>, <span class="op">-</span><span class="dv">30</span>, <span class="op">-</span><span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">70</span>, <span class="dv">90</span>])</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Load each file and compute mean voltage</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> <span class="st">'../Data/'</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>mean_voltages <span class="op">=</span> np.zeros(<span class="bu">len</span>(angles_deg))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, angle <span class="kw">in</span> <span class="bu">enumerate</span>(angles_deg):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    sign <span class="op">=</span> <span class="st">'n'</span> <span class="cf">if</span> angle <span class="op">&lt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">'p'</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> <span class="ss">f'</span><span class="sc">{</span>data_dir<span class="sc">}</span><span class="ss">Ang_</span><span class="sc">{</span>sign<span class="sc">}{</span><span class="bu">abs</span>(angle)<span class="sc">}</span><span class="ss">Deg.csv'</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_csv(filename, skiprows<span class="op">=</span><span class="dv">1</span>)        <span class="co"># WaveForms CSV has a 1-line header</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    mean_voltages[i] <span class="op">=</span> df.iloc[:, <span class="dv">1</span>].mean()       <span class="co"># voltage is in column 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> WaveForms Logger CSVs have a one-line metadata header before the data. The <code>skiprows=1</code> argument handles this. Inspect one of your files in VS Code to confirm the column layout before running this code.</p>
+</blockquote>
+<p><strong>2. Fit the calibration equation</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit: angle = a1 * voltage + a0</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>coeffs      <span class="op">=</span> np.polyfit(mean_voltages, angles_deg, <span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>angles_fit  <span class="op">=</span> np.polyval(coeffs, mean_voltages)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence interval</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>N     <span class="op">=</span> <span class="bu">len</span>(angles_deg)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>nu    <span class="op">=</span> N <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>resid <span class="op">=</span> angles_deg <span class="op">-</span> angles_fit</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>s_yx  <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(resid<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> nu)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>t_val <span class="op">=</span> stats.t.ppf(<span class="fl">0.95</span>, df<span class="op">=</span>nu)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>CI    <span class="op">=</span> t_val <span class="op">*</span> s_yx</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>S_a1 <span class="op">=</span> s_yx <span class="op">/</span> np.sqrt(np.<span class="bu">sum</span>((mean_voltages <span class="op">-</span> np.mean(mean_voltages))<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Calibration: θ = </span><span class="sc">{</span>coeffs[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss"> × V + </span><span class="sc">{</span>coeffs[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"s_yx = </span><span class="sc">{</span>s_yx<span class="sc">:.4f}</span><span class="ss"> °,  S_a1 = </span><span class="sc">{</span>S_a1<span class="sc">:.4f}</span><span class="ss"> °/V"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Save calibration coefficients for use in future labs</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>np.savetxt(<span class="st">'../Data/calibration_coeffs.csv'</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>           np.array([coeffs[<span class="dv">0</span>], coeffs[<span class="dv">1</span>]]),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>           header<span class="op">=</span><span class="st">'slope_deg_per_V, intercept_deg'</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>           delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>3. Plot the calibration curve</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>v_range <span class="op">=</span> np.linspace(mean_voltages.<span class="bu">min</span>(), mean_voltages.<span class="bu">max</span>(), <span class="dv">200</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">4.0</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fig.patch.set_facecolor(<span class="st">'white'</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ax.scatter(mean_voltages, angles_deg, s<span class="op">=</span><span class="dv">81</span>, color<span class="op">=</span><span class="st">'red'</span>, zorder<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">'Calibration data'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>ax.plot(v_range, np.polyval(coeffs, v_range), color<span class="op">=</span><span class="st">'blue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Linear fit'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>ax.plot(v_range, np.polyval(coeffs, v_range) <span class="op">+</span> CI, <span class="st">'k--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">'95% CI'</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>ax.plot(v_range, np.polyval(coeffs, v_range) <span class="op">-</span> CI, <span class="st">'k--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>cal_text <span class="op">=</span> (<span class="ss">f'θ = </span><span class="sc">{</span>coeffs[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss">V + </span><span class="sc">{</span>coeffs[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ch">\n</span><span class="ss">'</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f'$s_</span><span class="ch">{{</span><span class="ss">yx</span><span class="ch">}}</span><span class="ss">$ = </span><span class="sc">{</span>s_yx<span class="sc">:.4f}</span><span class="ss"> °</span><span class="ch">\n</span><span class="ss">'</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f'$S_</span><span class="ch">{{</span><span class="ss">a_1</span><span class="ch">}}</span><span class="ss">$ = </span><span class="sc">{</span>S_a1<span class="sc">:.4f}</span><span class="ss"> °/V'</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.05</span>, <span class="fl">0.95</span>, cal_text, transform<span class="op">=</span>ax.transAxes, fontsize<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        verticalalignment<span class="op">=</span><span class="st">'top'</span>, bbox<span class="op">=</span><span class="bu">dict</span>(boxstyle<span class="op">=</span><span class="st">'round'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>))</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Voltage (V)'</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Angle (degrees)'</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"FirstName LastName's Calibration Plot — Date"</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">'lower right'</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, which<span class="op">=</span><span class="st">'both'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'../Figures/FirstName_LastName_Lab02_Calibration.pdf'</span>, dpi<span class="op">=</span><span class="dv">600</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Save the calibration coefficients file — you will load it again in Lab 03 rather than redoing the calibration.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="part-5-record-a-pendulum-free-swing" class="level2">
+<h2 class="anchored" data-anchor-id="part-5-record-a-pendulum-free-swing">Part 5 — Record a Pendulum Free Swing</h2>
+<section id="configure-logger-for-swing-recording" class="level3">
+<h3 class="anchored" data-anchor-id="configure-logger-for-swing-recording">5.1 Configure Logger for Swing Recording</h3>
+<ol type="1">
+<li>Open <strong>Logger</strong> in WaveForms.</li>
+<li>Set <strong>Sample Rate</strong> to <strong>100 Hz</strong> and <strong>Duration</strong> to <strong>20 seconds</strong>.</li>
+<li>Name your output file <code>FirstName_LastName_Lab02_Swing.csv</code>.</li>
+</ol>
+</section>
+<section id="collect-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="collect-the-data">5.2 Collect the Data</h3>
+<ol type="1">
+<li>Hold the pendulum at approximately +90° (horizontal).</li>
+<li>Start the Logger recording.</li>
+<li>Release the pendulum smoothly (do not push it).</li>
+<li>Allow the pendulum to swing freely until it comes to rest or the recording ends.</li>
+<li>Save the CSV to <code>ME3300/Lab_02/Data/</code>.</li>
+</ol>
+</section>
+<section id="load-calibrate-and-plot-the-swing-data" class="level3">
+<h3 class="anchored" data-anchor-id="load-calibrate-and-plot-the-swing-data">5.3 Load, Calibrate, and Plot the Swing Data</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load swing data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>swing <span class="op">=</span> pd.read_csv(<span class="st">'../Data/FirstName_LastName_Lab02_Swing.csv'</span>, skiprows<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>time_raw  <span class="op">=</span> swing.iloc[:, <span class="dv">0</span>].values   <span class="co"># time column (seconds)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>volt_raw  <span class="op">=</span> swing.iloc[:, <span class="dv">1</span>].values   <span class="co"># voltage column</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply calibration</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>angle_deg <span class="op">=</span> np.polyval(coeffs, volt_raw)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>angle_rad <span class="op">=</span> np.radians(angle_deg)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Trim so t=0 is the release point</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the first sample where the pendulum begins to move</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># (voltage starts changing from the held position)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># A simple approach: find where abs(diff) first exceeds a threshold</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>diff   <span class="op">=</span> np.<span class="bu">abs</span>(np.diff(volt_raw))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>idx0   <span class="op">=</span> np.argmax(diff <span class="op">&gt;</span> <span class="fl">0.01</span>) <span class="op">+</span> <span class="dv">1</span>      <span class="co"># first significant change</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>time   <span class="op">=</span> time_raw[idx0:] <span class="op">-</span> time_raw[idx0]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>angle  <span class="op">=</span> angle_deg[idx0:]</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>fig2, ax2 <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">4.0</span>))</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>fig2.patch.set_facecolor(<span class="st">'white'</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>ax2.plot(time, angle, color<span class="op">=</span><span class="st">'red'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Experimental data'</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">'Time (s)'</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">'Angle (degrees)'</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"FirstName LastName's Pendulum Swing — Date"</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>ax2.legend()</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>ax2.grid(<span class="va">True</span>, which<span class="op">=</span><span class="st">'both'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>ax2.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>ax2.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> From your plot, estimate the oscillation period <span class="math inline">\(T_d\)</span> and the damped natural frequency <span class="math inline">\(\omega_d = 2\pi / T_d\)</span>. Record these values in your lab notebook.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="part-6-overlay-a-pendulum-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="part-6-overlay-a-pendulum-simulation">Part 6 — Overlay a Pendulum Simulation</h2>
+<section id="background-solving-the-ode-in-python" class="level3">
+<h3 class="anchored" data-anchor-id="background-solving-the-ode-in-python">6.1 Background: Solving the ODE in Python</h3>
+<p>Python’s <code>scipy.integrate.solve_ivp</code> is the equivalent of MATLAB’s <code>ode45</code>. It solves systems of first-order ODEs numerically. The second-order pendulum equation is rewritten as two first-order equations:</p>
+<p><span class="math display">\[\frac{d\theta}{dt} = \omega \qquad \frac{d\omega}{dt} = -2\zeta\omega_n\omega - \omega_n^2\sin(\theta)\]</span></p>
+</section>
+<section id="simulate-and-overlay" class="level3">
+<h3 class="anchored" data-anchor-id="simulate-and-overlay">6.2 Simulate and Overlay</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.integrate <span class="im">import</span> solve_ivp</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Pendulum parameters ---</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Measure the pendulum arm length with a ruler</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>L     <span class="op">=</span> <span class="fl">0.35</span>        <span class="co"># meters — UPDATE with your measured value</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>g     <span class="op">=</span> <span class="fl">9.81</span>        <span class="co"># m/s²</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>omega_n <span class="op">=</span> np.sqrt(g <span class="op">/</span> L)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial guesses — adjust iteratively to match your data</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>zeta  <span class="op">=</span> <span class="fl">0.05</span>        <span class="co"># damping ratio (start here, tune as needed)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>theta0_deg <span class="op">=</span> <span class="fl">90.0</span>   <span class="co"># initial angle in degrees</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>theta0 <span class="op">=</span> np.radians(theta0_deg)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>omega0 <span class="op">=</span> <span class="fl">0.0</span>        <span class="co"># released from rest</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pendulum_ode(t, y):</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    theta, omega <span class="op">=</span> y</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    dtheta_dt <span class="op">=</span> omega</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    domega_dt <span class="op">=</span> <span class="op">-</span><span class="dv">2</span> <span class="op">*</span> zeta <span class="op">*</span> omega_n <span class="op">*</span> omega <span class="op">-</span> omega_n<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> np.sin(theta)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [dtheta_dt, domega_dt]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve over the same time range as your experimental data</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>t_span <span class="op">=</span> (time[<span class="dv">0</span>], time[<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>t_eval <span class="op">=</span> np.linspace(time[<span class="dv">0</span>], time[<span class="op">-</span><span class="dv">1</span>], <span class="dv">2000</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>sol <span class="op">=</span> solve_ivp(pendulum_ode, t_span, [theta0, omega0],</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                t_eval<span class="op">=</span>t_eval, method<span class="op">=</span><span class="st">'RK45'</span>, max_step<span class="op">=</span><span class="fl">0.005</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>theta_model_deg <span class="op">=</span> np.degrees(sol.y[<span class="dv">0</span>])</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlay on the swing plot</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>ax2.plot(sol.t, theta_model_deg, color<span class="op">=</span><span class="st">'blue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>         linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Pendulum model'</span>)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>ax2.legend()</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>fig2.savefig(<span class="st">'../Figures/FirstName_LastName_Lab02_Swing.pdf'</span>, dpi<span class="op">=</span><span class="dv">600</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Q:</strong> Does the model period match the experimental period? Adjust <code>L</code> if needed — measure the pendulum arm length carefully.<br>
+<strong>Q:</strong> Does the model amplitude decay at the same rate as your experimental data? If not, adjust <code>zeta</code>. What value of <code>zeta</code> gives the best visual match?<br>
+<strong>Q:</strong> Even after tuning, does the model perfectly match the data? What assumptions in the simple pendulum model would cause discrepancies?</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="part-7-return-lab-space-to-prior-condition" class="level2">
+<h2 class="anchored" data-anchor-id="part-7-return-lab-space-to-prior-condition">Part 7 — Return Lab Space to Prior Condition</h2>
+<ol type="1">
+<li>Remove all jumper wires from the breadboard and return them to the wire kit in an organized manner.</li>
+<li>Disconnect the pendulum wires.</li>
+<li>Save all data files to OneDrive. Confirm access on a second device before leaving.</li>
+<li>Ensure both lab partners have copies of all data files and scripts.</li>
+<li>Log off the computer.</li>
+</ol>
+<hr>
+</section>
+<section id="post-lab-assignment" class="level2">
+<h2 class="anchored" data-anchor-id="post-lab-assignment">Post-Lab Assignment</h2>
+<p>Submit the following to the Lab 02 Canvas page by <strong>Monday at 10:00 PM</strong>.</p>
+<section id="files-to-submit" class="level3">
+<h3 class="anchored" data-anchor-id="files-to-submit">Files to Submit</h3>
+<ul>
+<li>Your Python script: <code>FirstName_LastName_Lab02.py</code></li>
+<li>Calibration plot (<code>.pdf</code>) — must match formatting requirements from Lab 01</li>
+<li>Pendulum swing plot with model overlay (<code>.pdf</code>)</li>
+</ul>
+</section>
+<section id="calibration-plot-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="calibration-plot-requirements">Calibration Plot Requirements</h3>
+<ul>
+<li>Raw calibration data: red circle markers, <code>s=81</code></li>
+<li>Linear fit line: solid blue, 2 pt linewidth</li>
+<li>95% CI lines: dashed black, 1 pt linewidth</li>
+<li>Annotated with calibration equation, <span class="math inline">\(s_{yx}\)</span>, and <span class="math inline">\(S_{a_1}\)</span> (use the <code>text</code> command)</li>
+<li>Figure size: 6.5 in × 4.0 in</li>
+<li>All Lab 01 formatting standards apply</li>
+</ul>
+</section>
+<section id="swing-plot-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="swing-plot-requirements">Swing Plot Requirements</h3>
+<ul>
+<li>Experimental data: solid red line, 2 pt linewidth</li>
+<li>Model: dashed blue line, 2 pt linewidth</li>
+<li>Annotated with measured <span class="math inline">\(T_d\)</span> and <span class="math inline">\(\omega_d\)</span> (use the <code>text</code> command)</li>
+<li>Figure size: 6.5 in × 4.0 in</li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3">
+<h3 class="anchored" data-anchor-id="post-lab-questions">Post-Lab Questions</h3>
+<ol type="1">
+<li>Report your calibration equation with units.</li>
+<li>What is the norm of the residuals for your calibration fit? What does it tell you about fit quality?</li>
+<li>What pendulum length <code>L</code> gave the best model agreement? How close is it to your physical measurement?</li>
+<li>What damping ratio <code>zeta</code> gave the best visual match to your data?</li>
+<li>List two physical reasons why the simple pendulum model diverges from your experimental data over time.</li>
+</ol>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -4,9 +4,9 @@
 **Author:** Dr. Christopher Bitikofer  
 **Course:** ME 3300 — Mechanical Measurements  
 
----
+## Learning Objective
 
-## Learning Objectives
+### Objectives:
 
 By the end of this lab, you should be able to:
 
@@ -14,21 +14,19 @@ By the end of this lab, you should be able to:
 - Use the WaveForms oscilloscope GUI to observe and interpret a live voltage signal
 - Use the WaveForms Logger to record time-series data and export it as a CSV
 - Calibrate an angular potentiometer and produce a calibration equation with confidence intervals
-- Record and plot a pendulum free-swing using your calibrated sensor
+- Record and plot a pendulum's free swing using your calibrated sensor
 - Compare experimental pendulum data to a simulated model using `scipy.integrate.solve_ivp`
 
----
+### Check Your Understanding
 
-## Check Your Understanding
+By the end of this lab, you should be able to independently answer the following questions
 
 - What is a voltage divider, and what determines the output voltage of a potentiometer?
-- How do you set voltage scale (V/div) and time scale (s/div) on the WaveForms oscilloscope?
+- How do you set the voltage scale (V/div) and time scale (s/div) on the WaveForms oscilloscope?
 - What does the WaveForms Logger instrument do, and how do you export its data?
 - How do you apply a calibration equation to convert raw voltage readings to physical units in Python?
 - What is `scipy.integrate.solve_ivp`, and what inputs does it require?
 - Why does the simple pendulum model diverge from experimental data over time?
-
----
 
 ## Required Equipment
 
@@ -42,21 +40,21 @@ By the end of this lab, you should be able to:
 
 ## Software Required
 
-- WaveForms (Digilent) — installed on lab computers
+- WaveForms
 - VS Code with your `me3300` conda environment active
 - Python packages: `numpy`, `scipy`, `matplotlib`, `pandas`
 
 > **WaveForms Reference:** Full documentation for the WaveForms software is available at  
 > [https://digilent.com/reference/software/waveforms/waveforms-3/start](https://digilent.com/reference/software/waveforms/waveforms-3/start).  
-> You do not need to read it all — specific sections are referenced throughout this lab.
+> You do not need to read it all, but specific sections are referenced throughout this lab.
 
 ---
 
 ## Lab Introduction
 
-This lab has two major goals. The first is to get comfortable with the WaveForms software and the Analog Discovery Studio hardware — your primary instrumentation platform for the rest of the semester. The second is to complete your first full measurement workflow: connect a sensor, calibrate it, collect experimental data, and compare the result to a theoretical model.
+This lab has two major goals. The first is to further acclimate you to working with the WaveForms software and the Analog Discovery Studio hardware. The second is to complete your first full measurement workflow: connect a sensor, calibrate it, collect experimental data, and compare the result to a theoretical model. Thirdly, you will analyze your data 
 
-You will do **no new Python programming in the first half of this lab**. Instead, you will use the WaveForms GUI to observe, record, and understand the signals from your sensor before automating anything. In Lab 03, you will replace the GUI steps with Python code — and at that point the code will not feel like magic, because you will have already seen exactly what it produces.
+In this lab you will learn this process using the WaveForms GUIdo no new Python programming in the first half of this lab. Instead, you will use the WaveForms GUI to observe, record, and understand the signals from your sensor before automating anything. In Lab 03, you will replace the GUI steps with Python code, and by then, the code should no longer feel like magic because you will have already seen exactly what it produces.
 
 ---
 

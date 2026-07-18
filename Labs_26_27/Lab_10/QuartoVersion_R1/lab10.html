@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-10: The Thrust Stand as a Dynamic System — Step Response, System ID, and the Hover Design Point</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab10_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab10_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="lab10_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="lab10_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab10_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab10_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab10_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab10_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab10_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab10_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab10_files/libs/bootstrap/bootstrap-6b9a4e2bc1d929dbbc8f0b698e19a81c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="lab10_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="lab10_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="lab10_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning Objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#extend-your-folder-structure" id="toc-extend-your-folder-structure" class="nav-link" data-scroll-target="#extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</a></li>
+  <li><a href="#read-the-background-section" id="toc-read-the-background-section" class="nav-link" data-scroll-target="#read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#python-quick-reference-new-this-lab" id="toc-python-quick-reference-new-this-lab" class="nav-link" data-scroll-target="#python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background"><span class="header-section-number">4</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#sec-second-order" id="toc-sec-second-order" class="nav-link" data-scroll-target="#sec-second-order"><span class="header-section-number">4.1</span> The Rig as a Second-Order System</a></li>
+  <li><a href="#sec-first-order" id="toc-sec-first-order" class="nav-link" data-scroll-target="#sec-first-order"><span class="header-section-number">4.2</span> The Motor as a First-Order System</a></li>
+  <li><a href="#sec-bandwidth" id="toc-sec-bandwidth" class="nav-link" data-scroll-target="#sec-bandwidth"><span class="header-section-number">4.3</span> Bandwidth Separation: When Can You Trust a Force Measurement?</a></li>
+  <li><a href="#sec-block-avg" id="toc-sec-block-avg" class="nav-link" data-scroll-target="#sec-block-avg"><span class="header-section-number">4.4</span> Honest CIs for Time-Series Means</a></li>
+  </ul></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">5</span> Part-1: Station Checkout and Tare</a></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">6</span> Part-2: Tap Test — the Rig’s Second-Order Signature</a>
+  <ul class="collapse">
+  <li><a href="#example-result" id="toc-example-result" class="nav-link" data-scroll-target="#example-result"><span class="header-section-number">6.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">7</span> Part-3: Throttle Step Response</a>
+  <ul class="collapse">
+  <li><a href="#example-results" id="toc-example-results" class="nav-link" data-scroll-target="#example-results"><span class="header-section-number">7.1</span> Example Results</a></li>
+  </ul></li>
+  <li><a href="#sec-part-4" id="toc-sec-part-4" class="nav-link" data-scroll-target="#sec-part-4"><span class="header-section-number">8</span> Part-4: Bandwidth Separation — Closing the Trust Argument</a></li>
+  <li><a href="#sec-part-5" id="toc-sec-part-5" class="nav-link" data-scroll-target="#sec-part-5"><span class="header-section-number">9</span> Part-5: Verify the Hover Design Point on the Bench</a>
+  <ul class="collapse">
+  <li><a href="#example-result-1" id="toc-example-result-1" class="nav-link" data-scroll-target="#example-result-1"><span class="header-section-number">9.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-real-drone" id="toc-sec-real-drone" class="nav-link" data-scroll-target="#sec-real-drone"><span class="header-section-number">10</span> Why Not a Real Drone?</a></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#submission-items" id="toc-submission-items" class="nav-link" data-scroll-target="#submission-items"><span class="header-section-number">11.1</span> Submission Items</a></li>
+  <li><a href="#tap-test-plot-requirements" id="toc-tap-test-plot-requirements" class="nav-link" data-scroll-target="#tap-test-plot-requirements"><span class="header-section-number">11.2</span> Tap-Test Plot Requirements</a></li>
+  <li><a href="#step-response-plot-requirements" id="toc-step-response-plot-requirements" class="nav-link" data-scroll-target="#step-response-plot-requirements"><span class="header-section-number">11.3</span> Step-Response Plot Requirements</a></li>
+  <li><a href="#time-constant-fit-plot-requirements" id="toc-time-constant-fit-plot-requirements" class="nav-link" data-scroll-target="#time-constant-fit-plot-requirements"><span class="header-section-number">11.4</span> Time-Constant Fit Plot Requirements</a></li>
+  <li><a href="#hover-verification-plot-requirements" id="toc-hover-verification-plot-requirements" class="nav-link" data-scroll-target="#hover-verification-plot-requirements"><span class="header-section-number">11.5</span> Hover Verification Plot Requirements</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">11.6</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave" id="toc-before-you-leave" class="nav-link" data-scroll-target="#before-you-leave"><span class="header-section-number">12</span> Before You Leave</a></li>
+  <li><a href="#the-capstone-arc-closed" id="toc-the-capstone-arc-closed" class="nav-link" data-scroll-target="#the-capstone-arc-closed"><span class="header-section-number">13</span> The Capstone Arc, Closed</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lab10.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-10: The Thrust Stand as a Dynamic System — Step Response, System ID, and the Hover Design Point</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning Objective</h2>
+<p>Lab 09 measured what your motor-propeller system does in steady state. This closing lab asks the <em>dynamic</em> questions — how fast can thrust change, what are the test rig’s own dynamics, and can you trust a force measurement made through a structure that has dynamics of its own? It ends where the capstone must: executing the hover design point you committed to last week, and judging it with confidence intervals.</p>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li><strong>Identify a second-order system from its ringdown</strong>: tap-test the rig and extract natural frequency and damping ratio via the <strong>log decrement</strong> method</li>
+<li>Use <strong><code>scipy.signal.find_peaks</code></strong> to locate oscillation peaks programmatically</li>
+<li><strong>Measure a first-order step response</strong>: command a throttle step and extract the thrust <strong>time constant</strong> by linearizing the exponential — with a fit, not a stopwatch</li>
+<li>Quantify the <em>asymmetry</em> between spin-up and spin-down, and explain it physically</li>
+<li>Reason about <strong>bandwidth separation</strong>: why the rig’s resonance does <em>not</em> corrupt the step measurement, and when it would</li>
+<li>Put an honest confidence interval on a <strong>time-series mean</strong> using block averaging</li>
+<li><strong>Execute and verify your hover design point</strong> — the semester’s measurement chain, closed end to end</li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="hardware-instruments" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
+<ul>
+<li>Why is the tap test done with the propeller off and the motor unpowered?</li>
+<li>The commanded throttle step is (electrically) nearly instantaneous. Why isn’t the thrust step?</li>
+<li>What physically sets the rig’s natural frequency? If we bolted a heavier motor to the same load cell, which way would <span class="math inline">\(f_n\)</span> move?</li>
+<li>Why does the step script start the recording <em>before</em> commanding the step?</li>
+</ul>
+</section>
+<section id="programming" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.2</span> Programming</h4>
+<ul>
+<li>What do <code>find_peaks</code>’s <code>height</code> and <code>distance</code> arguments do, and how do you choose them against noise and expected period?</li>
+<li>How does taking <code>np.log</code> of a decaying exponential turn time-constant extraction into <code>np.polyfit</code>?</li>
+<li>Why does the fit window exclude data after <span class="math inline">\(t_0 + 0.3\)</span> s even though the record is longer?</li>
+<li>What does <code>reshape(n_blk, 1000)</code> do to a 1-D array?</li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>From peak amplitudes 0.32, 0.26, 0.21 V, estimate the log decrement and damping ratio.</li>
+<li>Why would <code>std/sqrt(5000)</code> be a dishonestly narrow CI for the mean of a 5-second, 1 kHz thrust recording?</li>
+<li>Your measured hover thrust CI does not contain the 60 g design target. List, in order of size, the error sources that could explain the gap before you blame the rig.</li>
+<li>What ratio between rig natural frequency and motor bandwidth makes the thrust measurement trustworthy, and what would you do if it were 1.5 instead?</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Same Prop, Same Rules">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Same Prop, Same Rules
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All Lab 09 safety rules apply unchanged: guard on whenever power is on, glasses on, kill switch is the first response, prop off for the tap test, TA checks the prop nut after reinstalling.</p>
+</div>
+</div>
+<section id="extend-your-folder-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</h3>
+<p>Add a Lab_10 folder set to your <code>ME3300</code> folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href="#cb1-1"></a>ME3300/</span>
+<span id="cb1-2"><a href="#cb1-2"></a>├── Lab_01/ ... Lab_09/</span>
+<span id="cb1-3"><a href="#cb1-3"></a>├── Lab_10/</span>
+<span id="cb1-4"><a href="#cb1-4"></a>│   ├── Code/</span>
+<span id="cb1-5"><a href="#cb1-5"></a>│   │   ├── Lab10_Prelab_Walkthrough.ipynb</span>
+<span id="cb1-6"><a href="#cb1-6"></a>│   │   └── FirstName_LastName_Lab10.ipynb</span>
+<span id="cb1-7"><a href="#cb1-7"></a>│   ├── Data/</span>
+<span id="cb1-8"><a href="#cb1-8"></a>│   └── Figures/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Bring your Lab 09 data.</strong> The analysis loads <code>../../Lab_09/Data/loadcell_calibration_coeffs.csv</code> — confirm it exists and synced. If your partner has it and you don’t, fix that <em>before</em> lab.</p>
+</section>
+<section id="read-the-background-section" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</h3>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It derives the log-decrement equations and the linearized step-response fit — the two workhorses of this lab.</p>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Download <code>Lab10_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_10/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> Python skills on simulated signals:</p>
+<ul>
+<li><strong><code>scipy.signal.find_peaks</code></strong> — and how to defeat noise with <code>height</code> and <code>distance</code></li>
+<li><strong>log-decrement arithmetic</strong> — from peak amplitudes to <span class="math inline">\(\zeta\)</span> and <span class="math inline">\(\omega_n\)</span></li>
+<li><strong>linearizing an exponential</strong> — <code>np.log</code> + <code>np.polyfit</code> as a time-constant extractor</li>
+<li><strong>block averaging with <code>reshape</code></strong> — honest CIs for correlated time-series data</li>
+</ul>
+<p>As always, report the <strong>checkpoint</strong> values in the <strong>Prelab 10 quiz on Canvas</strong> before your lab session.</p>
+</section>
+<section id="python-quick-reference-new-this-lab" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</h3>
+<table class="caption-top table">
+<caption>New Python syntax and functions introduced in Lab 10</caption>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Find oscillation peaks</td>
+<td><code>find_peaks(y, height=0.02, distance=15)</code></td>
+</tr>
+<tr class="even">
+<td>Natural log (element-wise)</td>
+<td><code>np.log(y)</code></td>
+</tr>
+<tr class="odd">
+<td>Reshape 1-D array into blocks</td>
+<td><code>y[:n*1000].reshape(n, 1000)</code></td>
+</tr>
+<tr class="even">
+<td>Unpack, ignoring some values</td>
+<td><code>*_, tau = step_analysis(fname)</code></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>A quadcopter hovers by <em>constantly adjusting</em> motor thrust — tens of corrections per second. Whether that control loop works depends not on the thrust curve you measured last week, but on how <em>quickly</em> the real motor follows a command: its <strong>time constant</strong>. Every actuator you will ever specify — valves, heaters, servos, pumps — has one, and “how fast is it, really?” is answered exactly the way you will answer it today: command a step, record the response, fit the model.</p>
+<p>But there is a subtlety worth the price of admission. Your force sensor is bolted to a structure, and structures have dynamics too. Hit the rig sharply and it <em>rings</em> — a damped oscillation at its natural frequency, straight out of your second-order systems coursework. So today has a beautiful arc:</p>
+<ul>
+<li><strong>Part 2</strong> — characterize the <em>rig</em> as a second-order system (tap test → <span class="math inline">\(f_n\)</span>, <span class="math inline">\(\zeta\)</span> via log decrement).</li>
+<li><strong>Part 3</strong> — characterize the <em>motor</em> as a first-order system (throttle step → <span class="math inline">\(\tau\)</span> via linearized fit).</li>
+<li><strong>Part 4</strong> — put them together: the measurement is trustworthy precisely <em>because</em> these two dynamics live an order of magnitude apart. You will compute that separation, not assume it.</li>
+<li><strong>Part 5</strong> — the capstone moment: command the hover throttle you committed to in Lab 09 Q14 and check whether your 60 g design target survives, with confidence intervals doing the judging. To be clear about what this is: <strong>nothing flies.</strong> The rig stays bolted down, and “hover” means the <em>hover condition</em> — thrust equal to weight — verified on the bench, the way engine test cells verify flight hardware without leaving the ground. (Why not a real drone? See <a href="#sec-real-drone" class="quarto-xref">Section&nbsp;10</a> — including the class demo where the answer is <em>shown</em>, not told.)</li>
+</ul>
+</section>
+<section id="sec-background" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-background"><span class="header-section-number">4</span> Background</h2>
+<section id="sec-second-order" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="sec-second-order"><span class="header-section-number">4.1</span> The Rig as a Second-Order System</h3>
+<p>The motor and mount (mass <span class="math inline">\(m\)</span>) sit on the load cell (stiffness <span class="math inline">\(k\)</span>, light damping <span class="math inline">\(c\)</span>) — a classic spring-mass-damper. Free vibration after an impulse:</p>
+<p><span id="eq-ringdown"><span class="math display">\[m\ddot{x} + c\dot{x} + kx = 0 \quad\Rightarrow\quad x(t) = A e^{-\zeta\omega_n t}\sin(\omega_d t) \tag{1}\]</span></span></p>
+<p>with natural frequency <span class="math inline">\(\omega_n = \sqrt{k/m}\)</span>, damping ratio <span class="math inline">\(\zeta = c/(2\sqrt{km})\)</span>, and damped frequency</p>
+<p><span id="eq-omega-d"><span class="math display">\[\omega_d = \omega_n\sqrt{1 - \zeta^2} \tag{2}\]</span></span></p>
+<p>A pen-tap is a fine approximation of an impulse, and the load cell itself reports the ringdown — the sensor measures its own structure’s vibration.</p>
+<p><strong>Log decrement</strong> turns the decay envelope into a damping measurement. Successive peaks (one damped period <span class="math inline">\(T_d\)</span> apart) shrink by a fixed ratio, so with peak amplitudes <span class="math inline">\(A_i\)</span>:</p>
+<p><span id="eq-log-dec"><span class="math display">\[\delta = \ln\frac{A_i}{A_{i+1}} \qquad \zeta = \frac{\delta}{\sqrt{4\pi^2 + \delta^2}} \tag{3}\]</span></span></p>
+<p>Averaging <span class="math inline">\(\ln(A_i/A_{i+1})\)</span> over many peak pairs beats noise; the mean peak spacing gives <span class="math inline">\(T_d\)</span>, hence <span class="math inline">\(\omega_d = 2\pi/T_d\)</span>, and <a href="#eq-omega-d" class="quarto-xref">Equation&nbsp;2</a> recovers <span class="math inline">\(\omega_n\)</span>.</p>
+</section>
+<section id="sec-first-order" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="sec-first-order"><span class="header-section-number">4.2</span> The Motor as a First-Order System</h3>
+<p>Why doesn’t thrust step instantly when the command does? Because the rotor and propeller store rotational kinetic energy: speed obeys <span class="math inline">\(J\dot{\omega} = \tau_{motor} - \tau_{drag}\)</span>, and near an operating point that linearizes to a first-order response</p>
+<p><span id="eq-first-order"><span class="math display">\[T(t) = T_{ss} - (T_{ss} - T_0)\,e^{-t/\tau} \tag{4}\]</span></span></p>
+<p>exactly the form you met with thermocouples and RC circuits. The time constant <span class="math inline">\(\tau\)</span> bundles the rotor inertia <span class="math inline">\(J\)</span> against two “stiffnesses” that fight speed changes: aerodynamic drag (<span class="math inline">\(\propto \omega^2\)</span>) and the motor’s back-EMF (which reduces current as speed rises). One asymmetry to look for: on a <em>down</em>-step the ESC cannot push current backwards — spin-down coasts on prop drag alone, while spin-up gets active motor torque. Physics says down should be <em>slower</em>. Your data will say by how much.</p>
+<p><strong>Extracting <span class="math inline">\(\tau\)</span> honestly.</strong> Reading “63.2% of the step” off the plot works but uses one point. Rearranging <a href="#eq-first-order" class="quarto-xref">Equation&nbsp;4</a>:</p>
+<p><span id="eq-tau-lin"><span class="math display">\[\ln\left[\frac{T_{ss} - T(t)}{T_{ss} - T_0}\right] = -\frac{t}{\tau} \tag{5}\]</span></span></p>
+<p>The left side is a straight line in <span class="math inline">\(t\)</span> with slope <span class="math inline">\(-1/\tau\)</span>: a <code>np.polyfit</code> job, using <em>every</em> sample on the clean part of the rise — and the straightness of that line is itself the evidence that first-order is the right model. Window design matters: we fit where the normalized response is between 10% and 90% (the ends are noise-dominated), and cap the window in <em>time</em>, because long after settling the noise occasionally wanders back above the 10% line and would poison the fit.</p>
+</section>
+<section id="sec-bandwidth" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="sec-bandwidth"><span class="header-section-number">4.3</span> Bandwidth Separation: When Can You Trust a Force Measurement?</h3>
+<p>The load cell reports thrust <em>through</em> the rig’s dynamics. If thrust changed as fast as the rig rings, the cell would report structural oscillation, not thrust. The saving grace is separation of time scales: the motor’s bandwidth is <span class="math inline">\(f_{bw} = 1/(2\pi\tau)\)</span> — a few hertz — while the rig rings at tens of hertz. To the rig, every thrust change the motor can actually produce is <em>quasi-static</em>. You will verify the ratio is comfortably large (<span class="math inline">\(\gtrsim 10\times\)</span>), which is exactly the check a test engineer runs before believing any dynamic force data. It is also why the tap test rings but the throttle step does not: the tap is faster than the rig; the motor is slower than it.</p>
+</section>
+<section id="sec-block-avg" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="sec-block-avg"><span class="header-section-number">4.4</span> Honest CIs for Time-Series Means</h3>
+<p>A 5-second hover recording has 5000 samples, but not 5000 <em>independent</em> ones — consecutive samples share slow wander (drift, air recirculation, supply ripple). Dividing by <span class="math inline">\(\sqrt{5000}\)</span> claims information you don’t have. The standard fix is <strong>block averaging</strong>: cut the record into 1-second blocks, average each, and treat the block means as the independent sample. Fewer, honest degrees of freedom beat many fake ones.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">5</span> Part-1: Station Checkout and Tare</h2>
+<p>Wire the station exactly as in Lab 09 Part-1 (same table, same pins). Verify with the DMM: 5 V excitation, ~2.5 V at the current sensor, stable tare at the AD620 output.</p>
+<p>Record the tare — motor <strong>unpowered</strong> (kill switch OFF this time; we want the mechanical zero), prop mounted:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> pydwf <span class="im">import</span> DwfLibrary, DwfState</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="im">from</span> pydwf.utilities <span class="im">import</span> openDwfDevice</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="im">import</span> time</span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a>dwf <span class="op">=</span> DwfLibrary()</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a>fs <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="kw">def</span> record(ai, duration, fs<span class="op">=</span>fs):</span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="co">"""Record both channels for `duration` seconds; return t, ch1, ch2."""</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>    n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb2-13"><a href="#cb2-13"></a>    <span class="cf">for</span> ch <span class="kw">in</span> (<span class="dv">0</span>, <span class="dv">1</span>):</span>
+<span id="cb2-14"><a href="#cb2-14"></a>        ai.channelEnableSet(ch, <span class="va">True</span>)</span>
+<span id="cb2-15"><a href="#cb2-15"></a>        ai.channelRangeSet(ch, <span class="fl">5.0</span>)</span>
+<span id="cb2-16"><a href="#cb2-16"></a>    ai.frequencySet(fs)</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    ai.bufferSizeSet(n)</span>
+<span id="cb2-18"><a href="#cb2-18"></a>    ai.configure(<span class="va">False</span>, <span class="va">True</span>)</span>
+<span id="cb2-19"><a href="#cb2-19"></a>    <span class="cf">while</span> ai.status(<span class="va">True</span>) <span class="op">!=</span> DwfState.Done:</span>
+<span id="cb2-20"><a href="#cb2-20"></a>        time.sleep(<span class="fl">0.05</span>)</span>
+<span id="cb2-21"><a href="#cb2-21"></a>    <span class="cf">return</span> (np.arange(n) <span class="op">/</span> fs,</span>
+<span id="cb2-22"><a href="#cb2-22"></a>            np.array(ai.statusData(<span class="dv">0</span>, n)),</span>
+<span id="cb2-23"><a href="#cb2-23"></a>            np.array(ai.statusData(<span class="dv">1</span>, n)))</span>
+<span id="cb2-24"><a href="#cb2-24"></a></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb2-26"><a href="#cb2-26"></a>    t, v_cell, v_curr <span class="op">=</span> record(device.analogIn, <span class="fl">2.0</span>)</span>
+<span id="cb2-27"><a href="#cb2-27"></a></span>
+<span id="cb2-28"><a href="#cb2-28"></a>np.savetxt(<span class="st">'../Data/MotorOffTare.csv'</span>,</span>
+<span id="cb2-29"><a href="#cb2-29"></a>           np.column_stack([t, v_cell, v_curr]),</span>
+<span id="cb2-30"><a href="#cb2-30"></a>           header<span class="op">=</span><span class="st">'time_s,loadcell_V,current_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>record()</code> is Lab 09’s <code>read_means()</code> returning the <em>full arrays</em> instead of means — this week the time history is the whole point.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q1.</strong> Compare today’s tare voltage to Lab 09’s. If they differ, list what could have legitimately changed and whether your analysis is robust to it (hint: look where the tare enters Lab 09’s tare correction, <span class="math inline">\(T = F(V_{\text{running}}) - F(V_{\text{motor off}})\)</span>).</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">6</span> Part-2: Tap Test — the Rig’s Second-Order Signature</h2>
+<p><strong>Remove the propeller</strong> (kill switch off). The rig’s ringdown should be a <em>structural</em> measurement, uncontaminated by aerodynamics — and an accidental motor start with a bare shaft is harmless.</p>
+<p>Procedure (see <a href="#fig-tap-photo" class="quarto-xref">Figure&nbsp;1</a>): one partner runs the cell below, the other gives the motor mount plate one crisp downward tap with a pen barrel just after the recording starts. Record 3 seconds; repeat for <strong>three taps</strong> total, saving <code>TapTest_Run1.csv</code> through <code>Run3</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>run <span class="op">=</span> <span class="dv">1</span>                                  <span class="co"># EDIT: 1, 2, 3</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    <span class="bu">input</span>(<span class="ss">f"Tap run </span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">: press Enter, then tap the plate once..."</span>)</span>
+<span id="cb3-5"><a href="#cb3-5"></a>    t, v_cell, _ <span class="op">=</span> record(device.analogIn, <span class="fl">3.0</span>)</span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a>np.savetxt(<span class="ss">f'../Data/TapTest_Run</span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">.csv'</span>,</span>
+<span id="cb3-8"><a href="#cb3-8"></a>           np.column_stack([t, v_cell]),</span>
+<span id="cb3-9"><a href="#cb3-9"></a>           header<span class="op">=</span><span class="st">'time_s,loadcell_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-tap-photo" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tap-photo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/TapTest_Photo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Tap technique: one crisp hit on the motor plate, then hands away."><img src="figures/TapTest_Photo.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tap-photo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Tap technique: one crisp hit on the motor plate, then hands away.
+</figcaption>
+</figure>
+</div>
+<p>Now the identification. <code>find_peaks</code> does the tedious part; the log decrement does the physics:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> scipy.signal <span class="im">import</span> find_peaks</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a>n_peaks <span class="op">=</span> <span class="dv">10</span>                      <span class="co"># use the first 10 clean peaks</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>fn_runs, zeta_runs <span class="op">=</span> [], []</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="cf">for</span> run <span class="kw">in</span> (<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>):</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    d <span class="op">=</span> np.loadtxt(<span class="ss">f'../Data/TapTest_Run</span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">.csv'</span>,</span>
+<span id="cb4-9"><a href="#cb4-9"></a>                   delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    t, v <span class="op">=</span> d[:, <span class="dv">0</span>], d[:, <span class="dv">1</span>]</span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a>    baseline <span class="op">=</span> v[:<span class="dv">400</span>].mean()             <span class="co"># cell voltage before the tap</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>    y <span class="op">=</span> v <span class="op">-</span> baseline</span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a>    idx0 <span class="op">=</span> np.argmax(np.<span class="bu">abs</span>(y) <span class="op">&gt;</span> <span class="fl">0.05</span>)    <span class="co"># first sample after the tap</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a>    peaks, _ <span class="op">=</span> find_peaks(y[idx0:], height<span class="op">=</span><span class="fl">0.02</span>, distance<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb4-17"><a href="#cb4-17"></a>    peaks <span class="op">=</span> peaks[:n_peaks] <span class="op">+</span> idx0        <span class="co"># back to full-record indexing</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a></span>
+<span id="cb4-19"><a href="#cb4-19"></a>    tp, Ap <span class="op">=</span> t[peaks], y[peaks]</span>
+<span id="cb4-20"><a href="#cb4-20"></a></span>
+<span id="cb4-21"><a href="#cb4-21"></a>    <span class="co"># damped frequency from mean peak spacing</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>    Td <span class="op">=</span> np.diff(tp).mean()</span>
+<span id="cb4-23"><a href="#cb4-23"></a>    omega_d <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">/</span> Td              <span class="co"># Eq. 2</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a></span>
+<span id="cb4-25"><a href="#cb4-25"></a>    <span class="co"># log decrement -&gt; damping ratio -&gt; natural frequency</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>    delta <span class="op">=</span> np.mean(np.log(Ap[:<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> Ap[<span class="dv">1</span>:]))          <span class="co"># Eq. 3</span></span>
+<span id="cb4-27"><a href="#cb4-27"></a>    zeta <span class="op">=</span> delta <span class="op">/</span> np.sqrt(<span class="dv">4</span> <span class="op">*</span> np.pi<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> delta<span class="op">**</span><span class="dv">2</span>)    <span class="co"># Eq. 3</span></span>
+<span id="cb4-28"><a href="#cb4-28"></a>    omega_n <span class="op">=</span> omega_d <span class="op">/</span> np.sqrt(<span class="dv">1</span> <span class="op">-</span> zeta<span class="op">**</span><span class="dv">2</span>)           <span class="co"># Eq. 2</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a></span>
+<span id="cb4-30"><a href="#cb4-30"></a>    fn_runs.append(omega_n <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> np.pi))</span>
+<span id="cb4-31"><a href="#cb4-31"></a>    zeta_runs.append(zeta)</span>
+<span id="cb4-32"><a href="#cb4-32"></a>    <span class="bu">print</span>(<span class="ss">f"run </span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">: fn = </span><span class="sc">{</span>fn_runs[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.2f}</span><span class="ss"> Hz, zeta = </span><span class="sc">{</span>zeta<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb4-33"><a href="#cb4-33"></a></span>
+<span id="cb4-34"><a href="#cb4-34"></a>fn_runs, zeta_runs <span class="op">=</span> np.array(fn_runs), np.array(zeta_runs)</span>
+<span id="cb4-35"><a href="#cb4-35"></a>t2 <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>, df<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb4-36"><a href="#cb4-36"></a>fn_CI <span class="op">=</span> t2 <span class="op">*</span> fn_runs.std(ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(<span class="dv">3</span>)</span>
+<span id="cb4-37"><a href="#cb4-37"></a>zeta_CI <span class="op">=</span> t2 <span class="op">*</span> zeta_runs.std(ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(<span class="dv">3</span>)</span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="bu">print</span>(<span class="ss">f"fn = </span><span class="sc">{</span>fn_runs<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss"> ± </span><span class="sc">{</span>fn_CI<span class="sc">:.2f}</span><span class="ss"> Hz, "</span></span>
+<span id="cb4-39"><a href="#cb4-39"></a>      <span class="ss">f"zeta = </span><span class="sc">{</span>zeta_runs<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>zeta_CI<span class="sc">:.4f}</span><span class="ss">  (95% CI, n = 3)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>New tools, in order of appearance:</p>
+<ul>
+<li><strong><code>find_peaks(y, height=0.02, distance=15)</code></strong> returns the indices of local maxima. The two keyword arguments are your noise armor, and both are <em>designed</em>, not guessed: <code>height=0.02</code> demands peaks clear ~7× the cell’s noise floor (σ ≈ 3 mV), so noise wiggles don’t qualify; <code>distance=15</code> refuses peaks closer than 15 samples, comfortably below the ~24-sample damped period, so one physical peak can’t be counted twice. The <code>, _</code> discards the second return value (a properties dictionary we don’t need).</li>
+<li><strong><code>np.log(Ap[:-1] / Ap[1:])</code></strong> — the slicing trick pairs each peak with its successor: elements 0..n-1 divided by elements 1..n gives every <span class="math inline">\(A_i/A_{i+1}\)</span> ratio at once; averaging their logs is the multi-peak log decrement.</li>
+<li>Note the fingerprint of good practice: <em>every</em> threshold (<code>0.05</code> tap detector, <code>0.02</code> peak height) is justified against a known noise level. That habit came from Lab 03’s release detector; it never stops paying.</li>
+</ul>
+<p>Build the ringdown figure to match <a href="#fig-example-tap" class="quarto-xref">Figure&nbsp;2</a>: signal, detected peaks marked, <span class="math inline">\(f_n\)</span> and <span class="math inline">\(\zeta\)</span> annotated with their CIs.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q2.</strong> Report <span class="math inline">\(f_n\)</span> and <span class="math inline">\(\zeta\)</span> with CIs. Is the rig underdamped, critically damped, or overdamped — and how many oscillations does it take for the amplitude to fall by half? (Show the calculation from <span class="math inline">\(\zeta\)</span>.)</p>
+<p><strong>Q3.</strong> Estimate the effective vibrating mass from <span class="math inline">\(f_n\)</span> and the load cell’s approximate stiffness (<span class="math inline">\(k \approx 2\times10^4\)</span> N/m, from its rated deflection). Is your answer plausible for a motor + mount?</p>
+<p><strong>Q4.</strong> Your three <span class="math inline">\(\zeta\)</span> values scatter more (relatively) than your three <span class="math inline">\(f_n\)</span> values. Why should damping be intrinsically harder to measure than frequency? (Think about what each is computed <em>from</em>.)</p>
+</div>
+</div>
+<section id="example-result" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="example-result"><span class="header-section-number">6.1</span> Example Result</h3>
+<div id="fig-example-tap" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-tap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab10_TapTest.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Example tap-test ringdown with detected peaks (made-up data). Your values will differ, but your formatting and annotations should match."><img src="figures/Python/FirstName_LastName_Lab10_TapTest.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-tap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Example tap-test ringdown with detected peaks (made-up data). Your values will differ, but your formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<p><strong>Reinstall the propeller</strong>; TA checks it before you re-power.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-3" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">7</span> Part-3: Throttle Step Response</h2>
+<p>The script commands 30% throttle, starts a 3.5-second recording, and <em>steps to 60% mid-recording</em> — capturing steady state, transient, and new steady state in one record. The <code>set_throttle</code> function is Lab 09’s, unchanged (copy it into your notebook).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>run <span class="op">=</span> <span class="dv">1</span>                                  <span class="co"># EDIT: 1, 2, 3</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>d_start, d_end <span class="op">=</span> <span class="dv">30</span>, <span class="dv">60</span>                  <span class="co"># swap for the down-steps</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    dout, ai <span class="op">=</span> device.digitalOut, device.analogIn</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    set_throttle(dout, <span class="dv">0</span>)</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="bu">input</span>(<span class="st">"Guard on? Kill switch ON, wait for beeps, then Enter..."</span>)</span>
+<span id="cb5-8"><a href="#cb5-8"></a></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    set_throttle(dout, d_start)</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    time.sleep(<span class="fl">2.0</span>)                      <span class="co"># settle at the starting point</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="co"># arm the recording, THEN step: the transient lands mid-buffer</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a>    n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> <span class="fl">3.5</span>)</span>
+<span id="cb5-14"><a href="#cb5-14"></a>    <span class="cf">for</span> ch <span class="kw">in</span> (<span class="dv">0</span>, <span class="dv">1</span>):</span>
+<span id="cb5-15"><a href="#cb5-15"></a>        ai.channelEnableSet(ch, <span class="va">True</span>)</span>
+<span id="cb5-16"><a href="#cb5-16"></a>        ai.channelRangeSet(ch, <span class="fl">5.0</span>)</span>
+<span id="cb5-17"><a href="#cb5-17"></a>    ai.frequencySet(fs)</span>
+<span id="cb5-18"><a href="#cb5-18"></a>    ai.bufferSizeSet(n)</span>
+<span id="cb5-19"><a href="#cb5-19"></a>    ai.configure(<span class="va">False</span>, <span class="va">True</span>)            <span class="co"># recording starts now</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a>    time.sleep(<span class="fl">1.0</span>)</span>
+<span id="cb5-21"><a href="#cb5-21"></a>    set_throttle(dout, d_end)            <span class="co"># the step, 1 s into the record</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a>    <span class="cf">while</span> ai.status(<span class="va">True</span>) <span class="op">!=</span> DwfState.Done:</span>
+<span id="cb5-23"><a href="#cb5-23"></a>        time.sleep(<span class="fl">0.05</span>)</span>
+<span id="cb5-24"><a href="#cb5-24"></a>    t <span class="op">=</span> np.arange(n) <span class="op">/</span> fs</span>
+<span id="cb5-25"><a href="#cb5-25"></a>    v_cell <span class="op">=</span> np.array(ai.statusData(<span class="dv">0</span>, n))</span>
+<span id="cb5-26"><a href="#cb5-26"></a>    v_curr <span class="op">=</span> np.array(ai.statusData(<span class="dv">1</span>, n))</span>
+<span id="cb5-27"><a href="#cb5-27"></a></span>
+<span id="cb5-28"><a href="#cb5-28"></a>    set_throttle(dout, <span class="dv">0</span>)</span>
+<span id="cb5-29"><a href="#cb5-29"></a></span>
+<span id="cb5-30"><a href="#cb5-30"></a>name <span class="op">=</span> <span class="st">'StepUp'</span> <span class="cf">if</span> d_end <span class="op">&gt;</span> d_start <span class="cf">else</span> <span class="st">'StepDown'</span></span>
+<span id="cb5-31"><a href="#cb5-31"></a>np.savetxt(<span class="ss">f'../Data/</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">_Run</span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">.csv'</span>,</span>
+<span id="cb5-32"><a href="#cb5-32"></a>           np.column_stack([t, v_cell, v_curr]),</span>
+<span id="cb5-33"><a href="#cb5-33"></a>           header<span class="op">=</span><span class="st">'time_s,loadcell_V,current_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Collect <strong>three up-steps (30→60%) and three down-steps (60→30%)</strong> — six records, about five minutes.</p>
+<p>The analysis packages naturally as a function (one record in, one <span class="math inline">\(\tau\)</span> out). Load the Lab 09 calibration first — good calibrations are assets:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>coeffs <span class="op">=</span> np.loadtxt(<span class="st">'../../Lab_09/Data/loadcell_calibration_coeffs.csv'</span>,</span>
+<span id="cb6-2"><a href="#cb6-2"></a>                    delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)     <span class="co"># [c1 N/V, c0 N]</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
+<span id="cb6-4"><a href="#cb6-4"></a>tare <span class="op">=</span> np.loadtxt(<span class="st">'../Data/MotorOffTare.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>v_tare <span class="op">=</span> tare[:, <span class="dv">1</span>].mean()</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">def</span> step_analysis(fname):</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="co">"""Return t, thrust (N), step time, T0, Tss, tau for one record."""</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>    d <span class="op">=</span> np.loadtxt(fname, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    t, v_c, v_i <span class="op">=</span> d[:, <span class="dv">0</span>], d[:, <span class="dv">1</span>], d[:, <span class="dv">2</span>]</span>
+<span id="cb6-11"><a href="#cb6-11"></a></span>
+<span id="cb6-12"><a href="#cb6-12"></a>    F <span class="op">=</span> np.polyval(coeffs, v_c) <span class="op">-</span> np.polyval(coeffs, v_tare)</span>
+<span id="cb6-13"><a href="#cb6-13"></a>    I <span class="op">=</span> (v_i <span class="op">-</span> <span class="fl">2.5</span>) <span class="op">/</span> <span class="fl">0.100</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a></span>
+<span id="cb6-15"><a href="#cb6-15"></a>    <span class="co"># the commanded step shows up instantly in current: detect it there</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>    jump <span class="op">=</span> np.<span class="bu">abs</span>(np.diff(I))</span>
+<span id="cb6-17"><a href="#cb6-17"></a>    i_step <span class="op">=</span> np.argmax(jump <span class="op">&gt;</span> <span class="fl">1.5</span>)  <span class="op">+</span> <span class="dv">1</span>         <span class="co"># designed &gt;&gt; 5-sigma noise</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a>    t0 <span class="op">=</span> t[i_step]</span>
+<span id="cb6-19"><a href="#cb6-19"></a></span>
+<span id="cb6-20"><a href="#cb6-20"></a>    T0  <span class="op">=</span> F[t <span class="op">&lt;</span> t0 <span class="op">-</span> <span class="fl">0.05</span>].mean()               <span class="co"># pre-step steady state</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a>    Tss <span class="op">=</span> F[t <span class="op">&gt;</span> t0 <span class="op">+</span> <span class="fl">0.60</span>].mean()               <span class="co"># post-step steady state</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a></span>
+<span id="cb6-23"><a href="#cb6-23"></a>    <span class="co"># linearize: y = (Tss-F)/(Tss-T0) = exp(-(t-t0)/tau) -&gt; ln y is a line.</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a>    <span class="co"># Window design: y in (0.10, 0.90) keeps the clean part of the decay,</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a>    <span class="co"># and t &lt; t0 + 0.3 s keeps settled-noise samples (which sometimes</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a>    <span class="co"># wander above 0.10 by chance) from poisoning the fit.</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a>    y <span class="op">=</span> (Tss <span class="op">-</span> F) <span class="op">/</span> (Tss <span class="op">-</span> T0)</span>
+<span id="cb6-28"><a href="#cb6-28"></a>    mask <span class="op">=</span> (t <span class="op">&gt;</span> t0) <span class="op">&amp;</span> (t <span class="op">&lt;</span> t0 <span class="op">+</span> <span class="fl">0.30</span>) <span class="op">&amp;</span> (y <span class="op">&gt;</span> <span class="fl">0.10</span>) <span class="op">&amp;</span> (y <span class="op">&lt;</span> <span class="fl">0.90</span>)</span>
+<span id="cb6-29"><a href="#cb6-29"></a>    pc <span class="op">=</span> np.polyfit(t[mask] <span class="op">-</span> t0, np.log(y[mask]), <span class="dv">1</span>)   <span class="co"># Eq. 6</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a>    tau <span class="op">=</span> <span class="op">-</span><span class="dv">1</span> <span class="op">/</span> pc[<span class="dv">0</span>]</span>
+<span id="cb6-31"><a href="#cb6-31"></a>    <span class="cf">return</span> t, F, t0, T0, Tss, tau</span>
+<span id="cb6-32"><a href="#cb6-32"></a></span>
+<span id="cb6-33"><a href="#cb6-33"></a></span>
+<span id="cb6-34"><a href="#cb6-34"></a>taus_up, taus_dn <span class="op">=</span> [], []</span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="cf">for</span> run <span class="kw">in</span> (<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>):</span>
+<span id="cb6-36"><a href="#cb6-36"></a>    <span class="op">*</span>_, tau_u <span class="op">=</span> step_analysis(<span class="ss">f'../Data/StepUp_Run</span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">.csv'</span>)</span>
+<span id="cb6-37"><a href="#cb6-37"></a>    <span class="op">*</span>_, tau_d <span class="op">=</span> step_analysis(<span class="ss">f'../Data/StepDown_Run</span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">.csv'</span>)</span>
+<span id="cb6-38"><a href="#cb6-38"></a>    taus_up.append(tau_u)</span>
+<span id="cb6-39"><a href="#cb6-39"></a>    taus_dn.append(tau_d)</span>
+<span id="cb6-40"><a href="#cb6-40"></a>    <span class="bu">print</span>(<span class="ss">f"run </span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">: tau_up = </span><span class="sc">{</span>tau_u<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ms, "</span></span>
+<span id="cb6-41"><a href="#cb6-41"></a>          <span class="ss">f"tau_down = </span><span class="sc">{</span>tau_d<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb6-42"><a href="#cb6-42"></a></span>
+<span id="cb6-43"><a href="#cb6-43"></a>taus_up, taus_dn <span class="op">=</span> np.array(taus_up), np.array(taus_dn)</span>
+<span id="cb6-44"><a href="#cb6-44"></a>tau_CI <span class="op">=</span> t2 <span class="op">*</span> taus_up.std(ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(<span class="dv">3</span>)</span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="bu">print</span>(<span class="ss">f"tau_up = </span><span class="sc">{</span>taus_up<span class="sc">.</span>mean()<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ± </span><span class="sc">{</span>tau_CI<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ms (95% CI)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong>Why detect the step in the <em>current</em> channel?</strong> The ESC changes its drive within one PWM frame — the current jump is essentially instantaneous and huge compared to its noise (a designed threshold again: 1.5 A against a diff-noise floor of ~0.2 A). Thrust, the <em>output</em>, is exactly the thing whose lag we’re measuring — detecting the step there would be circular.</li>
+<li><strong><code>*_, tau_u = step_analysis(...)</code></strong> — the starred underscore soaks up the return values we don’t need here, keeping just the last. (We use the full six-value return when plotting below.)</li>
+<li>The normalization <span class="math inline">\(y = (T_{ss}-F)/(T_{ss}-T_0)\)</span> works untouched for down-steps too — check the algebra and convince yourself.</li>
+</ul>
+<p>Build the step-response figure (<a href="#fig-example-step" class="quarto-xref">Figure&nbsp;3</a>): measured thrust in grams, the fitted first-order model (<a href="#eq-first-order" class="quarto-xref">Equation&nbsp;4</a>) overlaid dashed, the 63.2% line marked, <span class="math inline">\(\tau\)</span> ± CI annotated. Then the fit-evidence figure (<a href="#fig-example-taufit" class="quarto-xref">Figure&nbsp;4</a>): <span class="math inline">\(\ln y\)</span> against <span class="math inline">\(t - t_0\)</span> with the fitted line — <strong>the straightness of this plot is your proof that first-order was the right model.</strong></p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q5.</strong> Report <span class="math inline">\(\tau_{up}\)</span> and <span class="math inline">\(\tau_{down}\)</span> with CIs. By what factor is spin-down slower? Explain the asymmetry using the ESC’s one-way current limitation (<a href="#sec-first-order" class="quarto-xref">Section&nbsp;4.2</a>).</p>
+<p><strong>Q6.</strong> Where does your log-linear plot bend away from the fitted line, if anywhere? Early-time curvature and late-time scatter have <em>different</em> explanations — give one for each.</p>
+<p><strong>Q7.</strong> A drone flight controller updates motor commands at 400 Hz. Given your <span class="math inline">\(\tau\)</span>, roughly how many control updates happen within one motor time constant? What does that imply about who is the bottleneck — the controller or the actuator?</p>
+</div>
+</div>
+<section id="example-results" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="example-results"><span class="header-section-number">7.1</span> Example Results</h3>
+<div id="fig-example-step" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-step-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab10_StepResponse.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Example step response with first-order fit (made-up data). Your values will differ, but your formatting and annotations should match."><img src="figures/Python/FirstName_LastName_Lab10_StepResponse.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-step-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Example step response with first-order fit (made-up data). Your values will differ, but your formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<div id="fig-example-taufit" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-taufit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab10_TauFit.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Example time-constant fit — the straight line is the model evidence (made-up data)."><img src="figures/Python/FirstName_LastName_Lab10_TauFit.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-taufit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Example time-constant fit — the straight line is the model evidence (made-up data).
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-4" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-part-4"><span class="header-section-number">8</span> Part-4: Bandwidth Separation — Closing the Trust Argument</h2>
+<p>Two numbers from today, one ratio, and the measurement’s credibility rests on it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>f_bw <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> taus_up.mean())</span>
+<span id="cb7-2"><a href="#cb7-2"></a>sep <span class="op">=</span> fn_runs.mean() <span class="op">/</span> f_bw</span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="bu">print</span>(<span class="ss">f"motor bandwidth       = </span><span class="sc">{</span>f_bw<span class="sc">:.2f}</span><span class="ss"> Hz"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="bu">print</span>(<span class="ss">f"rig natural frequency = </span><span class="sc">{</span>fn_runs<span class="sc">.</span>mean()<span class="sc">:.1f}</span><span class="ss"> Hz"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="bu">print</span>(<span class="ss">f"separation ratio      = </span><span class="sc">{</span>sep<span class="sc">:.1f}</span><span class="ss">x"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q8.</strong> Report your separation ratio. Explain in two sentences, to a skeptical customer, why the thrust step data can be trusted even though the rig visibly rings when tapped.</p>
+<p><strong>Q9.</strong> Your step records show <em>no</em> visible 42-ish-Hz ringing. Reconcile: the tap excites the resonance violently, the step barely at all. What property of the two inputs differs?</p>
+<p><strong>Q10.</strong> Suppose a redesigned rig came out at <span class="math inline">\(f_n = 8\)</span> Hz. Which parts of today’s data would survive, which would be corrupted, and name one design change (mass or stiffness, and which direction) to fix it.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-5" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-part-5"><span class="header-section-number">9</span> Part-5: Verify the Hover Design Point on the Bench</h2>
+<p>Lab 09 Q14 committed you to a hover throttle (rounded <strong>up</strong> to a whole percent). Now you execute that design decision — on the bench, where instrumentation can judge it.</p>
+<p><strong>What this test is.</strong> The rig stays fixed; the motor cannot go anywhere. You command your hover throttle, hold it five seconds, and measure whether the system delivers the thrust your design requires. This is a <em>static hover-condition verification</em>: at hover, thrust exactly balances weight, so a motor that produces 60.0 g of measured thrust at your commanded setpoint <em>is</em> meeting the hover requirement — whether or not anything leaves the ground. This is precisely how flight hardware is qualified in industry: engines prove their thrust ratings bolted to test cells, not by flying prototypes and hoping.</p>
+<p><strong>The success criteria</strong> — decide them <em>before</em> you look at the data, like an engineer, not after, like a lawyer:</p>
+<ol type="1">
+<li><strong>Accuracy:</strong> measured mean thrust within <strong>±5%</strong> of the 60 g target.</li>
+<li><strong>Honesty:</strong> measured mean reported with its 95% CI (block-averaged, <a href="#sec-block-avg" class="quarto-xref">Section&nbsp;4.4</a>) — and if the target falls <em>outside</em> the CI, the gap is decomposed and explained (Q12), not ignored.</li>
+<li><strong>Viability:</strong> hover current implies ≥ 8 minutes of ideal flight time on the 850 mAh design battery, and the Lab 09 thrust margin (Q15) still holds at ≥ 2:1.</li>
+</ol>
+<p>Meet all three and your design is <em>verified</em>; miss one and the deliverable is a diagnosis and a recommendation (Q13) — which is not failure, it is engineering.</p>
+<p>Command exactly your committed number, hold five seconds, and let the data judge:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>hover_pct <span class="op">=</span> <span class="dv">38</span>                          <span class="co"># EDIT: YOUR Lab 09 Q14 value</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb8-4"><a href="#cb8-4"></a>    dout, ai <span class="op">=</span> device.digitalOut, device.analogIn</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    set_throttle(dout, <span class="dv">0</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="bu">input</span>(<span class="st">"Guard on? Kill switch ON, beeps done, then Enter..."</span>)</span>
+<span id="cb8-7"><a href="#cb8-7"></a></span>
+<span id="cb8-8"><a href="#cb8-8"></a>    set_throttle(dout, hover_pct)</span>
+<span id="cb8-9"><a href="#cb8-9"></a>    time.sleep(<span class="fl">2.0</span>)                      <span class="co"># spin up and settle</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>    t, v_cell, v_curr <span class="op">=</span> record(ai, <span class="fl">5.0</span>)</span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a>    set_throttle(dout, <span class="dv">0</span>)</span>
+<span id="cb8-13"><a href="#cb8-13"></a></span>
+<span id="cb8-14"><a href="#cb8-14"></a>np.savetxt(<span class="st">'../Data/HoverTest.csv'</span>,</span>
+<span id="cb8-15"><a href="#cb8-15"></a>           np.column_stack([t, v_cell, v_curr]),</span>
+<span id="cb8-16"><a href="#cb8-16"></a>           header<span class="op">=</span><span class="st">'time_s,loadcell_V,current_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Analysis — with the honest CI from <a href="#sec-block-avg" class="quarto-xref">Section&nbsp;4.4</a>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>d <span class="op">=</span> np.loadtxt(<span class="st">'../Data/HoverTest.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>t, v_c, v_i <span class="op">=</span> d[:, <span class="dv">0</span>], d[:, <span class="dv">1</span>], d[:, <span class="dv">2</span>]</span>
+<span id="cb9-3"><a href="#cb9-3"></a>F <span class="op">=</span> np.polyval(coeffs, v_c) <span class="op">-</span> np.polyval(coeffs, v_tare)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>g_thrust <span class="op">=</span> F <span class="op">/</span> <span class="fl">9.81</span> <span class="op">*</span> <span class="dv">1000</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co"># consecutive samples are correlated, so a plain std/sqrt(N) CI would be</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co"># dishonestly narrow. Average 1-second blocks and treat the BLOCKS as the</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># independent samples.</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>g_trim <span class="op">=</span> g_thrust[t <span class="op">&gt;=</span> <span class="fl">1.0</span>]</span>
+<span id="cb9-10"><a href="#cb9-10"></a>n_blk <span class="op">=</span> <span class="bu">len</span>(g_trim) <span class="op">//</span> <span class="dv">1000</span>                 <span class="co"># whole 1-second blocks</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a>blocks <span class="op">=</span> g_trim[:n_blk <span class="op">*</span> <span class="dv">1000</span>].reshape(n_blk, <span class="dv">1000</span>).mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-12"><a href="#cb9-12"></a>g_mean <span class="op">=</span> blocks.mean()</span>
+<span id="cb9-13"><a href="#cb9-13"></a>g_CI <span class="op">=</span> (stats.t.ppf(<span class="fl">0.975</span>, df<span class="op">=</span>n_blk <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb9-14"><a href="#cb9-14"></a>        <span class="op">*</span> blocks.std(ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(n_blk))</span>
+<span id="cb9-15"><a href="#cb9-15"></a></span>
+<span id="cb9-16"><a href="#cb9-16"></a>target <span class="op">=</span> <span class="fl">60.0</span></span>
+<span id="cb9-17"><a href="#cb9-17"></a>err <span class="op">=</span> (g_mean <span class="op">-</span> target) <span class="op">/</span> target <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="bu">print</span>(<span class="ss">f"measured hover thrust = </span><span class="sc">{</span>g_mean<span class="sc">:.1f}</span><span class="ss"> ± </span><span class="sc">{</span>g_CI<span class="sc">:.1f}</span><span class="ss"> g (95% CI)"</span>)</span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="bu">print</span>(<span class="ss">f"design target = </span><span class="sc">{</span>target<span class="sc">:.1f}</span><span class="ss"> g -&gt; </span><span class="sc">{</span>err<span class="sc">:+.1f}</span><span class="ss">% error"</span>)</span>
+<span id="cb9-20"><a href="#cb9-20"></a>I_h <span class="op">=</span> ((v_i <span class="op">-</span> <span class="fl">2.5</span>) <span class="op">/</span> <span class="fl">0.100</span>)[t <span class="op">&gt;=</span> <span class="fl">1.0</span>].mean()</span>
+<span id="cb9-21"><a href="#cb9-21"></a><span class="bu">print</span>(<span class="ss">f"hover current = </span><span class="sc">{</span>I_h<span class="sc">:.2f}</span><span class="ss"> A -&gt; flight time ~ "</span></span>
+<span id="cb9-22"><a href="#cb9-22"></a>      <span class="ss">f"</span><span class="sc">{</span><span class="fl">0.850</span><span class="op">/</span>(<span class="dv">4</span><span class="op">*</span>I_h)<span class="op">*</span><span class="dv">60</span><span class="sc">:.1f}</span><span class="ss"> min on an 850 mAh pack"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>reshape(n_blk, 1000)</code></strong> folds the 1-D record into an (n × 1000) array — one row per second — so <code>.mean(axis=1)</code> produces the block means in one line. Computing <code>n_blk</code> from the data length (instead of hard-coding 4) makes the cell robust to a slightly different record length.</li>
+</ul>
+<p>Build the verification figure (<a href="#fig-example-hover" class="quarto-xref">Figure&nbsp;5</a>): the thrust record, its mean and CI lines, and the 60 g design target — one plot that summarizes the whole semester’s argument.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q11.</strong> Report measured hover thrust ± CI, and the percent error against 60 g. Does the target fall inside your CI?</p>
+<p><strong>Q12.</strong> For most teams it will <em>not</em> — and that is the intended lesson. Your CI captures this measurement’s <em>precision</em>; the gap to the target comes from <em>other</em> links in the chain. Quantify the two biggest: (a) the thrust cost of rounding your Q14 throttle up to a whole percent (use your Lab 09 curve’s local slope), and (b) your Lab 09 curve’s own CI at the hover point. Do these account for the gap?</p>
+<p><strong>Q13.</strong> The design verdict, against the three success criteria: does the 240 g quadcopter hover with acceptable accuracy, honesty, and viability? Give a one-paragraph engineering recommendation — commit, redesign, or retest — citing your numbers against each criterion.</p>
+</div>
+</div>
+<section id="example-result-1" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="example-result-1"><span class="header-section-number">9.1</span> Example Result</h3>
+<div id="fig-example-hover" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-hover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab10_HoverVerification.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Example hover verification (made-up data). Your values will differ, but your formatting and annotations should match."><img src="figures/Python/FirstName_LastName_Lab10_HoverVerification.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-hover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Example hover verification (made-up data). Your values will differ, but your formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="sec-real-drone" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-real-drone"><span class="header-section-number">10</span> Why Not a Real Drone?</h2>
+<p>A fair question, and worth answering carefully because the answer is <em>not</em> “because it wouldn’t work.”</p>
+<p>Your bench verification is the <strong>stronger</strong> test of the design claim. A drone that visibly hovers tells you thrust ≈ weight to within the controller’s authority — maybe ±10%, absorbed silently by the control loop working harder. Your instrumented rig resolves the same question to a fraction of a gram, with a confidence interval, and tells you <em>which link in the chain</em> owns any discrepancy. Flight is a demonstration; measurement is evidence. The rig also isolates the one motor you characterized — a flying quad mixes four motors, battery sag, frame aerodynamics, and controller gains into one confounded result.</p>
+<p>What flight <em>would</em> add is everything you measured feeding a control loop: your thrust curve becomes the controller’s feedforward map, your time constant <span class="math inline">\(\tau\)</span> sets how hard the loop can be pushed before it oscillates, and your thrust margin is its control authority. That is a <em>controls</em> problem — ME 3130’s sequel, not this course’s material — and it is exactly where this equipment grows next: a guided hover rig where your calibration files are loaded into a live altitude controller is the planned extension of this lab, and a strong senior-design seed if it interests you.</p>
+<p><strong>Watch the front bench</strong> at the end of the session: a small quadcopter (flying inside a net, because your instructors also believe in guarded test articles) holding altitude — running the same physics you spent two weeks quantifying. When it holds height, that is thrust = weight, your Part-5 criterion. When it recovers from a push, that recovery speed is bounded by its motors’ <span class="math inline">\(\tau\)</span>, your Part-3 measurement. The demo is the connection; your data is the understanding.</p>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</h2>
+<p>Upload your submissions to Canvas. <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u> A full example solution notebook is posted after all sections have met; check your approach against it, but submit your own work.</p>
+<section id="submission-items" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="submission-items"><span class="header-section-number">11.1</span> Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook (<code>FirstName_LastName_Lab10.ipynb</code>), restarted and run top-to-bottom (acquisition cells may show their saved outputs)</li>
+<li>Tap-test ringdown plot, <strong>.pdf</strong></li>
+<li>Step-response plot with model overlay, <strong>.pdf</strong></li>
+<li>Time-constant fit (log-linear) plot, <strong>.pdf</strong></li>
+<li>Hover verification plot, <strong>.pdf</strong></li>
+<li>Answers to the post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="tap-test-plot-requirements" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="tap-test-plot-requirements"><span class="header-section-number">11.2</span> Tap-Test Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>Major and minor grids on; top and right spines removed</li>
+<li>Signal: blue line, 1 pt; detected peaks: red circle markers, size 40</li>
+<li>Time axis windowed to show the ringdown clearly (≈ 1 s around the tap)</li>
+<li><code>ax.text</code> annotation: <span class="math inline">\(f_n\)</span> and <span class="math inline">\(\zeta\)</span>, each with its 95% CI</li>
+<li>Title “FirstName LastName’s Tap Test Plot” with the date</li>
+</ul>
+</section>
+<section id="step-response-plot-requirements" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="step-response-plot-requirements"><span class="header-section-number">11.3</span> Step-Response Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; same standards</li>
+<li>Measured thrust in grams: red line, 1 pt; first-order model: dashed blue, 2 pt</li>
+<li>63.2% level marked (dotted black) and labeled; time axis windowed from just before the step to ~1 s after</li>
+<li><code>ax.text</code> annotation: <span class="math inline">\(\tau\)</span> ± CI in ms</li>
+<li>Title “FirstName LastName’s Step Response Plot” with the date</li>
+</ul>
+</section>
+<section id="time-constant-fit-plot-requirements" class="level3" data-number="11.4">
+<h3 data-number="11.4" class="anchored" data-anchor-id="time-constant-fit-plot-requirements"><span class="header-section-number">11.4</span> Time-Constant Fit Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; same standards</li>
+<li><span class="math inline">\(\ln y\)</span> data: red markers, size 12; fit: solid blue, 2 pt; <span class="math inline">\(\tau\)</span> annotated</li>
+<li>Axis labels exactly: “Time after step (s)”, “ln[(T<sub>ss</sub> − T)/(T<sub>ss</sub> − T<sub>0</sub>)]”</li>
+<li>Title “FirstName LastName’s Time-Constant Fit Plot” with the date</li>
+</ul>
+</section>
+<section id="hover-verification-plot-requirements" class="level3" data-number="11.5">
+<h3 data-number="11.5" class="anchored" data-anchor-id="hover-verification-plot-requirements"><span class="header-section-number">11.5</span> Hover Verification Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; same standards</li>
+<li>Thrust record: red line, 0.8 pt; mean: solid blue 2 pt; 95% CI: dashed black 1 pt; design target: green dash-dot 1.5 pt — all four in the legend</li>
+<li>Thrust axis in grams, windowed to make the CI visible (do not autoscale to the noise)</li>
+<li><code>ax.text</code> annotation: percent error vs.&nbsp;target</li>
+<li>Title “FirstName LastName’s Hover Verification Plot” with the date</li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="11.6">
+<h3 data-number="11.6" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">11.6</span> Post-Lab Questions</h3>
+<ol type="1">
+<li>Report <span class="math inline">\(f_n\)</span>, <span class="math inline">\(\zeta\)</span>, <span class="math inline">\(\tau_{up}\)</span>, <span class="math inline">\(\tau_{down}\)</span>, and your separation ratio, each with its CI where you have one.</li>
+<li>Derive <a href="#eq-tau-lin" class="quarto-xref">Equation&nbsp;5</a> from <a href="#eq-first-order" class="quarto-xref">Equation&nbsp;4</a> in three lines. State one advantage the fit has over the 63.2% single-point method <em>besides</em> using more data (hint: what does the residual pattern tell you that a single crossing cannot?).</li>
+<li>Your <span class="math inline">\(\tau\)</span> was measured at the 30→60% operating range. Would you expect it to be identical at 10→20%? Reason from what sets the “stiffness” in <a href="#sec-first-order" class="quarto-xref">Section&nbsp;4.2</a>.</li>
+<li>A teammate proposes stiffening the rig with a thicker load cell so <span class="math inline">\(f_n\)</span> triples, “to make the data even more trustworthy.” What does this cost in force resolution, and is the trade worth it here? (The cell’s output is proportional to its strain.)</li>
+<li>Write the abstract (≤ 150 words) of a test report covering both labs: objective, method, key results with uncertainties, and the design verdict. This is the summary a capstone sponsor would actually read.</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="before-you-leave"><span class="header-section-number">12</span> Before You Leave</h2>
+<ul>
+<li>Show your hover verification plot to a TA before tearing down.</li>
+<li>Kill switch OFF, ADS supplies off, propeller off and bagged, masses in their case, wires sorted to the bin.</li>
+<li>Confirm all Lab 10 data synced to OneDrive; <strong>both</strong> partners have everything.</li>
+<li>This station now goes back to Lab-09 configuration for the next section — check the reset list card at the station.</li>
+<li>Clean the station, collect your belongings, and log off.</li>
+</ul>
+</section>
+<section id="the-capstone-arc-closed" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="the-capstone-arc-closed"><span class="header-section-number">13</span> The Capstone Arc, Closed</h2>
+<p>Look at what the two labs did, because it is the whole course in miniature: you built a signal chain and <em>verified</em> it, calibrated it against a traceable standard, automated the experiment, quantified confidence, tested the data against physical theory, made a design decision with stated margins — then characterized the system’s dynamics, proved the instrument itself trustworthy with a bandwidth argument, and closed the loop by <em>executing the design point and judging it honestly against criteria you set in advance</em>. That sequence — not any one formula — is what engineering measurement is.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

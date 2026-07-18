@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="lab01_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="lab01_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="lab01_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="lab01_files/libs/bootstrap/bootstrap-19216fa8bb71272e13fc45993650fab3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="lab01_files/libs/bootstrap/bootstrap-6b9a4e2bc1d929dbbc8f0b698e19a81c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="lab01_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="lab01_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="lab01_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -272,20 +272,20 @@ window.Quarto = {
 <li>Note: if you are using a lab PC, your files won’t be saved unless OneDrive finishes uploading them. Always check that your files are available online (e.g., on your phone or in another browser).</li>
 </ul>
 <p>Create this folder structure on your PC or OneDrive:</p>
-<pre class="text"><code>ME3300/
-├── Lab_01/
-│   ├── Code/
-│   │   ├── Lab01_Prelab_Walkthrough.ipynb
-│   │   └── FirstName_LastName_Lab01.ipynb
-│   ├── Data/
-│   │   ├── walkthrough_temperature_data.csv
-│   │   └── time_voltage_data.csv
-│   └── Figures/
-├── Lab_02/
-│   ├── Code/
-│   ├── Data/
-│   └── Figures/
-├── Lab_03/ &lt;- Keep adding these as we continue the semester!</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href="#cb1-1"></a>ME3300/</span>
+<span id="cb1-2"><a href="#cb1-2"></a>├── Lab_01/</span>
+<span id="cb1-3"><a href="#cb1-3"></a>│   ├── Code/</span>
+<span id="cb1-4"><a href="#cb1-4"></a>│   │   ├── Lab01_Prelab_Walkthrough.ipynb</span>
+<span id="cb1-5"><a href="#cb1-5"></a>│   │   └── FirstName_LastName_Lab01.ipynb</span>
+<span id="cb1-6"><a href="#cb1-6"></a>│   ├── Data/</span>
+<span id="cb1-7"><a href="#cb1-7"></a>│   │   ├── walkthrough_temperature_data.csv</span>
+<span id="cb1-8"><a href="#cb1-8"></a>│   │   └── time_voltage_data.csv</span>
+<span id="cb1-9"><a href="#cb1-9"></a>│   └── Figures/</span>
+<span id="cb1-10"><a href="#cb1-10"></a>├── Lab_02/</span>
+<span id="cb1-11"><a href="#cb1-11"></a>│   ├── Code/</span>
+<span id="cb1-12"><a href="#cb1-12"></a>│   ├── Data/</span>
+<span id="cb1-13"><a href="#cb1-13"></a>│   └── Figures/</span>
+<span id="cb1-14"><a href="#cb1-14"></a>├── Lab_03/ &lt;- Keep adding these as we continue the semester!</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The walkthrough notebook and temperature data are downloaded from Canvas for the pre-lab assignment (see <a href="#sec-prelab-walkthrough" class="quarto-xref">Section&nbsp;2.8</a>). The other <strong>.ipynb</strong> notebook file and <strong>.csv</strong> data will be created later on in the lab.</p>
 </section>
 <section id="install-visual-studio-code-and-uv" class="level3" data-number="2.3">
@@ -312,9 +312,9 @@ Figure&nbsp;1: Steps to add a VS Code Extension
 <li><p>Install <strong>uv</strong>:</p>
 <ul>
 <li><p><strong>Windows</strong>: open PowerShell and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>powershell <span class="op">-</span>ExecutionPolicy ByPass <span class="op">-</span>c <span class="st">"irm https://astral.sh/uv/install.ps1 | iex"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1"></a>powershell <span class="op">-</span>ExecutionPolicy ByPass <span class="op">-</span>c <span class="st">"irm https://astral.sh/uv/install.ps1 | iex"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Mac/Linux</strong>: open the Terminal and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-LsSf</span> https://astral.sh/uv/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">curl</span> <span class="at">-LsSf</span> https://astral.sh/uv/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Close and reopen your terminal after installing so the <code>uv</code> command is recognized.</p></li>
 </ul></li>
 </ol>
@@ -349,9 +349,9 @@ Figure&nbsp;3: Copy Folder Path on Mac
 </figure>
 </div></li>
 <li><p>Open a terminal and run the following commands:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ME3300  <span class="co"># Replace with the path to your ME3300 folder!</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> init <span class="at">--python</span> 3.11</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add numpy scipy matplotlib pandas ipykernel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="bu">cd</span> ME3300  <span class="co"># Replace with the path to your ME3300 folder!</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="ex">uv</span> init <span class="at">--python</span> 3.11</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="ex">uv</span> add numpy scipy matplotlib pandas ipykernel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This creates a <code>.venv</code> virtual environment and a <code>pyproject.toml</code> file in your <code>ME3300</code> folder, and installs all of the packages you’ll need for this lab into it.</p></li>
 <li><p>Open up the <code>pyproject.toml</code> file uv created to see what is inside. Your file should look similar to this:</p>
 <div id="fig-uv-toml-inspection" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -385,7 +385,7 @@ Figure&nbsp;5: Selecting the right Python Interpreter
 </figure>
 </div></li>
 <li><p>Confirm your setup is working by opening a new terminal in VS Code (<code>Ctrl+`</code>) and running:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import numpy, scipy, matplotlib, pandas; print('All good!')"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"import numpy, scipy, matplotlib, pandas; print('All good!')"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You should see <code>All good!</code> printed. If you see an error, ask your TA for help in lab!</p></li>
 </ol>
 </section>

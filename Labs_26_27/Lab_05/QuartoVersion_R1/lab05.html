@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-05: Operational Amplifiers — Non-Inverting and Instrumentation Amplifier Circuits</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab05_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab05_files/libs/quarto-html/quarto.js"></script>
+<script src="lab05_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab05_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab05_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab05_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab05_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab05_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab05_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab05_files/libs/bootstrap/bootstrap-791ceca6b2ec3cae9ef2a359bbe8f8f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning Objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#extend-your-folder-structure" id="toc-extend-your-folder-structure" class="nav-link" data-scroll-target="#extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</a></li>
+  <li><a href="#read-the-background-section" id="toc-read-the-background-section" class="nav-link" data-scroll-target="#read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#python-quick-reference-new-this-lab" id="toc-python-quick-reference-new-this-lab" class="nav-link" data-scroll-target="#python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background"><span class="header-section-number">4</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#the-ideal-op-amp-and-its-golden-rules" id="toc-the-ideal-op-amp-and-its-golden-rules" class="nav-link" data-scroll-target="#the-ideal-op-amp-and-its-golden-rules"><span class="header-section-number">4.1</span> The Ideal Op-Amp and Its Golden Rules</a></li>
+  <li><a href="#the-non-inverting-amplifier" id="toc-the-non-inverting-amplifier" class="nav-link" data-scroll-target="#the-non-inverting-amplifier"><span class="header-section-number">4.2</span> The Non-Inverting Amplifier</a></li>
+  <li><a href="#dual-rails-and-saturation" id="toc-dual-rails-and-saturation" class="nav-link" data-scroll-target="#dual-rails-and-saturation"><span class="header-section-number">4.3</span> Dual Rails and Saturation</a></li>
+  <li><a href="#the-instrumentation-amplifier" id="toc-the-instrumentation-amplifier" class="nav-link" data-scroll-target="#the-instrumentation-amplifier"><span class="header-section-number">4.4</span> The Instrumentation Amplifier</a></li>
+  <li><a href="#gain-is-a-calibration-slope" id="toc-gain-is-a-calibration-slope" class="nav-link" data-scroll-target="#gain-is-a-calibration-slope"><span class="header-section-number">4.5</span> Gain Is a Calibration Slope</a></li>
+  </ul></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">5</span> Part-1: Build the Non-Inverting Amplifier</a></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">6</span> Part-2: Power Up and Verify in the GUI</a></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">7</span> Part-3: The Automated Gain Sweep</a></li>
+  <li><a href="#sec-part-4" id="toc-sec-part-4" class="nav-link" data-scroll-target="#sec-part-4"><span class="header-section-number">8</span> Part-4: Build and Sweep the Instrumentation Amplifier</a></li>
+  <li><a href="#sec-part-5" id="toc-sec-part-5" class="nav-link" data-scroll-target="#sec-part-5"><span class="header-section-number">9</span> Part-5: Fit the Gains</a>
+  <ul class="collapse">
+  <li><a href="#example-result" id="toc-example-result" class="nav-link" data-scroll-target="#example-result"><span class="header-section-number">9.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-6" id="toc-sec-part-6" class="nav-link" data-scroll-target="#sec-part-6"><span class="header-section-number">10</span> Part-6: The Common-Mode Demo</a></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#submission-items" id="toc-submission-items" class="nav-link" data-scroll-target="#submission-items"><span class="header-section-number">11.1</span> Submission Items</a></li>
+  <li><a href="#amplifier-gain-figure-requirements" id="toc-amplifier-gain-figure-requirements" class="nav-link" data-scroll-target="#amplifier-gain-figure-requirements"><span class="header-section-number">11.2</span> Amplifier Gain Figure Requirements</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">11.3</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave" id="toc-before-you-leave" class="nav-link" data-scroll-target="#before-you-leave"><span class="header-section-number">12</span> Before You Leave</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lab05.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-05: Operational Amplifiers — Non-Inverting and Instrumentation Amplifier Circuits</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning Objective</h2>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li>Understand the <strong>ideal op-amp</strong> model and use its two golden rules to derive amplifier gain</li>
+<li><strong>Design, build, and test</strong> a non-inverting amplifier (LM358) and an instrumentation amplifier (AD622), each with a target gain of <span class="math inline">\(G = 3\)</span></li>
+<li>Drive your circuits from the ADS <strong>±12 V programmable supplies</strong> — your first dual-rail circuit — from the GUI and from Python</li>
+<li>Run an <strong>automated gain sweep</strong>: one script that sets the input, measures input <em>and</em> output, and maps the full transfer curve including <strong>saturation</strong></li>
+<li>Extract gain by <strong>fitting the linear region</strong> of the transfer curve — a boolean mask plus the Lab 02 regression machinery</li>
+<li>See what makes an instrumentation amplifier special: a <strong>common-mode demo</strong> where the amplifier ignores volts of shared signal while amplifying millivolts of difference</li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="hardware-instruments" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
+<ul>
+<li>What are the two golden rules of an ideal op-amp with negative feedback?</li>
+<li>Why does an op-amp need both +12 V <em>and</em> −12 V? What happens to a signal that tries to swing below ground on a single supply?</li>
+<li>Pin 4 of the LM358 connects to −12 V. Why is connecting it to ground instead the classic way to kill the chip’s output range?</li>
+<li>What sets the gain of the non-inverting amplifier? Of the AD622?</li>
+<li>What physically limits the output voltage, and roughly where does the LM358 clip on ±12 V rails?</li>
+</ul>
+</section>
+<section id="programming" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.2</span> Programming</h4>
+<ul>
+<li>How do you set and enable the ±12 V supplies from <code>dwfpy</code>? Why must your script do this itself rather than relying on the GUI?</li>
+<li>How do you capture <em>two</em> scope channels in one acquisition?</li>
+<li>What does a boolean mask like <code>np.abs(v_out) &lt; 9.5</code> produce, and what does <code>v_in[mask]</code> return?</li>
+<li>Why is fitting <span class="math inline">\(V_{out}\)</span> vs.&nbsp;<span class="math inline">\(V_{in}\)</span> the right way to measure gain, rather than averaging pointwise <span class="math inline">\(V_{out}/V_{in}\)</span> ratios?</li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>The slope of your fitted line is the gain. What is the <em>intercept</em>, physically?</li>
+<li>What happens to the fitted gain if saturated points are left in the regression?</li>
+<li>Your amplifier saturated near +10.5 V, not +12 V. Why?</li>
+<li>Two signals arrive at an in-amp: 2.5 V on both inputs, plus 3 mV <em>between</em> them. What does the output look like for <span class="math inline">\(G = 3\)</span>?</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section.</p>
+<section id="extend-your-folder-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</h3>
+<p>Add a Lab_05 folder set to your <code>ME3300</code> folder:</p>
+<pre class="text"><code>ME3300/
+├── Lab_01/ ... Lab_04/
+├── Lab_05/
+│   ├── Code/
+│   │   ├── Lab05_Prelab_Walkthrough.ipynb
+│   │   └── FirstName_LastName_Lab05.ipynb
+│   ├── Data/
+│   └── Figures/</code></pre>
+<p>No new packages are needed this week.</p>
+</section>
+<section id="read-the-background-section" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</h3>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It introduces the op-amp golden rules, derives both gain equations you will design against, and explains saturation — which you will deliberately measure.</p>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Download <code>Lab05_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_05/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> Python skills using a simulated amplifier:</p>
+<ul>
+<li><strong>boolean masks</strong> — selecting the linear region of a dataset with a condition, and indexing arrays with it</li>
+<li>why fitting a <em>saturated</em> dataset without a mask silently corrupts the slope</li>
+<li>writing a function that <strong>returns several values</strong> at once (tuple unpacking)</li>
+<li>the full fit-statistics recipe (Lab 02) applied to a masked subset</li>
+</ul>
+<p>As always, working through the prelab will allow you to answer the <strong>checkpoint</strong> questions in the <strong>Prelab quiz on Canvas</strong> before your lab session.</p>
+</section>
+<section id="python-quick-reference-new-this-lab" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</h3>
+<div id="tbl-quickref" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: New Python syntax and functions introduced in Lab 05
+</figcaption>
+<div aria-describedby="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Open the Supplies from Python</td>
+<td><code>supplies = device.analog_io</code></td>
+</tr>
+<tr class="even">
+<td>Set a rail voltage</td>
+<td><code>supplies['V+']['Voltage'].value = 12.0</code></td>
+</tr>
+<tr class="odd">
+<td>Enable a rail</td>
+<td><code>supplies['V+']['Enable'].value = True</code></td>
+</tr>
+<tr class="even">
+<td>Master power switch</td>
+<td><code>supplies.master_enable = True</code></td>
+</tr>
+<tr class="odd">
+<td>Capture two channels at once</td>
+<td>set up <code>scope['ch1']</code> <strong>and</strong> <code>scope['ch2']</code>, then one <code>scope.single(...)</code></td>
+</tr>
+<tr class="even">
+<td>Boolean mask (linear region)</td>
+<td><code>linear = np.abs(v_out) &lt; 9.5</code></td>
+</tr>
+<tr class="odd">
+<td>Keep only masked points</td>
+<td><code>v_in[linear]</code>, <code>v_out[linear]</code></td>
+</tr>
+<tr class="even">
+<td>Count masked points</td>
+<td><code>np.count_nonzero(linear)</code></td>
+</tr>
+<tr class="odd">
+<td>Return several values</td>
+<td><code>return v_in, v_out, coeffs</code> then <code>a, b, c = f(...)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="tbl-device-model" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-device-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: The dwfpy device model; this lab completes the set
+</figcaption>
+<div aria-describedby="tbl-device-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>WaveForms GUI instrument</th>
+<th>dwfpy object</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scope / Logger (analog inputs)</td>
+<td><code>device.analog_input</code></td>
+</tr>
+<tr class="even">
+<td>Wavegen (signal generator)</td>
+<td><code>device.analog_output</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Supplies (power)</strong></td>
+<td><strong><code>device.analog_io</code></strong></td>
+</tr>
+<tr class="even">
+<td>Static I/O (digital pins)</td>
+<td><code>device.digital_io</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>Every sensor you have used so far was polite enough to output volts. Most real sensors are not: thermocouples produce <em>millivolts</em>, strain-gauge bridges <em>fractions</em> of millivolts. Between such a sensor and your DAQ sits an <strong>amplifier</strong>, and this week you build two of them.</p>
+<p>The workhorse is the <strong>operational amplifier</strong> — arguably the most successful analog building block ever made. You will build a <em>non-inverting amplifier</em> from a bare LM358 op-amp, where two resistors you choose set the gain, and then an <em>instrumentation amplifier</em> from an AD622, a chip that packages three op-amps and precision resistors into a sensor-grade differential amplifier. Both circuits target the same modest gain of 3 so you can compare them fairly.</p>
+<p>This is also a lab about <strong>characterizing a component you built</strong>. The measurement chain mantra — build, verify, calibrate, measure — applies to circuits exactly as it did to sensors: you will verify each amplifier live in the GUI, then run an automated sweep that maps its full input–output transfer curve. That curve is a calibration in the Lab 02 sense (the slope <em>is</em> the gain, fitted with the same regression statistics) — but with a twist you must handle deliberately: at large inputs the output <strong>saturates</strong> against the supply rails, and those points must be excluded from the fit with a boolean mask. Knowing where an amplifier stops being linear is as much a part of its specification as its gain.</p>
+<p>Finally, you will see <em>why</em> instrumentation amplifiers exist. In the common-mode demo, your AD622 will stare at a full volt of signal applied equally to both inputs and output almost nothing — then amplify a small <em>difference</em> faithfully. That trick, rejecting what the inputs share while amplifying what differs, is precisely what next week’s strain-gauge bridge requires, where a few millivolts of strain signal ride on a large shared voltage.</p>
+</section>
+<section id="sec-background" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-background"><span class="header-section-number">4</span> Background</h2>
+<section id="the-ideal-op-amp-and-its-golden-rules" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-ideal-op-amp-and-its-golden-rules"><span class="header-section-number">4.1</span> The Ideal Op-Amp and Its Golden Rules</h3>
+<p>An op-amp is a differential amplifier with enormous internal gain (~100,000×). Used raw, that gain is useless — any input imbalance slams the output into a rail. The trick that unlocked analog electronics is <strong>negative feedback</strong>: route part of the output back to the inverting (−) input, and the op-amp continuously adjusts its output to keep its inputs matched. For an ideal op-amp under negative feedback, two <strong>golden rules</strong> hold:</p>
+<ol type="1">
+<li>The op-amp drives its output to make <strong>the two input voltages equal</strong>: <span class="math inline">\(V_- = V_+\)</span>.</li>
+<li><strong>No current flows into either input.</strong></li>
+</ol>
+<p>These two statements turn amplifier design into simple circuit algebra, as you are about to see.</p>
+</section>
+<section id="the-non-inverting-amplifier" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="the-non-inverting-amplifier"><span class="header-section-number">4.2</span> The Non-Inverting Amplifier</h3>
+<p>In <a href="#fig-noninv-schematic" class="quarto-xref">Figure&nbsp;1</a>, the input signal drives the + input, and a voltage divider (<span class="math inline">\(R_1\)</span>, <span class="math inline">\(R_2\)</span>) feeds a fraction of the output back to the − input. Apply the golden rules: rule 1 says <span class="math inline">\(V_- = V_+ = V_{in}\)</span>; rule 2 says the divider is unloaded, so <span class="math inline">\(V_- = V_{out} \frac{R_1}{R_1 + R_2}\)</span>. Setting these equal and solving:</p>
+<p><span id="eq-noninv-gain"><span class="math display">\[V_{out} = \left(1 + \frac{R_2}{R_1}\right) V_{in} \quad\Rightarrow\quad G = 1 + \frac{R_2}{R_1} \tag{1}\]</span></span></p>
+<p>The gain depends <em>only</em> on your two resistors — not on the op-amp’s wild internal gain. With <span class="math inline">\(R_1 = 10\)</span> kΩ and <span class="math inline">\(R_2 = 20\)</span> kΩ, <span class="math inline">\(G = 3\)</span>. You will compute your expected gain from <em>DMM-measured</em> resistor values, not the printed nominals — resistors have tolerances, and your fit will be accurate enough to see the difference.</p>
+<div id="fig-noninv-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-noninv-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/NonInverting_Schematic.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noninv-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The non-inverting amplifier. The feedback divider <span class="math inline">\(R_1\)</span>–<span class="math inline">\(R_2\)</span> sets <span class="math inline">\(G = 1 + R_2/R_1\)</span>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="dual-rails-and-saturation" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="dual-rails-and-saturation"><span class="header-section-number">4.3</span> Dual Rails and Saturation</h3>
+<p>Your input sweeps from −5 V to +5 V, so the output must swing to roughly ±15 V — <em>negative</em> voltages included. A chip powered between +5 V and ground physically cannot produce a negative output; hence the <strong>dual-rail supply</strong>: +12 V and −12 V, with signal ground in the middle. The ADS provides both as programmable supplies.</p>
+<p>No amplifier can output beyond its rails — and most cannot even reach them. When the ideal output would exceed what the chip can deliver, the real output <strong>saturates</strong>: it clips at a ceiling and sits there, and the golden rules break (the inputs are no longer equal). For the LM358 on ±12 V rails, expect clipping around <span class="math inline">\(+10.5\)</span> V on top — about 1.5 V shy of the rail — and noticeably <em>closer</em> to the rail on the bottom (the LM358’s output stage is asymmetric; your data will show it). With <span class="math inline">\(G = 3\)</span>, a ±5 V input sweep commands ±15 V of output, so your sweep drives the amplifier well into saturation on both ends <strong>on purpose</strong>: mapping where linearity ends is the point.</p>
+</section>
+<section id="the-instrumentation-amplifier" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="the-instrumentation-amplifier"><span class="header-section-number">4.4</span> The Instrumentation Amplifier</h3>
+<p>A sensor like a strain-gauge bridge produces a small <em>differential</em> signal (millivolts between two wires) superimposed on a large <em>common-mode</em> voltage (both wires sitting volts above ground). Amplifying that with the circuit above would amplify the common voltage right along with the signal. The <strong>instrumentation amplifier</strong> solves this: it amplifies only the <em>difference</em> between its two inputs,</p>
+<p><span id="eq-inamp-transfer"><span class="math display">\[V_{out} = G \,(V_{+IN} - V_{-IN}) + V_{REF} \tag{2}\]</span></span></p>
+<p>while <em>rejecting</em> what the inputs share (its <strong>common-mode rejection ratio</strong>, CMRR, is 100+ dB on the datasheet — a factor of 100,000). The AD622 packages the whole three-op-amp circuit with laser-trimmed internal resistors; you set the gain with a single external resistor <span class="math inline">\(R_G\)</span>:</p>
+<p><span id="eq-inamp-gain"><span class="math display">\[G = 1 + \frac{50.5\ \text{k}\Omega}{R_G} \quad\Longleftrightarrow\quad R_G = \frac{50.5\ \text{k}\Omega}{G - 1} \tag{3}\]</span></span></p>
+<p>For <span class="math inline">\(G = 3\)</span>: <span class="math inline">\(R_G = 25.25\)</span> kΩ — grab the closest value in the resistor kit (24.9 kΩ is typical) and, as always, compute your expected gain from the DMM-measured value. Note from <a href="#eq-inamp-transfer" class="quarto-xref">Equation&nbsp;2</a> that the <strong>REF pin</strong> sets the output’s zero point; it must be wired to ground, not left floating (a floating REF is the classic AD622 mistake — the output wanders uselessly).</p>
+<div id="fig-inamp-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inamp-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/InAmp_Schematic.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inamp-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The AD622 wiring for this lab. <span class="math inline">\(R_G\)</span> bridges pins 1 and 8; REF is grounded.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="gain-is-a-calibration-slope" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="gain-is-a-calibration-slope"><span class="header-section-number">4.5</span> Gain Is a Calibration Slope</h3>
+<p>A gain measurement is a calibration in the Lab 02 sense: sweep a known input, record the output, fit a line. The slope <em>is</em> the gain, the intercept is the amplifier’s <strong>output offset</strong> (a few mV of imperfection), and the fit statistics (<span class="math inline">\(s_{yx}\)</span>, 95% CI on the slope) quantify how well you know it. One new wrinkle: the saturated points at the sweep’s ends are <em>not</em> failures of the line — they are a different physical regime, and they must be excluded from the fit. That is what boolean masks are for, and the prelab walkthrough shows what silently happens to your slope if you forget.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">5</span> Part-1: Build the Non-Inverting Amplifier</h2>
+<p>Build with the <strong>supplies off and WaveForms closed</strong>. Your guides: the schematic (<a href="#fig-noninv-schematic" class="quarto-xref">Figure&nbsp;1</a>), the pinout (<a href="#fig-lm358-pinout" class="quarto-xref">Figure&nbsp;3</a>), and the annotated photo (<a href="#fig-lm358-build" class="quarto-xref">Figure&nbsp;4</a>).</p>
+<div id="fig-lm358-pinout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-lm358-pinout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/LM358_Pinout.png" class="img-fluid figure-img" style="width:55.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lm358-pinout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: LM358 pinout (top view). The half-circle notch marks the pin-1 end; this lab uses the A side.
+</figcaption>
+</figure>
+</div>
+<div id="fig-lm358-build" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-lm358-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/LM358_Circuit_Build_ADS.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lm358-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The LM358 non-inverting amplifier on the breadboard.
+</figcaption>
+</figure>
+</div>
+<ol type="1">
+<li>Find a 10 kΩ and a 20 kΩ resistor. Verify each with the color bands, then <strong>measure both with your DMM</strong> and record the values — they go into your expected-gain calculation.</li>
+<li>Seat the LM358 across the breadboard’s center channel, notch matching <a href="#fig-lm358-pinout" class="quarto-xref">Figure&nbsp;3</a>. Press it fully down.</li>
+<li>Wire per the table below. Use the long rails for +12 V, −12 V, and GND, and keep the layout tidy — op-amp debugging is 90% wiring inspection.</li>
+</ol>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 33%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Connection</th>
+<th>From → To</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Input signal</td>
+<td><strong>W1</strong> → pin 3 (+IN)</td>
+<td>The voltage to amplify</td>
+</tr>
+<tr class="even">
+<td>Feedback divider</td>
+<td>pin 2 (−IN) → <span class="math inline">\(R_1\)</span> → GND rail</td>
+<td>Sets gain with <span class="math inline">\(R_2\)</span></td>
+</tr>
+<tr class="odd">
+<td>Feedback resistor</td>
+<td>pin 2 (−IN) → <span class="math inline">\(R_2\)</span> → pin 1 (OUT)</td>
+<td>Sets gain with <span class="math inline">\(R_1\)</span></td>
+</tr>
+<tr class="even">
+<td>Positive rail</td>
+<td><strong>V+</strong> supply → pin 8</td>
+<td>+12 V power</td>
+</tr>
+<tr class="odd">
+<td>Negative rail</td>
+<td><strong>V−</strong> supply → pin 4</td>
+<td>−12 V power (<strong>not GND!</strong>)</td>
+</tr>
+<tr class="even">
+<td>Input monitor</td>
+<td>W1 node → <strong>1+</strong> (1− → GND)</td>
+<td>Scope records <span class="math inline">\(V_{in}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Output monitor</td>
+<td>pin 1 → <strong>2+</strong> (2− → GND)</td>
+<td>Scope records <span class="math inline">\(V_{out}\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled" title="Pin 4 is V−, not ground">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Pin 4 is V−, not ground
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>On single-supply chips, pin 4 is often labeled GND — but in this dual-rail circuit it must connect to <strong>−12 V</strong>. Grounding it removes the entire negative half of the output range, and reversing the supply pins destroys the chip. This is the most common op-amp wiring error; check it twice.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Show a TA before power-up
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Have a TA check your wiring before Part-2. Improper wiring can damage the op-amp — and a damaged op-amp produces plausible-looking garbage that wastes an hour.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q1.</strong> Record your measured <span class="math inline">\(R_1\)</span> and <span class="math inline">\(R_2\)</span> and compute your expected gain from <a href="#eq-noninv-gain" class="quarto-xref">Equation&nbsp;1</a> (4 decimals). How far is it from the nominal 3.000?</p>
+<p><strong>Q2.</strong> Using the golden rules, explain in two sentences why the op-amp’s <em>internal</em> gain (~100,000) does not appear in <a href="#eq-noninv-gain" class="quarto-xref">Equation&nbsp;1</a>.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">6</span> Part-2: Power Up and Verify in the GUI</h2>
+<p>New circuit, standing rule: <strong>watch it live before you automate it.</strong></p>
+<ol type="1">
+<li>Open <strong>WaveForms</strong> → <strong>Supplies</strong>. Set <strong>V+</strong> to <strong>+12 V</strong> and <strong>V−</strong> to <strong>−12 V</strong>, enable both, then Master Enable; match <a href="#fig-supplies-setup" class="quarto-xref">Figure&nbsp;5</a>.</li>
+<li>Verify with your DMM: +12 V rail, −12 V rail, each measured to GND at the chip’s pins (8 and 4) — not just at the supply.</li>
+<li>Open <strong>Wavegen</strong>, set W1 to <strong>DC, 1.0 V</strong>, and Run. Measure the output (pin 1) with your DMM: it should read close to <span class="math inline">\(3\times\)</span> your input. Try 2 V, then −1 V. The amplifier should track <span class="math inline">\(G \cdot V_{in}\)</span> faithfully — in both polarities.</li>
+<li>Now find saturation by hand: raise W1 in 0.5 V steps toward 5 V while watching the output on the DMM or Scope. Somewhere past 3.3 V of input, the output stops following. Compare what you see with <a href="#fig-saturation-check" class="quarto-xref">Figure&nbsp;6</a>.</li>
+<li>When you are satisfied, <strong>close WaveForms fully</strong> (system tray). Note what the Supplies do when WaveForms closes — Q4 asks.</li>
+</ol>
+<div id="fig-supplies-setup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-supplies-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Supplies_12V_Setup.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-supplies-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Supplies configured for ±12 V.
+</figcaption>
+</figure>
+</div>
+<div id="fig-saturation-check" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-saturation-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Scope_Saturation_Check.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-saturation-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: The output clipping against the positive rail during the live GUI check.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q3.</strong> Record <span class="math inline">\(V_{out}\)</span> at <span class="math inline">\(V_{in}\)</span> = 1.0 V (DMM). Compute <span class="math inline">\(V_{out}/V_{in}\)</span> — is it within a few percent of your Q1 expected gain?</p>
+<p><strong>Q4.</strong> At (roughly) what input voltage did the output stop following, and at what output voltage did it clamp? Also: when WaveForms closed, what happened to the ±12 V rails, and what does that mean your Part-3 script must do?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-3" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">7</span> Part-3: The Automated Gain Sweep</h2>
+<p>Open <code>FirstName_LastName_Lab05.ipynb</code> (starter on Canvas). The sweep script below is Lab 04’s DC-setpoint loop grown up: it now powers the rails, drives the input, and records <strong>two channels</strong> — the actual input <em>and</em> the output — at every setpoint. Measuring the input rather than trusting the setpoint is a habit worth keeping: your fit will be only as honest as its x-axis.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dwfpy <span class="im">as</span> dwf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>set_points <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">5.0</span>, <span class="fl">5.0</span>, <span class="dv">41</span>)    <span class="co"># W1 setpoints (V)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>v_in_meas  <span class="op">=</span> []</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>v_out_meas <span class="op">=</span> []</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>fs, duration <span class="op">=</span> <span class="dv">1000</span>, <span class="fl">0.5</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    supplies <span class="op">=</span> device.analog_io                 <span class="co"># the Supplies instrument</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="fl">12.0</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="op">-</span><span class="fl">12.0</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    supplies.master_enable <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="fl">0.5</span>)                             <span class="co"># let the rails come up</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    wavegen <span class="op">=</span> device.analog_output</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    scope   <span class="op">=</span> device.analog_input</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>)               <span class="co"># amplifier input</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch2'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">25.0</span>)              <span class="co"># output can reach ±11 V!</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v_set <span class="kw">in</span> set_points:</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        wavegen[<span class="st">'ch1'</span>].setup(<span class="st">'dc'</span>, offset<span class="op">=</span>v_set, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="fl">0.1</span>)                         <span class="co"># settle</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        v_in_meas.append(scope[<span class="st">'ch1'</span>].get_data().mean())</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        v_out_meas.append(scope[<span class="st">'ch2'</span>].get_data().mean())</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"W1 </span><span class="sc">{</span>v_set<span class="sc">:+.2f}</span><span class="ss"> V -&gt; in </span><span class="sc">{</span>v_in_meas[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:+.4f}</span><span class="ss"> V, "</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"out </span><span class="sc">{</span>v_out_meas[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:+.4f}</span><span class="ss"> V"</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    supplies.master_enable <span class="op">=</span> <span class="va">False</span>              <span class="co"># rails off before rewiring</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>np.savetxt(<span class="st">'../Data/LM358_Sweep.csv'</span>,           <span class="co"># AD622_Sweep.csv on run 2</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>           np.column_stack([set_points, v_in_meas, v_out_meas]),</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>           header<span class="op">=</span><span class="st">'set_V,vin_V,vout_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>New syntax, in the order it appears:</p>
+<ul>
+<li><strong><code>device.analog_io</code></strong> is the Supplies instrument — the last GUI instrument to get a Python name (<a href="#tbl-device-model" class="quarto-xref">Table&nbsp;2</a> is now complete). Its channels are addressed by the same labels the GUI shows (<code>'V+'</code>, <code>'V-'</code>), and each channel has named settings (<code>'Voltage'</code>, <code>'Enable'</code>) you write through <code>.value</code>. The <code>master_enable</code> line is the GUI’s Master Enable switch. Your Q4 observation explains why the script must do all this: closing WaveForms took the rails down, so every dwfpy run has to rebuild its own power state.</li>
+<li><strong>Two channels, one acquisition.</strong> Setting up <code>ch1</code> <em>and</em> <code>ch2</code> before a single <code>scope.single(...)</code> captures both simultaneously — then each channel’s <code>get_data()</code> returns its own buffer. Note the ranges differ: the input never leaves ±5 V, but the output reaches ±11 V, so Ch2 needs the wider <strong>25 V range</strong>. (Leave it at 5 V and your <em>measurement</em> saturates before the amplifier does — a trap worth one minute of thought now.)</li>
+<li>One <code>with</code> block now runs <em>three</em> instruments — supplies, wavegen, scope. This is a complete automated test stand in 30 lines.</li>
+</ul>
+<p>Watch the printout as it runs: in the middle of the sweep, out ≈ 3 × in; at the ends, the output pins near ±11 V no matter what the input does. Then run the sweep — this same script, new filename — again in Part-4 for the AD622.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q5.</strong> From the printout: at what measured input voltages did the output stop tracking <span class="math inline">\(3 V_{in}\)</span> on each end? Do they agree with your Q4 by-hand values?</p>
+<p><strong>Q6.</strong> Copy one mid-sweep printout line and one saturated line into your logbook. If Ch2’s range had been left at 5 V, what would the saturated lines have read, and how could that mislead you about your amplifier?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-4" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-part-4"><span class="header-section-number">8</span> Part-4: Build and Sweep the Instrumentation Amplifier</h2>
+<p><strong>Supplies off</strong> (your script already did this), then rebuild for the AD622 using <a href="#fig-inamp-schematic" class="quarto-xref">Figure&nbsp;2</a>, the pinout (<a href="#fig-ad622-pinout" class="quarto-xref">Figure&nbsp;7</a>), and the photo (<a href="#fig-ad622-build" class="quarto-xref">Figure&nbsp;8</a>).</p>
+<div id="fig-ad622-pinout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ad622-pinout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/AD622_Pinout.png" class="img-fluid figure-img" style="width:55.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ad622-pinout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: AD622 pinout (top view).
+</figcaption>
+</figure>
+</div>
+<div id="fig-ad622-build" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ad622-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/AD622_Circuit_Build_ADS.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ad622-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: The AD622 instrumentation amplifier on the breadboard.
+</figcaption>
+</figure>
+</div>
+<ol type="1">
+<li>From <a href="#eq-inamp-gain" class="quarto-xref">Equation&nbsp;3</a>, <span class="math inline">\(G = 3\)</span> wants <span class="math inline">\(R_G = 25.25\)</span> kΩ. Find the closest resistor in the kit (24.9 kΩ typical), <strong>measure it with the DMM</strong>, and record it.</li>
+<li>Seat the AD622 across the center channel (notch = pin-1 end) and wire per the schematic: <span class="math inline">\(R_G\)</span> between pins 1 and 8; W1 → pin 3 (+IN); pin 2 (−IN) → GND; +12 V → pin 7; −12 V → pin 4; <strong>pin 5 (REF) → GND</strong>; pin 6 (OUT) → Scope 2+. Keep the W1 → Scope 1+ input monitor.</li>
+<li>With −IN grounded, the differential input <span class="math inline">\((V_{+IN} - V_{-IN})\)</span> is simply your W1 voltage, so this sweep measures gain exactly as before. (Part-6 uses the second input properly.)</li>
+<li>TA check, then re-run the Part-3 sweep cell with the filename changed to <code>AD622_Sweep.csv</code>.</li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled" title="REF must be grounded">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+REF must be grounded
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="#eq-inamp-transfer" class="quarto-xref">Equation&nbsp;2</a> adds <span class="math inline">\(V_{REF}\)</span> to the output. Leave pin 5 floating and the output rides on an undefined, drifting reference — the amplifier will seem broken while being wired 90% right.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q7.</strong> Record your measured <span class="math inline">\(R_G\)</span> and expected gain from <a href="#eq-inamp-gain" class="quarto-xref">Equation&nbsp;3</a> (4 decimals).</p>
+<p><strong>Q8.</strong> The LM358 circuit needed two external resistors <em>you</em> chose and wired; the AD622 needs only <span class="math inline">\(R_G\)</span>. Where did the rest of the resistors go, and why does putting them <em>inside</em> the package improve gain accuracy? (One sentence.)</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-5" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-part-5"><span class="header-section-number">9</span> Part-5: Fit the Gains</h2>
+<p>Two sweeps, one analysis. First put your logbook resistor measurements (Q1, Q7) to work as expected gains:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measured with the DMM — use YOUR values</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>R1  <span class="op">=</span> <span class="fl">9960.0</span>     <span class="co"># ohms (nominal 10 k)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>R2  <span class="op">=</span> <span class="fl">19890.0</span>    <span class="co"># ohms (nominal 20 k)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>R_G <span class="op">=</span> <span class="fl">24870.0</span>    <span class="co"># ohms (nominal 24.9 k)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>G_expected_lm <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> R2 <span class="op">/</span> R1            <span class="co"># Eq. 1</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>G_expected_ad <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="fl">50500.0</span> <span class="op">/</span> R_G      <span class="co"># Eq. 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Since you will analyze both sweeps identically, write the analysis once as a function — and meet the tool that handles saturation: the <strong>boolean mask</strong>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_gain(fname):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Load a sweep CSV, fit its linear region, return everything needed."""</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.loadtxt(fname, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    v_in, v_out <span class="op">=</span> data[:, <span class="dv">1</span>], data[:, <span class="dv">2</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    linear <span class="op">=</span> np.<span class="bu">abs</span>(v_out) <span class="op">&lt;</span> <span class="fl">9.5</span>           <span class="co"># True where NOT saturated</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    coeffs <span class="op">=</span> np.polyfit(v_in[linear], v_out[linear], <span class="dv">1</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    G_fit, offset <span class="op">=</span> coeffs</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    N      <span class="op">=</span> np.count_nonzero(linear)      <span class="co"># points in the linear region</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    nu     <span class="op">=</span> N <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    resid  <span class="op">=</span> v_out[linear] <span class="op">-</span> np.polyval(coeffs, v_in[linear])</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    norm_r <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(resid<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    s_yx   <span class="op">=</span> norm_r <span class="op">/</span> np.sqrt(nu)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    S_G    <span class="op">=</span> s_yx <span class="op">/</span> np.sqrt(np.<span class="bu">sum</span>((v_in[linear] <span class="op">-</span> v_in[linear].mean())<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    CI_G   <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>, df<span class="op">=</span>nu) <span class="op">*</span> S_G</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> v_in, v_out, linear, coeffs, G_fit, CI_G, s_yx</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>v_in_lm, v_out_lm, lin_lm, c_lm, G_lm, CI_lm, syx_lm <span class="op">=</span> fit_gain(<span class="st">'../Data/LM358_Sweep.csv'</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>v_in_ad, v_out_ad, lin_ad, c_ad, G_ad, CI_ad, syx_ad <span class="op">=</span> fit_gain(<span class="st">'../Data/AD622_Sweep.csv'</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"LM358: G = </span><span class="sc">{</span>G_lm<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>CI_lm<span class="sc">:.4f}</span><span class="ss"> (expected </span><span class="sc">{</span>G_expected_lm<span class="sc">:.4f}</span><span class="ss">)"</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"AD622: G = </span><span class="sc">{</span>G_ad<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>CI_ad<span class="sc">:.4f}</span><span class="ss"> (expected </span><span class="sc">{</span>G_expected_ad<span class="sc">:.4f}</span><span class="ss">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><strong><code>linear = np.abs(v_out) &lt; 9.5</code></strong> builds a boolean array — one <code>True</code>/<code>False</code> per data point — marking everything comfortably away from the ~±10.5 V rails. <strong><code>v_in[linear]</code></strong> then returns <em>only</em> the <code>True</code> points: this mask-indexing idiom is how NumPy selects data by condition, and you will use it constantly from here on. <code>np.count_nonzero(linear)</code> counts the survivors — that count, not 41, is the <span class="math inline">\(N\)</span> in your fit statistics.</li>
+<li>The fit itself is Lab 02 verbatim: <code>polyfit</code> slope and intercept, <span class="math inline">\(s_{yx}\)</span>, and a 95% CI on the slope. The slope is your measured gain; the intercept is the amplifier’s <strong>output offset voltage</strong> — record it, it’s a real spec.</li>
+<li><strong><code>return</code>-ing seven values</strong> works because Python packs them into a tuple; the seven names on the left unpack it. Ugly for seven items? A little — but perfect for getting a lab analysis done. (The prelab walkthrough practices this.)</li>
+</ul>
+<p>Now build the two-panel deliverable figure to match <a href="#fig-example-ampgain" class="quarto-xref">Figure&nbsp;9</a>: both sweeps, all points shown (saturation included — it is part of the story), the fit line solid across the linear region and dashed where the ideal amplifier <em>would</em> have gone, and the fit results annotated. Format per Post-Lab; save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q9.</strong> Record both fitted gains with their 95% CIs. Does each expected gain (from resistors) fall inside its CI? If not — whose “error” is it, the fit’s or the resistor measurement’s?</p>
+<p><strong>Q10.</strong> Read the saturation ceilings off your data for both amplifiers (top and bottom). Which chip clips more symmetrically? How far from the ±12 V rails does each clip?</p>
+<p><strong>Q11.</strong> Report each fit’s intercept. What does a nonzero intercept mean physically, and would it matter when amplifying a 3 mV sensor signal?</p>
+<p><strong>Q12.</strong> Re-run <code>fit_gain</code> once with the mask condition changed to <code>&lt; 99</code> (keeping every point). What happens to the fitted gain and to <span class="math inline">\(s_{yx}\)</span>? One sentence on why.</p>
+</div>
+</div>
+<section id="example-result" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="example-result"><span class="header-section-number">9.1</span> Example Result</h3>
+<div id="fig-example-ampgain" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-ampgain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab05_AmpGain.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-ampgain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Example gain sweep figure (made-up data). Your values will differ, but formatting and annotations should match — note the saturated points excluded from the solid fit.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-6" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-part-6"><span class="header-section-number">10</span> Part-6: The Common-Mode Demo</h2>
+<p>Ten minutes, no code — and it is the reason instrumentation amplifiers exist. So far the AD622’s −IN sat at ground. Now you will feed both inputs the <em>same</em> signal and watch the amplifier ignore it.</p>
+<ol type="1">
+<li>Reopen <strong>WaveForms</strong> (Supplies back to ±12 V, Master Enable). Set W1: <strong>sine, 100 Hz, 1 V amplitude, 0 V offset</strong>, Run.</li>
+<li><strong>Common-mode test:</strong> move the −IN wire (pin 2) from GND to the <strong>W1 node</strong>, so <em>both</em> inputs receive the identical 2 V-pp sine. In the Scope, watch Ch1 (the input) and Ch2 (the output). The input is a healthy sine; the output is nearly flat — millivolts of residue. Use the Scope’s measurements (or cursors) to read the output’s peak-to-peak value; compare <a href="#fig-commonmode" class="quarto-xref">Figure&nbsp;10</a>.</li>
+<li><strong>Differential test:</strong> move −IN (pin 2) back to <strong>GND</strong>. Now the same 2 V-pp is a <em>differential</em> input, and the output jumps to <span class="math inline">\(G \times 2 \approx 6\)</span> V-pp.</li>
+<li>Record both peak-to-peak readings, then shut down: Master Enable off, WaveForms closed.</li>
+</ol>
+<div id="fig-commonmode" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-commonmode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/CommonMode_Scope.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-commonmode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: The common-mode test: a full-scale sine into both inputs, almost nothing out.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q13.</strong> Record <span class="math inline">\(V_{pp,out}\)</span> for the common-mode and differential tests, and compute the ratio (differential ÷ common-mode). Your breadboard will not reach the datasheet’s 100 dB CMRR — a ratio in the hundreds-to-thousands is typical. What limits it here? (Hint: are your two input wires identical?)</p>
+<p><strong>Q14.</strong> Next week a strain-gauge bridge hands you ~3 mV of differential signal sitting on ~2.5 V of common-mode voltage. Using your Q13 numbers, explain in two sentences why the AD622 — and not the LM358 circuit — is the right amplifier for that job.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</h2>
+<p>Upload your submissions to Canvas. <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u> A full example solution notebook is posted after all sections have met; check your approach against it, but submit your own work.</p>
+<section id="submission-items" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="submission-items"><span class="header-section-number">11.1</span> Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook (<code>FirstName_LastName_Lab05.ipynb</code>), restarted and run top-to-bottom (acquisition cells may show their saved outputs)</li>
+<li>Amplifier gain figure (two panels), <strong>.pdf</strong></li>
+<li>Answers to the post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="amplifier-gain-figure-requirements" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="amplifier-gain-figure-requirements"><span class="header-section-number">11.2</span> Amplifier Gain Figure Requirements</h3>
+<ul>
+<li>Two stacked panels (LM358 top, AD622 bottom); figure size 6.5” wide × 6.0” tall; white background; Times font, 10 pt</li>
+<li>All 41 points per panel as red open circles, size 75 — saturated points included</li>
+<li>Linear-region fit: solid blue, 2 pt; its extension through the saturated region: dashed blue, 1 pt</li>
+<li>Major and minor grids on; top and right spines removed; legend clear of the data</li>
+<li>Axis labels with units; panel titles naming the amplifier and its expected gain; suptitle “FirstName LastName’s Operational Amplifier Gain Plot” with the date</li>
+<li><code>ax.text</code> annotation per panel (4 decimals where sensible): <span class="math inline">\(G_{fit}\)</span> ± 95% CI, <span class="math inline">\(s_{yx}\)</span>, and the measured saturation ceilings</li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">11.3</span> Post-Lab Questions</h3>
+<ol type="1">
+<li>Report both fitted gains ± CI alongside the expected gains from your measured resistors. Quantify each disagreement in percent.</li>
+<li>Your amplifiers clipped near +10.5 V, not +12 V. Explain where the missing volts went, and why the LM358’s clipping is asymmetric while the AD622’s is nearly symmetric.</li>
+<li>A classmate fitted their full sweep — no mask — and got <span class="math inline">\(G = 2.71\)</span> with enormous <span class="math inline">\(s_{yx}\)</span>. Explain exactly what pulled their slope down.</li>
+<li>You need <span class="math inline">\(G = 100\)</span> from the AD622. What <span class="math inline">\(R_G\)</span> does <a href="#eq-inamp-gain" class="quarto-xref">Equation&nbsp;3</a> require, and what does the <em>output</em> saturation ceiling then limit your maximum input to?</li>
+<li>A load cell outputs 5 mV differentially on a 2.5 V common-mode level, and you need a gain of 500. Which of this week’s two circuits do you choose, and — using your Q13 measurement — what would go wrong with the other one?</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="before-you-leave"><span class="header-section-number">12</span> Before You Leave</h2>
+<ul>
+<li><strong>Master Enable off</strong> before touching any wire — never rewire a powered op-amp circuit.</li>
+<li>Show your gain figure (or both sweep printouts) to a TA before tearing down.</li>
+<li>Return both chips gently to their labeled containers — bent DIP pins are next section’s mystery bug. Wires to the bin, sorted by color; resistors to the kit.</li>
+<li>Confirm your data files have synced to OneDrive (check on a second device) and that <strong>both</strong> partners have everything.</li>
+<li>Clean the station, collect your belongings, and log off.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

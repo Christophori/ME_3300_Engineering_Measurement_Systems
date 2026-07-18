@@ -1,22 +1,5 @@
 ---
 title: "ME 3300 Experiment-02: Sensor Calibration and Dynamic Measurement of a Pendulum"
-author: "Dr. Christopher Bitikofer"
-toc: true
-number-sections: true
-lightbox: true
-code-copy: true
-code-fold: show
-code-line-numbers: true
-
-theme:
-   light: yeti
-format:
-   html: default
-   pdf: true
-      documentclass: article
-      papersize: letter
-      fontsize: 12pt
-      geometry: margin=.5in
 ---
 
 {{< pagebreak >}}
@@ -33,7 +16,7 @@ Your objectives for this laboratory session are to:
 - Quantify the quality of your calibration using the norm of residuals, the standard error of fit $s_{yx}$, the standard error of the slope $S_{a_1}$, and a 95% confidence interval
 - Record a dynamic measurement: the free-swing motion of a pendulum
 - **Match a simulation of a dynamic model to measured data**: simulate a simple pendulum model using `scipy.integrate.solve_ivp` and tune its parameters until it approximately reproduces your experiment
-- Learn new Python skills: `for` loops, `enumerate`, f-strings, DataFrame indexing with `.iloc`, defining functions with `def`, and numerical ODE integration
+- Learn new Python skills: `for` loops, `enumerate`, f-strings, DataFrame indexing with `.iloc`, interactive plotting with `plotly`, defining functions with `def`, and numerical ODE integration
 
 ### Check Your Understanding
 
@@ -51,7 +34,7 @@ By the end of this lab, you should be able to answer all of these questions.
 - How does a `for` loop repeat an operation over a list of values? What does `enumerate` add?
 - What is an f-string, and how do you insert a variable's value into a filename or a plot annotation?
 - What is the difference between `df.iloc[:, 1]` and `df['column_name']`? When is `.iloc` the safer choice?
-- How do `np.diff` and `np.argmax` work together to find the moment the pendulum is released?
+- When would you reach for `plotly` instead of `matplotlib`, and how do you read a data point's *index* off an interactive plotly figure?
 - What is `scipy.integrate.solve_ivp`, and what inputs does it require? (Hint: it is closely related to MATLAB's `ode45`.)
 
 #### Data Analysis
@@ -83,7 +66,13 @@ ME3300/
 │   └── Figures/
 ```
 
-Because your `.venv` environment lives at the top of the `ME3300` folder, it already serves every lab subfolder so no new environment setup is needed. This lab uses the same packages you installed in Lab 01 (`numpy`, `scipy`, `matplotlib`, `pandas`, `ipykernel`).
+Because your `.venv` environment lives at the top of the `ME3300` folder, it already serves every lab subfolder so no new environment setup is needed. This lab uses the packages you installed in Lab 01 (`numpy`, `scipy`, `matplotlib`, `pandas`, `ipykernel`) plus two new ones for interactive plotting. Open a terminal in your `ME3300` folder and run:
+
+``` bash
+uv add plotly nbformat
+```
+
+`plotly` is the interactive plotting library you will meet in @sec-part-5; `nbformat` is a small helper plotly needs to display figures inside notebooks.
 
 ### Read the Background Section
 
@@ -96,7 +85,7 @@ Download `Lab02_Prelab_Walkthrough.ipynb` from Canvas and save it in `ME3300/Lab
 - `for` loops and `enumerate` for repeating an analysis over many data files
 - f-strings for building filenames and annotation text from variables
 - selecting DataFrame rows and columns by position with `.iloc`
-- finding events in a signal with `np.diff` and `np.argmax`
+- exploring a signal with an interactive `plotly` figure: hover readouts and the range slider
 - defining your own functions with `def`
 - simulating an ODE with `scipy.integrate.solve_ivp`
 
@@ -115,8 +104,10 @@ The walkthrough contains **checkpoint** boxes; report the requested values in th
 | Select DataFrame column by position | `df.iloc[:, 1]` (all rows, second column) |
 | DataFrame column → numpy array | `df.iloc[:, 1].values` |
 | Preview first rows of a DataFrame | `df.head()` |
-| Differences between adjacent samples | `np.diff(x)` (length is `len(x) - 1`) |
-| Index of first/largest `True` | `np.argmax(condition)` |
+| Interactive figure | `import plotly.graph_objects as go` then `fig = go.Figure()` |
+| Add a trace to a plotly figure | `fig.add_trace(go.Scatter(x=t, y=v, mode='lines'))` |
+| Show sample index in the hover box | `customdata=list(range(len(t)))` + `hovertemplate='idx=%{customdata}...'` |
+| Zoom with a range slider | `fig.update_layout(xaxis=dict(rangeslider=dict(visible=True)))` |
 | Degrees ↔ radians | `np.radians(deg)` / `np.degrees(rad)` |
 | Define a function | `def pendulum_ode(t, y): ... return [...]` |
 | Integrate an ODE | `solve_ivp(fun, t_span, y0, t_eval=t_eval)` (from `scipy.integrate`) |
@@ -126,7 +117,7 @@ The walkthrough contains **checkpoint** boxes; report the requested values in th
 
 | Instrument | What you'll use it for this lab |
 |------------------------------------|------------------------------------|
-| **Supplies** | Power the potentiometer with the fixed 3.3 V output |
+| **Supplies** | Power the potentiometer with the 5 V output |
 | **Scope** | Watch the live sensor voltage; measure oscillation period with cursors |
 | **Logger** | Record voltage vs. time at a set rate and duration; export CSV files |
 
@@ -221,16 +212,16 @@ The solver marches these equations forward in time from an initial condition $\l
 
 ### Enable the Power Supply
 
-The ADS provides several ways to supply power. The potentiometer needs a stable reference voltage, so for this lab you will use the programmable supply set to **3.3 V**.
+The ADS provides several ways to supply power. The potentiometer needs a stable reference voltage, so for this lab you will use the programmable supply set to **5 V**.
 
 1.  Open **Supplies** in WaveForms.
-2.  Enable the **3.3 V** fixed supply and click **Master Enable**; see @fig-supplies-setup. Leave the ±12 V supplies off.
+2.  Enable the **5 V** supply and click **Master Enable**; see @fig-supplies-setup. Leave the ±12 V supplies off.
 3.  Verify the output with your handheld DMM: measure between the **V+** pin and a **GND** pin on the ADS breadboard.
 
-![Supplies instrument with the 3.3 V output enabled.](figures/Supplies_Setup.png){#fig-supplies-setup width="100%"}
+![Supplies instrument with the 5 V output enabled.](figures/Supplies_Setup.png){#fig-supplies-setup width="100%"}
 
 ::: {.callout-important title="Logbook Questions"}
-**Q2.** What voltage does your DMM read? Is it *exactly* 3.3 V? Record the value. Why would it matter for your calibration if this supply drifts during the lab?
+**Q2.** What voltage does your DMM read? Is it *exactly* 5 V? Record the value. Why would it matter for your calibration if this supply drifts during the lab?
 :::
 
 {{< pagebreak >}}
@@ -247,7 +238,7 @@ The potentiometer has three critical leads (most in the lab actually have four w
 
 | Potentiometer lead | Connects to | Purpose |
 |------------------------|------------------------|------------------------|
-| End terminal (V+) | 3.3 V (V+) on ADS | Supplies the top of the divider |
+| End terminal (V+) | 5 V (V+) on ADS | Supplies the top of the divider |
 | End terminal (V-) & Signal – | GND on ADS | Grounds the bottom of the divider |
 | Signal + (Wiper center) | **1+** (Scope Ch. 1 positive) | The signal: divider output voltage |
 | — (jumper) | GND rail → **1−** (Ch. 1 negative) | Gives the differential input its reference |
@@ -263,7 +254,7 @@ The potentiometer body may be misaligned so that its dead zone (the small angle 
 ::: {.callout-important title="Logbook Questions"}
 **Q3.** Sketch the schematic of your circuit in your logbook. Label the supply, ground, wiper signal, and the ADS input pins.
 
-**Q4.** Record the wiper voltages at the two extremes of the pendulum's travel (about −90° and +90°). Roughly what fraction of the 0–3.3 V range does your sensor use?
+**Q4.** Record the wiper voltages at the two extremes of the pendulum's travel (about −90° and +90°). Roughly what fraction of the 0–5 V range does your sensor use?
 :::
 
 {{< pagebreak >}}
@@ -347,7 +338,7 @@ For each angle:
 |           70°            |                            |
 |           90°            |                            |
 
-: Example calibration logbook table (your voltages will differ — these are representative values for a 3.3 V supply). {#tbl-calibration}
+: Example calibration logbook table (your voltages will differ — these are representative values). {#tbl-calibration}
 
 ::: {.callout-important title="Logbook Questions"}
 **Q7.** Before fitting: visually scan your table. Does voltage change by roughly the same amount for each 20° step? What does that suggest about the linearity of your sensor?
@@ -472,9 +463,9 @@ With a trusted calibration in hand, you can now make a real dynamic measurement.
 4.  Let it swing until the recording ends, then export the CSV as `FirstName_LastName_Lab02_Swing.csv` to `ME3300/Lab_02/Data/`.
 5.  Open the file in VS Code and confirm it contains what you expect before moving on.
 
-### Load, Calibrate, and Trim the Data
+### Load and Calibrate the Data
 
-Back in your python notebook, load the swing recording, convert voltage to angle with your calibration, and trim the recording so $t = 0$ is the moment of release:
+Back in your python notebook, load the swing recording and convert voltage to angle with your calibration:
 
 ``` python
 # Load swing data (check skiprows against your file, as before)
@@ -484,22 +475,56 @@ volt_raw = swing.iloc[:, 1].values     # 2nd column: voltage (V)
 
 # Apply your calibration equation (Eq. 2): volts -> degrees
 angle_raw = np.polyval(coeffs, volt_raw)
+```
 
-# Trim so t = 0 is the release: find the first significant change in voltage
-dv    = np.abs(np.diff(volt_raw))      # change between adjacent samples
-idx0  = np.argmax(dv > 0.01)           # index of FIRST sample where dv > 0.01 V
-time  = time_raw[idx0:] - time_raw[idx0]
+### Trim to the Release — Interactively
+
+Your recording starts with several seconds of the pendulum held still — data that tells your reader nothing. To prepare a useful figure, you want $t = 0$ to be the moment of release, with the held portion trimmed away. A final report figure should show your audience exactly what they need to see and nothing more.
+
+There are lots of ways to find the release. One of our favorites is also the most direct: *plot the data and look*. For this we introduce a second plotting library, **plotly**, which excels at exactly this job.
+
+Plotly makes *interactive* figures: hover the mouse over a trace and a tooltip reports the exact values at that sample; drag the range-slider handles to zoom in on a region. Matplotlib remains the tool for polished static figures — publications, reports, your post-lab submissions. A beauty of Python is that you can use each library where it excels: **explore with plotly, publish with matplotlib**.
+
+``` python
+import plotly.graph_objects as go
+
+fig = go.Figure()
+fig.add_trace(go.Scatter(
+    x=time_raw, y=angle_raw,
+    mode='lines',
+    name='Calibrated Pot Angle (deg)',
+    customdata=list(range(len(time_raw))),
+    hovertemplate='idx=%{customdata}<br>t=%{x:.3f} s<br>angle=%{y:.2f} deg<extra></extra>'
+))
+fig.update_layout(
+    title='Interactive Swing Trim Plot',
+    xaxis_title='Time (s)', yaxis_title='Angle (deg)',
+    xaxis=dict(rangeslider=dict(visible=True)),
+    template='plotly_white'
+)
+fig.show()
+```
+
+Two pieces deserve a closer look:
+
+- **`customdata=list(range(len(time_raw)))`** attaches each sample's *index* (0, 1, 2, ...) to the trace, and **`hovertemplate`** formats the tooltip to display it. Time tells you *when* the release happened; the index tells you *where to slice the array*. (The `<extra></extra>` at the end suppresses a redundant trace-name box.)
+- **`rangeslider`** adds a miniature copy of the plot beneath the axes — drag its handles to zoom the main plot into the region around the release.
+
+Now use the figure: zoom in on the release, hover on the last sample before the angle starts to change, and note its index. Then trim with an ordinary slice:
+
+``` python
+idx0  = 160                            # <- YOUR index, read from the plotly figure
+time  = time_raw[idx0:] - time_raw[idx0]   # re-zero the clock at release
 angle = angle_raw[idx0:]
 ```
 
-Two new tools here:
-
-- **`np.diff(volt_raw)`** returns the difference between each pair of adjacent samples — effectively how fast the signal is changing, sample to sample. While the pendulum is held still, these differences are tiny (just noise); at release they jump.
-- **`np.argmax(dv > 0.01)`** — the comparison `dv > 0.01` produces an array of `True`/`False` values, and `argmax` returns the index of the first `True` (since `True` counts as 1). Together they locate the first sample where the signal changed by more than 10 mV: the release. The `[idx0:]` slice then discards everything before that moment, and subtracting `time_raw[idx0]` restarts the clock at zero.
+Hardcoding an index may feel crude next to writing a clever detector — but it is fast, you *verified it visually*, and the number sits right there in your notebook for anyone to check. For one-off report figures this manual approach is usually the quickest route to a correct plot. When an analysis must process many files, automating the detection becomes worth the effort — you will build exactly such a detector in Lab 03.
 
 ::: {.callout-tip title="Debug it yourself"}
-If your trim grabs the wrong moment, don't guess — *look*. Plot `volt_raw` against `time_raw` (a quick throwaway plot is helpful here!) and see where the release actually happens; then plot `dv` and see whether 0.01 V is a sensible threshold for *your* noise level. Making quick diagnostic plots is the single most useful debugging habit in experimental work. Most "code bugs" in this course are actually data surprises you'd spot instantly on a plot.
+This look-first habit is not just for trimming. Whenever numbers downstream look wrong, plot the raw data *before* you trust any code that processes it. Making quick diagnostic plots is the single most useful debugging habit in experimental work — most "code bugs" in this course are actually data surprises you'd spot instantly on a plot. An interactive plotly figure makes this even faster: the answer to "what is my noise level?" or "when did the event happen?" is one hover away.
 :::
+
+![Example of the interactive trim workflow: hover the last held sample to read its index, then slice. (Your figure is live — this is only a snapshot.)](figures/Python/Lab02_Plotly_Trim_Screenshot.png){#fig-plotly-trim width="6.5in"}
 
 ::: callout-note
 If you have collected this data and confirmed with a TA that it looks correct, this is an acceptable stopping point for your in-lab work. You can complete the rest of this lab later if needed!

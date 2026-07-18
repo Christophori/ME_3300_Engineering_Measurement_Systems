@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="lab03_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="lab03_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="lab03_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="lab03_files/libs/bootstrap/bootstrap-116e70cef452b7a205deb158d40a82d5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="lab03_files/libs/bootstrap/bootstrap-6b9a4e2bc1d929dbbc8f0b698e19a81c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="lab03_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="lab03_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="lab03_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -204,9 +204,9 @@ window.Quarto = {
 <h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
 <p>Your objectives for this laboratory session are to:</p>
 <ul>
-<li>Measure <strong>two sensors at once</strong>: the Lab 02 potentiometer plus a MEMS accelerometer, acquired on two differential channels</li>
-<li>Write your <strong>first Python automation</strong> of the ADS using <code>pydwf</code>, replacing a repetitive GUI task (a multi-point calibration) with a script</li>
-<li><strong>Calibrate a MEMS accelerometer</strong> using gravity as the reference, via a four-orientation static calibration</li>
+<li>Measure using <strong>two sensors at once</strong>: the Lab 02 potentiometer plus a MEMS accelerometer, acquired on two differential channels</li>
+<li>Write your <strong>first Python automation</strong> of the ADS using <code>pydwf</code>, to replace a repetitive GUI task (a multi-point calibration) with a script</li>
+<li><strong>Calibrate a MEMS accelerometer</strong> using gravity as the reference, via a four point calibration</li>
 <li><strong>Reuse a saved calibration</strong>: load your Lab 02 potentiometer coefficients from file instead of re-calibrating</li>
 <li>Use the WaveForms Scope <strong>Record mode</strong> to capture a long, fast (1 kHz), two-channel recording</li>
 <li>Compute angular velocity by <strong>numerical differentiation</strong> (<code>np.gradient</code>) and understand why differentiation amplifies noise</li>
@@ -220,8 +220,8 @@ window.Quarto = {
 <h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
 <ul>
 <li>What does a MEMS accelerometer actually measure? Why does a <em>stationary</em> accelerometer read ±9.81 m/s² instead of zero?</li>
-<li>Why can gravity serve as a calibration reference for an accelerometer?</li>
-<li>Why do both ADS channels need their − input referenced (to GND) in this circuit?</li>
+<li>How / why can gravity serve as a calibration reference for an accelerometer?</li>
+<li>Why do both ADS channels need their (−) input referenced (to GND) in this circuit?</li>
 <li>What is the difference between the Scope’s normal acquisition and <strong>Record mode</strong>? When do you need Record?</li>
 <li>Why must WaveForms be closed before a <code>pydwf</code> script can run?</li>
 </ul>
@@ -267,17 +267,30 @@ window.Quarto = {
 </section>
 <section id="add-the-pydwf-package" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="add-the-pydwf-package"><span class="header-section-number">2.2</span> Add the pydwf Package</h3>
-<p>This lab introduces <code>pydwf</code>, the Python interface to the WaveForms SDK. Add it to your course environment: open a terminal in your <code>ME3300</code> folder and run</p>
+<p>This lab introduces <code>pydwf</code> (<strong>PY</strong>thon <strong>D</strong>iligent <strong>W</strong>ave<strong>F</strong>orms), the Python interface to the WaveForms SDK. Add it to your course environment: open a terminal in your <code>ME3300</code> folder and run</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">uv</span> add pydwf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can verify the install with <code>uv run python -c "import pydwf; print(pydwf.__version__)"</code>. Note that <code>pydwf</code> talks to the same WaveForms <em>runtime</em> the GUI uses, so having WaveForms installed (Lab 01) is required.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>What is an SDK?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An SDK (Software Development Kit) is a software toolbox that provides the necessary tools, code, and documentation to write code for a program (in this case WaveForms)</p>
+</div>
+</div>
 </section>
 <section id="read-the-background-section" class="level3" data-number="2.3">
 <h3 data-number="2.3" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.3</span> Read the Background Section</h3>
-<p>Read the <a href="#sec-background">Background</a> section before lab. It explains what the accelerometer measures, derives the gravity-correction equation you will implement, and introduces the pydwf device model.</p>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It explains what the accelerometer measures, derives the gravity-correction equation you will implement, and introduces our new pydwf package.</p>
 </section>
 <section id="sec-prelab-walkthrough" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.4</span> Complete the Prelab Walkthrough Notebook</h3>
-<p>Download <code>Lab03_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_03/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> Python skills using simulated signals (no hardware needed at home):</p>
+<p>Download <code>Lab03_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_03/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> Python skills using simulated signals:</p>
 <ul>
 <li><code>while</code> loops, <code>break</code>, and the status-polling pattern DAQ code uses</li>
 <li>pausing a script for the user with <code>input()</code></li>
@@ -286,7 +299,7 @@ window.Quarto = {
 <li>combining arrays into columns with <code>np.column_stack</code></li>
 <li>loading files with <code>#</code> header lines using <code>np.loadtxt(..., comments='#')</code></li>
 </ul>
-<p>As always, report the <strong>checkpoint</strong> values in the <strong>Prelab 03 quiz on Canvas</strong> before your lab session. Skills from Labs 01–02 (loading CSVs, <code>polyfit</code>, fit statistics, <code>for</code>/<code>enumerate</code>, f-strings, <code>.iloc</code>, plot formatting) are not retaught.</p>
+<p>As always, working through the prelab will allow you to answer the <strong>checkpoint</strong> questions in the <strong>Prelab quiz on Canvas</strong> before your lab session.</p>
 </section>
 <section id="python-quick-reference-new-this-lab" class="level3" data-number="2.5">
 <h3 data-number="2.5" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.5</span> Python Quick Reference: New This Lab</h3>
@@ -339,10 +352,6 @@ window.Quarto = {
 </table>
 <table class="caption-top table">
 <caption>The pydwf device model: every GUI instrument is an object in code</caption>
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>WaveForms GUI instrument</th>
@@ -373,11 +382,11 @@ window.Quarto = {
 </section>
 <section id="laboratory-introduction" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
-<p>In Lab 02 you completed the full measurement chain for one sensor: build, verify, calibrate, measure, model. This lab scales that chain up in three directions at once.</p>
+<p>In Lab 02 you completed the full measurement chain for one sensor: <em>build, verify, calibrate, measure, model</em>. This lab scales that chain up in three directions.</p>
 <ul>
-<li><strong>Two sensors, two channels.</strong> You will measure the pendulum’s angle (potentiometer, Channel 1) and the acceleration at its tip (MEMS accelerometer, Channel 2) <em>simultaneously</em>. Multichannel measurement is the norm in real experiments — one signal alone rarely tells the whole story.</li>
-<li><strong>Your first DAQ automation.</strong> The accelerometer calibration requires holding the pendulum in four orientations and recording each one. In Lab 02 you did this kind of repetitive record–export–rename loop by hand, eleven times. This week, a short <code>pydwf</code> script does the repetition for you: it prompts you for each position, records, and averages, all in one run. This is the course’s automation philosophy from here forward: <strong>use the GUI where it makes sense</strong> (one-off captures, live exploration) <strong>and Python where tasks repeat</strong>. By Lab 10 you will be able to script complete experiments — a skill that carries directly into capstone and industry work.</li>
-<li><strong>Independent cross-checks.</strong> You will determine the pendulum tip’s normal acceleration two completely independent ways — measured directly by the accelerometer, and calculated from the differentiated potentiometer angle — and compare them. Agreement between independent methods is one of the strongest forms of experimental evidence; their <em>disagreement</em> teaches you about noise, alignment, and modeling assumptions.</li>
+<li><strong>Two sensors, two channels.</strong> You will measure the pendulum’s angle (potentiometer, Channel 1) and the acceleration at its tip (MEMS accelerometer, Channel 2) <em>simultaneously</em>. Multichannel measurement is the norm in real experiments as one signal alone rarely tells the whole story.</li>
+<li><strong>Your first DAQ automation.</strong> The accelerometer calibration requires holding the pendulum in four orientations and recording each one. In Lab 02 you did this kind of repetitive record–export–rename loop by hand, eleven times. This week, you will use a short <code>pydwf</code> script to handle that repetition for you: it prompts you for each position, records, and averages, all in one run. This is the course’s automation philosophy from here forward: <strong>use the GUI where it makes sense</strong> (one-off captures, live exploration) <strong>and Python where tasks repeat</strong>. By Lab 10, you will be able to script complete experiments, which is a skill that carries directly into capstone and industry work.</li>
+<li><strong>Independent cross-checks.</strong> You will determine the pendulum tip’s normal acceleration in two independent ways — measured directly by the accelerometer, and calculated from the differentiated potentiometer angle — and compare them. Agreement between independent methods is one of the strongest forms of experimental evidence and a means of validating measurement systems. <em>Disagreement</em> informs you about noise, and correctness of modeling assumptions.</li>
 </ul>
 </section>
 <section id="sec-background" class="level2" data-number="4">
@@ -386,18 +395,26 @@ window.Quarto = {
 <h3 data-number="4.1" class="anchored" data-anchor-id="normal-acceleration-of-a-rotating-point"><span class="header-section-number">4.1</span> Normal Acceleration of a Rotating Point</h3>
 <p>For rotation about a fixed axis, a point at radius <span class="math inline">\(r\)</span> from the pivot has a <strong>normal acceleration</strong> directed from the point toward the pivot:</p>
 <p><span id="eq-normal-accel"><span class="math display">\[a_n = -\dot{\theta}^2 r \tag{1}\]</span></span></p>
-<p>where <span class="math inline">\(\dot\theta\)</span> is the angular velocity in rad/s. The minus sign reflects our sign convention: the accelerometer’s <strong>+y axis points from the sensor toward the pivot</strong> (see <a href="#fig-orientations" class="quarto-xref">Figure&nbsp;2</a>), and the centripetal acceleration a swinging pendulum tip experiences points that same way. You will measure <span class="math inline">\(\dot\theta\)</span> by numerically differentiating the potentiometer angle, and <span class="math inline">\(r\)</span> with a tape measure (pivot to accelerometer center).</p>
+<p>where <span class="math inline">\(\dot\theta\)</span> is the angular velocity in rad/s. The minus sign reflects the accelerometer’s sign convention which may seem counter intuitive, but is a results of the accelerometer’s <strong>+y axis direction pointing from the sensor toward the pivot</strong> and the way in which accelerometer’s “feel” <strong>proper acceleration</strong> (The next section will illustrate that we mean here).<br>
+You will measure <span class="math inline">\(\dot\theta\)</span> by numerically differentiating the potentiometer angle, and estimating <span class="math inline">\(r\)</span> with a tape measure (pivot to accelerometer center).</p>
 </section>
 <section id="what-the-accelerometer-measures" class="level3" data-number="4.2">
 <h3 data-number="4.2" class="anchored" data-anchor-id="what-the-accelerometer-measures"><span class="header-section-number">4.2</span> What the Accelerometer Measures</h3>
-<p>The MEMS accelerometer (MMA7361, mounted at the pendulum tip; see <a href="#fig-accel-board" class="quarto-xref">Figure&nbsp;3</a>) contains a microscopic proof mass on silicon springs. It measures <strong>proper acceleration</strong> — the deflection of that mass — which includes gravity. A stationary accelerometer with its +y axis pointing straight up reads +9.81 m/s², not zero, because the springs must hold the proof mass up against gravity.</p>
-<p>For our swinging pendulum, the y-axis therefore senses <em>both</em> effects at once:</p>
-<p><span id="eq-accel-reading"><span class="math display">\[a_y = \underbrace{-\dot{\theta}^2 r}_{\text{normal accel.}} \; \underbrace{- \, g\cos\theta}_{\text{gravity component}} \tag{2}\]</span></span></p>
-<p>where <span class="math inline">\(\theta\)</span> is the pendulum angle measured from straight down. The gravity term follows from the free-body diagram in <a href="#fig-gravity-fbd" class="quarto-xref">Figure&nbsp;1</a>: the component of <span class="math inline">\(g\)</span> along the +y direction (tip toward pivot) is <span class="math inline">\(-g\cos\theta\)</span> — largest in magnitude when hanging straight down (<span class="math inline">\(\theta = 0\)</span>), zero when horizontal. In Part 5 you will <em>subtract</em> this term from the measured signal to isolate the normal acceleration and enable a fair comparison with <a href="#eq-normal-accel" class="quarto-xref">Equation&nbsp;1</a>.</p>
+<p>The MEM’s accelerometer (You will have either a model <a href="https://www.pololu.com/product/1251/resources">MMA7361LC</a>, or a <a href="www.notasite.com">NEED to find the new model!!!</a>), mounted at the pendulum tip; see <a href="#fig-accel-board" class="quarto-xref">Figure&nbsp;3</a>) contains a microscopic proof mass on silicon springs. It measures <a href="https://en.wikipedia.org/wiki/Proper_acceleration"><strong>proper acceleration</strong></a> which represents the actual mechanical forces acting on the sensor’s internal proof mass.</p>
+<p>The important distinction in this context is that gravity itself does not cause “proper acceleration”; rather, it is the physical stiffness of the MEM’s suspension springs that push/pull to hold the internal proof mass in the internal housing.</p>
+<p>A few key cases:</p>
+<ul>
+<li>A stationary accelerometer with its +y axis pointing straight up reads <span class="math inline">\(+9.81\)</span> <span class="math inline">\(m/s^2\)</span>, not zero, as the springs must hold the proof mass up against gravity.</li>
+<li>In free fall, the accelerometer measures <span class="math inline">\(0\)</span> <span class="math inline">\(m/s^2\)</span> because there are no mechanical forces acting on the sensor, even though it is accelerating downward from an observer’s perspective (coordinate acceleration)</li>
+<li>In our swinging pendulum, the gravity force acts in both x and y directions depending on the position of the pendulum, but normal acceleration is always negative in the accelerometer frame of reference, since the proof mass deflects down.</li>
+</ul>
+<p>For our swinging pendulum, the y-axis sensed acceleration is thus:</p>
+<p><span id="eq-accel-reading"><span class="math display">\[a_y = \underbrace{-\dot{\theta}^2 r}_{\text{normal accel.}} \; \underbrace{-\, g\cos\theta}_{\text{gravity component}} \tag{2}\]</span></span></p>
+<p>where <span class="math inline">\(\theta\)</span> is the pendulum angle measured from straight down. The gravity term follows from the free-body diagram in <a href="#fig-gravity-fbd" class="quarto-xref">Figure&nbsp;1</a>: the component of <span class="math inline">\(g\)</span> along the +y direction (tip toward pivot) is <span class="math inline">\(g\cos\theta\)</span> — largest in magnitude when hanging straight down (<span class="math inline">\(\theta = 0\)</span>), zero when horizontal. In Part 5, you will <em>subtract</em> this term from the measured signal to isolate the normal acceleration <a href="#eq-normal-accel" class="quarto-xref">Equation&nbsp;1</a>.</p>
 <div id="fig-gravity-fbd" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gravity-fbd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="figures/Accel_Gravity_FBD.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Free-body diagram of the accelerometer at angle \theta. The +y axis points from the sensor toward the pivot; the gravity component along +y is -g\cos\theta."><img src="figures/Accel_Gravity_FBD.png" class="img-fluid figure-img" style="width:45.0%"></a>
+<a href="figures/lab03diagram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Free-body diagram of the accelerometer at angle \theta. The +y axis points from the sensor toward the pivot; the gravity component along +y is -g\cos\theta."><img src="figures/lab03diagram.png" class="img-fluid figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gravity-fbd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Free-body diagram of the accelerometer at angle <span class="math inline">\(\theta\)</span>. The +y axis points from the sensor toward the pivot; the gravity component along +y is <span class="math inline">\(-g\cos\theta\)</span>.
@@ -407,7 +424,7 @@ Figure&nbsp;1: Free-body diagram of the accelerometer at angle <span class="math
 </section>
 <section id="gravity-as-a-calibration-reference" class="level3" data-number="4.3">
 <h3 data-number="4.3" class="anchored" data-anchor-id="gravity-as-a-calibration-reference"><span class="header-section-number">4.3</span> Gravity as a Calibration Reference</h3>
-<p>Equation <a href="#eq-accel-reading" class="quarto-xref">Equation&nbsp;2</a> also hands us a free calibration standard. When the pendulum is held <em>still</em>, <span class="math inline">\(\dot\theta = 0\)</span> and the sensor feels only the gravity component — which we know exactly at four easy-to-set orientations:</p>
+<p>Equation <a href="#eq-accel-reading" class="quarto-xref">Equation&nbsp;2</a> also hands us a nice calibration standard. When the pendulum is held <em>still</em>, <span class="math inline">\(\dot\theta = 0\)</span> and the sensor should feel only the gravity component — which we know exactly at four easy-to-set orientations:</p>
 <div id="fig-orientations" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-orientations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -419,12 +436,12 @@ Figure&nbsp;2: The four calibration orientations. At each, the known gravity com
 </figure>
 </div>
 <p>The sensor output voltage is linear in acceleration, so as in Lab 02 a linear calibration</p>
-<p><span id="eq-accel-cal"><span class="math display">\[a = a_1 V + a_0 \tag{3}\]</span></span></p>
-<p>is appropriate — now mapping volts to m/s² instead of degrees. Four points spanning ±1 g are enough to pin down the line, and the fit-quality statistics are computed exactly as in Lab 02 (norm of residuals, <span class="math inline">\(s_{yx}\)</span>, 95% CI, <span class="math inline">\(S_{a_1}\)</span> — see Lab 02 Eqs. 7–9), just with different units.</p>
+<p><span id="eq-accel-cal"><span class="math display">\[a = -a_1 V + a_0 \tag{3}\]</span></span></p>
+<p>is appropriate, now mapping volts to <span class="math inline">\(m/s^2\)</span> instead of degrees. These four points spanning ±1 g are enough to pin down the fit line, and the fit-quality statistics are computed exactly as in Lab 02 (norm of residuals, <span class="math inline">\(s_{yx}\)</span>, 95% CI, <span class="math inline">\(S_{a_1}\)</span>), just with different units.</p>
 </section>
 <section id="from-gui-to-code-the-pydwf-device-model" class="level3" data-number="4.4">
 <h3 data-number="4.4" class="anchored" data-anchor-id="from-gui-to-code-the-pydwf-device-model"><span class="header-section-number">4.4</span> From GUI to Code: the pydwf Device Model</h3>
-<p><code>pydwf</code> exposes every WaveForms instrument as a Python object (see the quick-reference table above). Setting a sample rate in code, <code>ai.frequencySet(1000)</code>, does <em>exactly</em> what typing 1000 Hz into the GUI does — same instrument, same hardware, different interface. Because you drove these instruments by hand in Lab 02, none of this is magic; it is the same knobs, turned programmatically. One consequence: <strong>only one program can hold the device at a time</strong>, so WaveForms must be closed before a pydwf script runs (and vice versa).</p>
+<p><code>pydwf</code> exposes every WaveForms instrument as a Python object (see the quick-reference table above). Setting a sample rate in code, <code>ai.frequencySet(1000)</code>, does <em>exactly</em> what typing 1000 Hz into the GUI does — same instrument, same hardware, different interface. You drove these instruments via the WaveForms GUI by hand in Lab 02, so none of this is magic; it is the same knobs, turned programmatically. One consequence: <strong>only one program can talk to the ADS device at a time</strong>, so WaveForms must be closed before a pydwf script runs (and vice versa).</p>
 <div style="page-break-after: always;"></div>
 </section>
 </section>
@@ -434,10 +451,10 @@ Figure&nbsp;2: The four calibration orientations. At each, the known gravity com
 <div id="fig-accel-board" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-accel-board-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="figures/Accel_Board_Photo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: The MMA7361 accelerometer board mounted at the pendulum tip, with its 3-wire cable."><img src="figures/Accel_Board_Photo.png" class="img-fluid figure-img" style="width:70.0%"></a>
+<a href="figures/Accel_Board_Photo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: The accelerometer board mounted at the pendulum tip, with its 3-wire cable."><img src="figures/Accel_Board_Photo.png" class="img-fluid figure-img" style="width:70.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-accel-board-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: The MMA7361 accelerometer board mounted at the pendulum tip, with its 3-wire cable.
+Figure&nbsp;3: The accelerometer board mounted at the pendulum tip, with its 3-wire cable.
 </figcaption>
 </figure>
 </div>
@@ -452,6 +469,11 @@ Figure&nbsp;4: Both sensors wired to the ADS breadboard.
 </figure>
 </div>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 17%">
+<col style="width: 47%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Connection</th>

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-08: Thermocouples and First-Order Dynamic Response</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab08_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab08_files/libs/quarto-html/quarto.js"></script>
+<script src="lab08_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab08_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab08_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab08_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab08_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab08_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab08_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab08_files/libs/bootstrap/bootstrap-791ceca6b2ec3cae9ef2a359bbe8f8f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning Objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#extend-your-folder-structure" id="toc-extend-your-folder-structure" class="nav-link" data-scroll-target="#extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</a></li>
+  <li><a href="#read-the-background-section" id="toc-read-the-background-section" class="nav-link" data-scroll-target="#read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#python-quick-reference-new-this-lab" id="toc-python-quick-reference-new-this-lab" class="nav-link" data-scroll-target="#python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background"><span class="header-section-number">4</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#the-thermocouple-and-its-signal-chain" id="toc-the-thermocouple-and-its-signal-chain" class="nav-link" data-scroll-target="#the-thermocouple-and-its-signal-chain"><span class="header-section-number">4.1</span> The Thermocouple and Its Signal Chain</a></li>
+  <li><a href="#why-calibrate-a-pre-calibrated-chip" id="toc-why-calibrate-a-pre-calibrated-chip" class="nav-link" data-scroll-target="#why-calibrate-a-pre-calibrated-chip"><span class="header-section-number">4.2</span> Why Calibrate a Pre-Calibrated Chip?</a></li>
+  <li><a href="#first-order-dynamic-response" id="toc-first-order-dynamic-response" class="nav-link" data-scroll-target="#first-order-dynamic-response"><span class="header-section-number">4.3</span> First-Order Dynamic Response</a></li>
+  <li><a href="#two-ways-to-measure-tau" id="toc-two-ways-to-measure-tau" class="nav-link" data-scroll-target="#two-ways-to-measure-tau"><span class="header-section-number">4.4</span> Two Ways to Measure <span class="math inline">\(\tau\)</span></a></li>
+  </ul></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">5</span> Part-1: Bath and Circuit Setup</a></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">6</span> Part-2: Watch It Live (GUI First)</a></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">7</span> Part-3: Calibrate the Chain (Two Points)</a></li>
+  <li><a href="#sec-part-4" id="toc-sec-part-4" class="nav-link" data-scroll-target="#sec-part-4"><span class="header-section-number">8</span> Part-4: Three Plunges</a></li>
+  <li><a href="#sec-part-5" id="toc-sec-part-5" class="nav-link" data-scroll-target="#sec-part-5"><span class="header-section-number">9</span> Part-5: Time-Shift and the 63.2% Method</a>
+  <ul class="collapse">
+  <li><a href="#example-result" id="toc-example-result" class="nav-link" data-scroll-target="#example-result"><span class="header-section-number">9.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-6" id="toc-sec-part-6" class="nav-link" data-scroll-target="#sec-part-6"><span class="header-section-number">10</span> Part-6: The Error-Fraction Method</a>
+  <ul class="collapse">
+  <li><a href="#example-result-1" id="toc-example-result-1" class="nav-link" data-scroll-target="#example-result-1"><span class="header-section-number">10.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#submission-items" id="toc-submission-items" class="nav-link" data-scroll-target="#submission-items"><span class="header-section-number">11.1</span> Submission Items</a></li>
+  <li><a href="#step-response-plot-requirements" id="toc-step-response-plot-requirements" class="nav-link" data-scroll-target="#step-response-plot-requirements"><span class="header-section-number">11.2</span> Step Response Plot Requirements</a></li>
+  <li><a href="#error-fraction-plot-requirements" id="toc-error-fraction-plot-requirements" class="nav-link" data-scroll-target="#error-fraction-plot-requirements"><span class="header-section-number">11.3</span> Error Fraction Plot Requirements</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">11.4</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave" id="toc-before-you-leave" class="nav-link" data-scroll-target="#before-you-leave"><span class="header-section-number">12</span> Before You Leave</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lab08.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-08: Thermocouples and First-Order Dynamic Response</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning Objective</h2>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li>Measure temperature with a <strong>K-type thermocouple</strong> and understand the signal chain that makes its microvolt output usable (Seebeck effect → cold-junction compensation → amplification → buffering)</li>
+<li>Perform a <strong>two-point calibration</strong> of the complete measurement chain against a liquid-in-glass thermometer, and compare it with the amplifier datasheet</li>
+<li>Capture the thermocouple’s <strong>step response</strong> by plunging it into a near-boiling bath — three repeated runs at 1000 Hz</li>
+<li>Extract the <strong>time constant</strong> <span class="math inline">\(\tau\)</span> two independent ways: the <strong>63.2% method</strong> and the <strong>error-fraction (log-linear) method</strong>, and reconcile them</li>
+<li>Use <strong>log-transform linearization</strong> to turn an exponential into a <code>polyfit</code> problem — one of the oldest and best tricks in data analysis</li>
+<li>Judge, from your own <span class="math inline">\(\tau\)</span>, what sample rate a dynamic measurement <em>needs</em> — Lab 04’s lesson, now with a sensor you characterized yourself</li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="hardware-instruments" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
+<ul>
+<li>What physical effect makes a thermocouple produce voltage, and why is <em>cold-junction compensation</em> required?</li>
+<li>What does the AD8495 output at 25 °C? (Datasheet: <span class="math inline">\(V = 1.25 + 0.005\,T\)</span>.)</li>
+<li>What does the voltage follower do, and — with the ADS’s 1 MΩ input — was it strictly necessary here?</li>
+<li>Why must only the bead enter the water?</li>
+<li>Why do we calibrate the <em>whole chain</em> against the LIGT instead of trusting the datasheet?</li>
+</ul>
+</section>
+<section id="programming" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.2</span> Programming</h4>
+<ul>
+<li>Why does <code>T[10:] - T[:-10] &gt; 5.0</code> detect the plunge while single-sample <code>np.diff</code> thresholds misfire on noise?</li>
+<li>How does the cool-down gate (<code>while True</code> + a quick capture + <code>break</code>) know when the bead is ready for the next run?</li>
+<li>What does <code>np.log</code> of the error fraction accomplish, and what shape should the result have?</li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>A first-order sensor reaches what fraction of a step at <span class="math inline">\(t = \tau\)</span>? At <span class="math inline">\(t = 5\tau\)</span>?</li>
+<li>Why should <span class="math inline">\(T_{ss}\)</span> in the error-fraction method come from the LIGT rather than the tail of your data?</li>
+<li>Why does the <span class="math inline">\(\ln\Gamma\)</span> scatter grow at late times?</li>
+<li>Your <span class="math inline">\(\tau\)</span> is ~50 ms. Defend a sample-rate choice for measuring this sensor’s transient.</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section.</p>
+<section id="extend-your-folder-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</h3>
+<p>Add a Lab_08 folder set to your <code>ME3300</code> folder:</p>
+<pre class="text"><code>ME3300/
+├── Lab_01/ ... Lab_06/
+├── Lab_08/
+│   ├── Code/
+│   │   ├── Lab08_Prelab_Walkthrough.ipynb
+│   │   └── FirstName_LastName_Lab08.ipynb
+│   ├── Data/
+│   └── Figures/</code></pre>
+<p>No new packages are needed this week.</p>
+</section>
+<section id="read-the-background-section" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</h3>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It covers the thermocouple signal chain, derives the first-order step response, and sets up both time-constant methods.</p>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Download <code>Lab08_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_08/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> skills on simulated first-order data:</p>
+<ul>
+<li>generating and recognizing <strong>exponential step responses</strong> (<code>np.exp</code>)</li>
+<li>the <strong>63.2% method</strong> on noisy data</li>
+<li><strong>log-transform linearization</strong>: <code>np.log</code> of the error fraction, fit with <code>polyfit</code></li>
+<li>how the choice of <strong>fit range</strong> (the <span class="math inline">\(\Gamma\)</span> mask) moves the answer</li>
+<li><strong>gap differencing</strong> (<code>T[10:] - T[:-10]</code>) for robust step detection</li>
+</ul>
+<p>As always, working through the prelab will allow you to answer the <strong>checkpoint</strong> questions in the <strong>Prelab quiz on Canvas</strong> before your lab session.</p>
+</section>
+<section id="python-quick-reference-new-this-lab" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</h3>
+<div id="tbl-quickref" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: New Python syntax and functions introduced in Lab 08
+</figcaption>
+<div aria-describedby="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Exponential</td>
+<td><code>np.exp(-t / tau)</code></td>
+</tr>
+<tr class="even">
+<td>Natural log (elementwise)</td>
+<td><code>np.log(Gamma)</code></td>
+</tr>
+<tr class="odd">
+<td>Rise across a 10-sample gap</td>
+<td><code>rise10 = T[10:] - T[:-10]</code></td>
+</tr>
+<tr class="even">
+<td>First index passing a test</td>
+<td><code>np.argmax(rise10 &gt; 5.0)</code> (Lab 02)</td>
+</tr>
+<tr class="odd">
+<td>Error fraction</td>
+<td><code>Gamma = (Tss - T) / (Tss - T0)</code></td>
+</tr>
+<tr class="even">
+<td>Keep only the exponential range</td>
+<td><code>valid = (Gamma &gt; 0.02) &amp; (Gamma &lt; 0.95)</code> (Lab 05 masks)</td>
+</tr>
+<tr class="odd">
+<td>Wait for a condition (cool-down)</td>
+<td><code>while True:</code> + quick capture + <code>break</code> (Lab 04)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>Until now, every quantity you measured held still while you measured it. This week’s quantity <em>moves</em>: you will plunge a thermocouple from room-temperature air into near-boiling water and record the fastest event this course has asked you to capture — a temperature step that is 95% finished in a quarter of a second.</p>
+<p>The scientific payload is <strong>dynamic response</strong>. No sensor reports a change instantly; the thermocouple bead must physically <em>warm up</em>, and the physics of that warming (a heat balance on the bead) makes it a <strong>first-order system</strong> — the simplest and most common dynamic model in measurement engineering. First-order behavior is characterized by a single number, the <strong>time constant</strong> <span class="math inline">\(\tau\)</span>, and this lab measures it twice, by two methods with very different personalities: a quick graphical read-off (the 63.2% method), and a full-data regression built on a log transform (the error-fraction method). The second method smuggles in a technique you will reuse for the rest of your career: <strong>linearizing</strong> a nonlinear model so that ordinary least squares — your trusty <code>polyfit</code> — can fit it.</p>
+<p>The lab also completes a running theme. The signal chain here is the whole course in one circuit: a sensor producing <em>microvolts</em> (the thermocouple), a specialized amplifier fixing its famous reference-junction problem (the AD8495), a <strong>voltage follower</strong> you build from Lab 05’s op-amp golden rules, a <strong>two-point calibration</strong> of the entire chain against a trusted reference (the liquid-in-glass thermometer — hereafter LIGT), and a <strong>sample-rate decision</strong> that your own Lab 04 aliasing experiment now equips you to defend. When your measured <span class="math inline">\(\tau\)</span> turns out to be tens of milliseconds, ask yourself what the draft plan of “log at 10 Hz” would have captured.</p>
+<p><strong>Safety first:</strong> this lab involves boiling water and electronics on one bench. Read the Part-1 safety notes before touching anything, and start the hot plate the moment you arrive — physics won’t hurry, and the water needs to be simmering before Part-3.</p>
+</section>
+<section id="sec-background" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-background"><span class="header-section-number">4</span> Background</h2>
+<section id="the-thermocouple-and-its-signal-chain" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-thermocouple-and-its-signal-chain"><span class="header-section-number">4.1</span> The Thermocouple and Its Signal Chain</h3>
+<p>Join two dissimilar metal wires and the junction develops a small voltage that depends on temperature — the <strong>Seebeck effect</strong>. A K-type thermocouple (chromel–alumel) produces about 41 µV/°C: robust, fast, cheap, usable over a huge range, and <em>far</em> too small to read directly. Worse, the connection between the thermocouple wires and your copper circuit forms a <em>second</em> junction that generates its own opposing voltage — historically fixed by holding that “cold junction” in ice water. The <strong>AD8495</strong> solves both problems on one chip: it amplifies the K-type signal and adds an electronic <strong>cold-junction compensation</strong> measured at the chip itself. Its output (per the Adafruit breakout’s datasheet) is:</p>
+<p><span id="eq-ad8495"><span class="math display">\[V = 1.25 + 0.005 \, T \qquad \Longleftrightarrow \qquad T = 200\,V - 250 \tag{1}\]</span></span></p>
+<p>with <span class="math inline">\(T\)</span> in °C: 5 mV/°C riding on a 1.25 V offset (so temperatures below 0 °C stay above ground on a single 5 V supply).</p>
+<p>Between the AD8495 and your DAQ sits a <strong>voltage follower</strong> (<a href="#fig-signal-chain" class="quarto-xref">Figure&nbsp;1</a>) — Lab 05’s op-amp with its output wired straight to its inverting input. The golden rules make short work of it: <span class="math inline">\(V_- = V_+\)</span> and <span class="math inline">\(V_- = V_{out}\)</span>, so <span class="math inline">\(V_{out} = V_{in}\)</span>, gain of exactly 1. Its job is not gain but <strong>isolation</strong>: the follower’s input draws essentially no current from the amplifier, while its output happily drives whatever is downstream. Honest note: the ADS scope input is 1 MΩ and the AD8495 could drive it directly — the follower here is a <em>lesson</em> more than a necessity (Q2 asks you to weigh in). It does add a few millivolts of offset (every op-amp does), and Part-3 shows why that doesn’t matter.</p>
+<div id="fig-signal-chain" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-signal-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/TC_Signal_Chain.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signal-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The Lab 08 signal chain: bead → AD8495 (amplify + cold-junction compensate) → voltage follower (isolate) → Scope.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="why-calibrate-a-pre-calibrated-chip" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="why-calibrate-a-pre-calibrated-chip"><span class="header-section-number">4.2</span> Why Calibrate a Pre-Calibrated Chip?</h3>
+<p><a href="#eq-ad8495" class="quarto-xref">Equation&nbsp;1</a> is the <em>chip’s</em> calibration. Your measurement chain is the chip <strong>plus</strong> the follower’s offset <strong>plus</strong> any supply and wiring imperfections. A <strong>two-point calibration</strong> against the LIGT — one reading in room air, one in the near-boiling bath — pins down the chain’s actual line <span class="math inline">\(T = a_1 V + a_0\)</span>. Expect <span class="math inline">\(a_1\)</span> within a few percent of the datasheet’s 200 °C/V, and <span class="math inline">\(a_0\)</span> a degree or so off <span class="math inline">\(-250\)</span> — that offset <em>is</em> the voltage follower, measured. (Two points determine the line exactly, so there are no residuals and no fit statistics — recall Lab 03’s four-point calibration left only 2 degrees of freedom; two points leave zero. Q5 asks what a third point would buy.) One subtlety: water here does not boil at 100 °C — at this elevation it boils near <strong>97 °C</strong>, and the LIGT, not an assumption, is your reference.</p>
+</section>
+<section id="first-order-dynamic-response" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="first-order-dynamic-response"><span class="header-section-number">4.3</span> First-Order Dynamic Response</h3>
+<p>Dunk the bead (mass <span class="math inline">\(m\)</span>, specific heat <span class="math inline">\(c_p\)</span>, surface area <span class="math inline">\(A\)</span>) into water at <span class="math inline">\(T_{ss}\)</span>. Newton’s law of cooling gives the heat balance:</p>
+<p><span id="eq-ode"><span class="math display">\[m c_p \frac{dT}{dt} = h A \,(T_{ss} - T) \tag{2}\]</span></span></p>
+<p>— a first-order ODE (one energy-storage element, hence <em>first-order system</em>). Its step response is the exponential approach:</p>
+<p><span id="eq-step"><span class="math display">\[T(t) = T_{ss} + (T_0 - T_{ss})\, e^{-t/\tau}, \qquad \tau = \frac{m c_p}{h A} \tag{3}\]</span></span></p>
+<p><a href="#fig-anatomy" class="quarto-xref">Figure&nbsp;2</a> shows the anatomy. At <span class="math inline">\(t = \tau\)</span> the response has covered <span class="math inline">\(1 - e^{-1} = 63.2\%\)</span> of the step; by <span class="math inline">\(5\tau\)</span> it is within 1% (settled). And <a href="#eq-step" class="quarto-xref">Equation&nbsp;3</a>’s <span class="math inline">\(\tau\)</span> formula predicts the physics you should expect: a smaller bead (less <span class="math inline">\(m\)</span>, relatively more <span class="math inline">\(A\)</span>) responds faster, and a medium with better heat transfer (stirred water ≫ still air) shrinks <span class="math inline">\(\tau\)</span> dramatically.</p>
+<div id="fig-anatomy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/FirstOrder_Response_Anatomy.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Anatomy of a first-order step response: 63.2% at <span class="math inline">\(t=\tau\)</span>, the initial-slope construction, and settling at <span class="math inline">\(5\tau\)</span>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="two-ways-to-measure-tau" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="two-ways-to-measure-tau"><span class="header-section-number">4.4</span> Two Ways to Measure <span class="math inline">\(\tau\)</span></h3>
+<p><strong>Method 1 — the 63.2% read-off.</strong> Compute the crossing level directly from <a href="#eq-step" class="quarto-xref">Equation&nbsp;3</a>:</p>
+<p><span id="eq-t63"><span class="math display">\[T(\tau) = T_0 + 0.632\,(T_{ss} - T_0) \tag{4}\]</span></span></p>
+<p>and find the time at which the data first crosses it. Fast and intuitive — but it uses exactly <em>one</em> point of your 5000, and inherits that point’s noise.</p>
+<p><strong>Method 2 — the error fraction.</strong> Normalize the remaining “distance to go”:</p>
+<p><span id="eq-gamma"><span class="math display">\[\Gamma(t) = \frac{T_{ss} - T(t)}{T_{ss} - T_0} = e^{-t/\tau} \quad\Longrightarrow\quad \ln \Gamma = -\frac{t}{\tau} \tag{5}\]</span></span></p>
+<p>Taking the log turns the exponential into a <strong>straight line through the origin with slope <span class="math inline">\(-1/\tau\)</span></strong> — which <code>polyfit</code> fits using <em>every</em> point, with the full Lab 02 statistics attached. The transform also hands you a diagnostic for free: if <span class="math inline">\(\ln\Gamma\)</span> vs.&nbsp;<span class="math inline">\(t\)</span> is straight, the sensor really is first-order; curvature is the model complaining. Two cautions built into the method: use the LIGT value for <span class="math inline">\(T_{ss}\)</span> (the data’s tail is noisy and slightly biased), and fit only the range where <span class="math inline">\(\Gamma\)</span> is meaningfully between 0 and 1 — near the end, <span class="math inline">\(T_{ss} - T(t)\)</span> is noise divided by noise, and its log scatters wildly (you will see this on your plot; it is normal and instructive).</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">5</span> Part-1: Bath and Circuit Setup</h2>
+<div class="callout callout-style-default callout-warning callout-titled" title="Hot water + electronics">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hot water + electronics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Boiling water, glass, and a hot plate share your bench today. Do not move the hot plate or beaker — ask a TA. Keep all wiring, the ADS, and your laptop on the dry side of the station. Only the thermocouple <strong>bead</strong> enters the water; leads, breadboard, and hands stay out. If anything spills, step back and call a TA before touching the electronics.</p>
+</div>
+</div>
+<ol type="1">
+<li><strong>Immediately</strong>: set up the bath per <a href="#fig-bath" class="quarto-xref">Figure&nbsp;3</a> — beaker on the hot plate, stirrer in, LIGT hung from the stand at its calibration depth — and turn the heat on full. While it heats, build the circuit.</li>
+<li>Once boiling, reduce to a <strong>stable simmer</strong> with the stirrer on low. (Vigorous boiling splashes and steams; you want steady, stirred, near-boiling water.)</li>
+<li>Build the signal chain per <a href="#fig-signal-chain" class="quarto-xref">Figure&nbsp;1</a> and the photo in <a href="#fig-tc-build" class="quarto-xref">Figure&nbsp;4</a>: AD8495 breakout — <strong>Vin → the ADS 5 V switch</strong>, GND → GND, <strong>OUT → LM358 pin 3 (+IN)</strong>; follower feedback — <strong>pin 1 (OUT) wired to pin 2 (−IN)</strong>; LM358 powered from ±12 V (pins 8 and 4 — pin 4 is <strong>V−</strong>, Lab 05’s warning stands); follower output → <strong>Scope 1+</strong> (1− → GND).</li>
+<li>Power up (5 V switch; ±12 V via Supplies) and verify with the DMM: the AD8495 OUT should read near <span class="math inline">\(1.25 + 0.005\,T_{room}\)</span> (about 1.36 V in a 21 °C room), and the follower output should match its input to within a few millivolts.</li>
+</ol>
+<div id="fig-bath" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bath-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Bath_Setup_Photo.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bath-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The heated bath station.
+</figcaption>
+</figure>
+</div>
+<div id="fig-tc-build" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tc-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/TC_Circuit_Build_ADS.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tc-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The signal chain on the breadboard.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q1.</strong> Record the DMM reading at the AD8495 output and the LIGT room temperature. Does the reading match <a href="#eq-ad8495" class="quarto-xref">Equation&nbsp;1</a>? How many °C does any discrepancy correspond to?</p>
+<p><strong>Q2.</strong> Measure the follower’s input and output with the DMM and record the difference. Given the ADS scope’s 1 MΩ input, is the follower <em>strictly necessary</em> in this chain? Name one downstream device (from earlier labs or elsewhere) for which it <em>would</em> be.</p>
+</div>
+</div>
+</section>
+<section id="sec-part-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">6</span> Part-2: Watch It Live (GUI First)</h2>
+<ol type="1">
+<li>Open <strong>WaveForms</strong> → <strong>Scope</strong>, Channel 1, range ±5 V. The trace should sit at the room-temperature level.</li>
+<li>Pinch the bead between two fingers and watch the trace climb toward body temperature; compare <a href="#fig-pinch" class="quarto-xref">Figure&nbsp;5</a>. Release and watch it fall.</li>
+<li>Now the preview of the main event: <strong>briefly dip just the bead</strong> into the bath and pull it out. Watch how <em>violently fast</em> the trace moves compared to the finger pinch.</li>
+<li>Close WaveForms fully.</li>
+</ol>
+<div id="fig-pinch" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pinch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Scope_Pinch_Check.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pinch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: The live check: room level, then the finger-pinch response.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q3.</strong> Estimate, from the live trace, roughly how long the dip response took — tenths of a second? seconds? Now defend the manual’s choice of a <strong>1000 Hz</strong> sample rate for Part-4 using Lab 04’s vocabulary. What would a 10 Hz log of this event look like?</p>
+</div>
+</div>
+</section>
+<section id="sec-part-3" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">7</span> Part-3: Calibrate the Chain (Two Points)</h2>
+<p>Open <code>FirstName_LastName_Lab08.ipynb</code> (starter on Canvas). Two averaged captures, each paired with a LIGT reading you take at the same moment:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dwfpy <span class="im">as</span> dwf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>fs, duration <span class="op">=</span> <span class="dv">50</span>, <span class="fl">10.0</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    supplies <span class="op">=</span> device.analog_io              <span class="co"># ±12 V for the follower</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="fl">12.0</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="op">-</span><span class="fl">12.0</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    supplies.master_enable <span class="op">=</span> <span class="va">True</span>            <span class="co"># (AD8495 runs off the 5 V switch)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    scope <span class="op">=</span> device.analog_input</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name <span class="kw">in</span> [<span class="st">'Cal_RoomAir'</span>, <span class="st">'Cal_Boiling'</span>]:</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: bead in position, LIGT read and logged? Enter..."</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        volts  <span class="op">=</span> scope[<span class="st">'ch1'</span>].get_data()</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        time_s <span class="op">=</span> np.arange(n) <span class="op">/</span> fs</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        np.savetxt(<span class="ss">f'../Data/</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.csv'</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                   np.column_stack([time_s, volts]),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                   header<span class="op">=</span><span class="st">'Time (s),Channel 1 (V)'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: mean = </span><span class="sc">{</span>volts<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For the <code>Cal_RoomAir</code> capture, hold the bead in still air beside the LIGT (away from the hot plate). For <code>Cal_Boiling</code>, submerge the bead near the LIGT bulb in the stirred bath — steady hands for ten seconds. Then the calibration itself is two-point algebra:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LIGT readings (typed from the logbook)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>T_air  <span class="op">=</span> <span class="fl">21.4</span>      <span class="co"># C — room air</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>T_boil <span class="op">=</span> <span class="fl">97.4</span>      <span class="co"># C — near-boiling bath (elevation-corrected!)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>v_air  <span class="op">=</span> np.loadtxt(<span class="st">'../Data/Cal_RoomAir.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)[:, <span class="dv">1</span>].mean()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>v_boil <span class="op">=</span> np.loadtxt(<span class="st">'../Data/Cal_Boiling.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)[:, <span class="dv">1</span>].mean()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Two points define the line exactly: T = a1*V + a0</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>a1 <span class="op">=</span> (T_boil <span class="op">-</span> T_air) <span class="op">/</span> (v_boil <span class="op">-</span> v_air)     <span class="co"># sensitivity (C/V)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>a0 <span class="op">=</span> T_air <span class="op">-</span> a1 <span class="op">*</span> v_air                      <span class="co"># offset (C)</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"v_air = </span><span class="sc">{</span>v_air<span class="sc">:.4f}</span><span class="ss"> V, v_boil = </span><span class="sc">{</span>v_boil<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"calibration: T = </span><span class="sc">{</span>a1<span class="sc">:.2f}</span><span class="ss"> * V + (</span><span class="sc">{</span>a0<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"datasheet ideal: T = 200.00 * V + (-250.00)   [T = (V - 1.25)/0.005]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q4.</strong> Record both LIGT temperatures, both mean voltages, and your <span class="math inline">\(a_1\)</span>, <span class="math inline">\(a_0\)</span>. Compare with the datasheet line: how far off is the sensitivity (%)? The offset (°C)? Which circuit component explains the offset discrepancy — and why doesn’t it matter now that you’ve calibrated?</p>
+<p><strong>Q5.</strong> Two points leave zero degrees of freedom — the line fits perfectly <em>by construction</em>, so the calibration carries no self-check. What specifically would a third point (say, an ice bath at 0 °C) let you test?</p>
+</div>
+</div>
+</section>
+<section id="sec-part-4" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-part-4"><span class="header-section-number">8</span> Part-4: Three Plunges</h2>
+<p>The main event. Each run: the script confirms the bead has cooled, you position the bead in air beside the bath, press Enter, and <strong>immediately plunge the bead into the stirred bath</strong> — the capture runs 5 s at 1000 Hz.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fs, duration <span class="op">=</span> <span class="dv">1000</span>, <span class="fl">5.0</span>        <span class="co"># fast! tau is only ~50 ms</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    supplies <span class="op">=</span> device.analog_io</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="fl">12.0</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="op">-</span><span class="fl">12.0</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    supplies.master_enable <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    scope <span class="op">=</span> device.analog_input</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> run <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]:</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cool-down gate: wait until the bead is back near room temp</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            scope.single(sample_rate<span class="op">=</span><span class="dv">100</span>, buffer_size<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                         configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>            T_now <span class="op">=</span> a1 <span class="op">*</span> scope[<span class="st">'ch1'</span>].get_data().mean() <span class="op">+</span> a0</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> T_now <span class="op">&lt;</span> T_air <span class="op">+</span> <span class="fl">3.0</span>:</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"  bead still at </span><span class="sc">{</span>T_now<span class="sc">:.1f}</span><span class="ss"> C — keep cooling..."</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            time.sleep(<span class="dv">5</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span>(<span class="ss">f"Run </span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">: bead in air beside the bath. Press Enter, "</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>              <span class="st">"then IMMEDIATELY plunge (capture runs 5 s)..."</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        volts  <span class="op">=</span> scope[<span class="st">'ch1'</span>].get_data()</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        time_s <span class="op">=</span> np.arange(n) <span class="op">/</span> fs</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        np.savetxt(<span class="ss">f'../Data/Plunge_</span><span class="sc">{</span>run<span class="sc">:02d}</span><span class="ss">.csv'</span>,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>                   np.column_stack([time_s, volts]),</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>                   header<span class="op">=</span><span class="st">'Time (s),Channel 1 (V)'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  saved Plunge_</span><span class="sc">{</span>run<span class="sc">:02d}</span><span class="ss">.csv "</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"(end T = </span><span class="sc">{</span>a1<span class="op">*</span>volts[<span class="op">-</span><span class="dv">500</span>:]<span class="sc">.</span>mean()<span class="op">+</span>a0<span class="sc">:.1f}</span><span class="ss"> C)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <strong>cool-down gate</strong> is Lab 04’s <code>while True</code> + <code>break</code> doing real work: a quick 1-second capture reads the current bead temperature <em>through your own calibration</em>, and the loop refuses to proceed until the bead is within 3 °C of room temperature — automating the old “wait, is it cool yet?” guesswork. Record the LIGT bath temperature at each run.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Common mistakes (read before your first plunge)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common mistakes (read before your first plunge)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Judge each run by its plot immediately (a quick <code>plt.plot</code> cell after each capture is smart):</p>
+<ul>
+<li><strong>A hump before the main rise</strong> — the bead crossed the <em>steam</em> on its way in. Small humps are tolerable (your detector will ignore them; keep the entry quick and from the side). A large slow ramp before the step means too much steam: ask a TA to top up the water.</li>
+<li><strong>A ragged, stepped rise</strong> — the bead wasn’t fully submerged, or touched the beaker wall. Keep the bead a couple of centimeters deep, mid-water, not touching glass.</li>
+<li><strong>A run that starts warm</strong> (initial level well above room) — the bead didn’t finish cooling; the gate prevents this if you let it.</li>
+</ul>
+<p>Repeat any run that fails — three <em>clean</em> runs is the goal, not three attempts.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q6.</strong> Record the LIGT bath temperature at each run and note anything unusual you saw in each capture (humps, ragged sections). Which runs are keepers?</p>
+<p><strong>Q7.</strong> Each capture is 5000 samples for an event that’s over in ~0.25 s. Why record 5 s at all — what do the long pre-step and post-step stretches provide for the analysis in Parts 5–6?</p>
+</div>
+</div>
+</section>
+<section id="sec-part-5" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-part-5"><span class="header-section-number">9</span> Part-5: Time-Shift and the 63.2% Method</h2>
+<p>Each run’s plunge happened at a different (human-timed) moment, so first find it, precisely, in each record:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_run(fname):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Load a plunge capture; return shifted (t, T), T0, Tss, tau63."""</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> np.loadtxt(fname, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    T_full <span class="op">=</span> a1 <span class="op">*</span> d[:, <span class="dv">1</span>] <span class="op">+</span> a0               <span class="co"># volts -&gt; C via YOUR calibration</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    t_full <span class="op">=</span> d[:, <span class="dv">0</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    T0 <span class="op">=</span> T_full[:<span class="dv">1000</span>].mean()                <span class="co"># early window: pre-plunge, pre-steam</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Detect the plunge: a &gt;5 C rise across 10 samples (10 ms) can only be</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the step — noise (~0.2 C) and steam preheat (~1.5 C, slow) can't do it.</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    rise10 <span class="op">=</span> T_full[<span class="dv">10</span>:] <span class="op">-</span> T_full[:<span class="op">-</span><span class="dv">10</span>]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> np.argmax(rise10 <span class="op">&gt;</span> <span class="fl">5.0</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">+=</span> np.argmax(T_full[idx:idx <span class="op">+</span> <span class="dv">10</span>] <span class="op">&gt;</span> T0 <span class="op">+</span> <span class="fl">1.0</span>)   <span class="co"># refine: the takeoff</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> t_full[idx:] <span class="op">-</span> t_full[idx]           <span class="co"># t = 0 at the plunge</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> T_full[idx:]</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    Tss <span class="op">=</span> T[<span class="op">-</span><span class="dv">1000</span>:].mean()                   <span class="co"># settled end of record</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    T63 <span class="op">=</span> T0 <span class="op">+</span> <span class="fl">0.632</span> <span class="op">*</span> (Tss <span class="op">-</span> T0)            <span class="co"># Eq. 4</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    tau63 <span class="op">=</span> t[np.argmax(T <span class="op">&gt;=</span> T63)]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> t, T, T0, Tss, tau63</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>runs <span class="op">=</span> [analyze_run(<span class="ss">f'../Data/Plunge_</span><span class="sc">{</span>i<span class="sc">:02d}</span><span class="ss">.csv'</span>) <span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]]</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>taus <span class="op">=</span> np.array([r[<span class="dv">4</span>] <span class="cf">for</span> r <span class="kw">in</span> runs])</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"run | T0 (C) | Tss (C) | tau63 (ms)"</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (t, T, T0, Tss, tau63) <span class="kw">in</span> <span class="bu">enumerate</span>(runs, start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> | </span><span class="sc">{</span>T0<span class="sc">:6.1f}</span><span class="ss"> | </span><span class="sc">{</span>Tss<span class="sc">:6.1f}</span><span class="ss">  |  </span><span class="sc">{</span>tau63<span class="op">*</span><span class="dv">1000</span><span class="sc">:6.1f}</span><span class="ss">"</span>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">mean tau63 = </span><span class="sc">{</span>taus<span class="sc">.</span>mean()<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ms"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The detector deserves a close look, because it is a <em>designed</em> detector in the Lab 02/03 tradition:</p>
+<ul>
+<li><strong><code>T_full[10:] - T_full[:-10]</code></strong> — Lab 06’s shifted-slices trick, now as <strong>gap differencing</strong>: the rise across a 10-sample (10 ms) window. During the step the bead climbs ~15 °C in 10 ms; sensor noise (~0.2 °C) and the slow steam preheat (~1.5 °C over 300 ms) cannot come close to the 5 °C threshold. Compare a naive single-sample <code>np.diff(T) &gt; 0.5</code>: with 0.2 °C of noise on <em>each</em> sample, that threshold false-fires somewhere in 5000 samples nearly every run. Widening the window grows the signal while the noise stays put — the same design-against-noise lesson as Lab 02’s release detector, one tool stronger.</li>
+<li>The <strong>refine</strong> line then locates the takeoff <em>within</em> the detected window (first sample 1 °C above <span class="math inline">\(T_0\)</span>), so <span class="math inline">\(t = 0\)</span> lands within about a millisecond of the true plunge.</li>
+<li>The <strong>list comprehension</strong> <code>[analyze_run(...) for i in [1, 2, 3]]</code> runs the whole analysis on all three files in one line — <code>def</code> once, loop the calls (Lab 05’s pattern, compacted).</li>
+</ul>
+<p>Build the three-run figure to match <a href="#fig-example-step" class="quarto-xref">Figure&nbsp;6</a> — all runs time-shifted to <span class="math inline">\(t = 0\)</span>, focused on the transient, each run’s <span class="math inline">\(\tau_{63}\)</span> in the legend, and the first-order model at the mean <span class="math inline">\(\tau\)</span> overlaid. Format per Post-Lab; save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q8.</strong> Copy the printed <span class="math inline">\(\tau\)</span> table. How repeatable are your three time constants (spread as % of the mean)? What differs physically between runs — plunge speed, depth, path through the steam?</p>
+<p><strong>Q9.</strong> Run 2’s capture (if you caught steam) shows a small hump before the step. Explain, with numbers, why the gap-difference detector didn’t fire on it.</p>
+</div>
+</div>
+<section id="example-result" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="example-result"><span class="header-section-number">9.1</span> Example Result</h3>
+<div id="fig-example-step" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-step-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab08_StepResponse.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-step-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Example three-run step response (made-up data). Your values will differ, but formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="sec-part-6" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-part-6"><span class="header-section-number">10</span> Part-6: The Error-Fraction Method</h2>
+<p>Pick your cleanest run. The error fraction (<a href="#eq-gamma" class="quarto-xref">Equation&nbsp;5</a>) uses <strong>every</strong> sample of the transient, and the log transform makes the fit linear:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>t, T, T0, Tss_data, tau63 <span class="op">=</span> runs[<span class="dv">0</span>]          <span class="co"># best run</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>Tss <span class="op">=</span> T_boil                                  <span class="co"># LIGT value — the reference</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>Gamma <span class="op">=</span> (Tss <span class="op">-</span> T) <span class="op">/</span> (Tss <span class="op">-</span> T0)                <span class="co"># error fraction (Eq. 5)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>valid <span class="op">=</span> (Gamma <span class="op">&gt;</span> <span class="fl">0.02</span>) <span class="op">&amp;</span> (Gamma <span class="op">&lt;</span> <span class="fl">0.95</span>)       <span class="co"># the exponential range only</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>t_v      <span class="op">=</span> t[valid]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ln_Gamma <span class="op">=</span> np.log(Gamma[valid])</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>coeffs <span class="op">=</span> np.polyfit(t_v, ln_Gamma, <span class="dv">1</span>)         <span class="co"># ln(Gamma) = -t/tau</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>slope  <span class="op">=</span> coeffs[<span class="dv">0</span>]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>tau_ef <span class="op">=</span> <span class="op">-</span><span class="fl">1.0</span> <span class="op">/</span> slope</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>N      <span class="op">=</span> np.count_nonzero(valid)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>nu     <span class="op">=</span> N <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>resid  <span class="op">=</span> ln_Gamma <span class="op">-</span> np.polyval(coeffs, t_v)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>s_yx   <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(resid<span class="op">**</span><span class="dv">2</span>)) <span class="op">/</span> np.sqrt(nu)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>S_m    <span class="op">=</span> s_yx <span class="op">/</span> np.sqrt(np.<span class="bu">sum</span>((t_v <span class="op">-</span> t_v.mean())<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>CI_m   <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>, df<span class="op">=</span>nu) <span class="op">*</span> S_m</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># propagate slope CI into tau (tau = -1/slope -&gt; u_tau/tau = u_slope/|slope|)</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>CI_tau <span class="op">=</span> tau_ef <span class="op">*</span> CI_m <span class="op">/</span> <span class="bu">abs</span>(slope)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"slope = </span><span class="sc">{</span>slope<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span>CI_m<span class="sc">:.3f}</span><span class="ss"> 1/s (95% CI), N = </span><span class="sc">{</span>N<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"tau (error fraction) = </span><span class="sc">{</span>tau_ef<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ± </span><span class="sc">{</span>CI_tau<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"tau (63.2%, same run) = </span><span class="sc">{</span>tau63<span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> ms"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><strong><code>np.log</code></strong> is the whole linearization: after it, the exponential model is a line and everything you know about line fitting — including all the Lab 02 statistics — applies verbatim. This transform-then-fit move works whenever a model can be algebraically straightened (exponentials, power laws via <code>np.log10</code> of both axes, Arrhenius plots…); keep it in your pocket.</li>
+<li><strong>The mask matters.</strong> <code>Gamma &gt; 0.02</code> cuts the region where <span class="math inline">\(T_{ss} - T\)</span> is smaller than the noise (its log is garbage — you’ll see the scatter fan out on your plot right at the cut); <code>Gamma &lt; 0.95</code> trims the entry transient. Q11 has you move these limits and watch the fitted <span class="math inline">\(\tau\)</span> respond — the same fit-what-the-model-describes discipline as Lab 05’s saturation mask.</li>
+<li><strong>The last two lines are Lab 06 in action</strong>: the slope’s CI propagates into <span class="math inline">\(\tau\)</span>’s CI by the derivative rule for <span class="math inline">\(\tau = -1/\text{slope}\)</span> (relative uncertainties are equal for a <span class="math inline">\(x^{-1}\)</span> relationship — a one-variable power rule).</li>
+</ul>
+<p>Build the error-fraction figure to match <a href="#fig-example-gamma" class="quarto-xref">Figure&nbsp;7</a>. Format per Post-Lab; save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q10.</strong> Report <span class="math inline">\(\tau_{ef} \pm\)</span> CI and <span class="math inline">\(\tau_{63}\)</span> for the same run. Do they agree? Which estimate do you trust more, and on what grounds (how many data points back each one)?</p>
+<p><strong>Q11.</strong> Re-run the fit with the mask changed to <code>(Gamma &gt; 0.001) &amp; (Gamma &lt; 0.99)</code>. What happens to the fitted <span class="math inline">\(\tau\)</span> and to <span class="math inline">\(s_{yx}\)</span>? Explain using what <span class="math inline">\(\ln\Gamma\)</span> looks like near the end of the record.</p>
+<p><strong>Q12.</strong> Is your <span class="math inline">\(\ln\Gamma\)</span> plot straight over the fitted range? What does its straightness (or curvature) say about modeling the bead as a first-order system?</p>
+</div>
+</div>
+<section id="example-result-1" class="level3" data-number="10.1">
+<h3 data-number="10.1" class="anchored" data-anchor-id="example-result-1"><span class="header-section-number">10.1</span> Example Result</h3>
+<div id="fig-example-gamma" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-gamma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab08_ErrorFraction.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-gamma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Example error-fraction plot (made-up data). Note the scatter growing at late times — that is the log of noise, and it is why the mask exists.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</h2>
+<p>Upload your submissions to Canvas. <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u> A full example solution notebook is posted after all sections have met; check your approach against it, but submit your own work.</p>
+<section id="submission-items" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="submission-items"><span class="header-section-number">11.1</span> Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook (<code>FirstName_LastName_Lab08.ipynb</code>), restarted and run top-to-bottom (acquisition cells may show their saved outputs)</li>
+<li>Step response plot (three runs), <strong>.pdf</strong></li>
+<li>Error fraction plot (best run), <strong>.pdf</strong></li>
+<li>Answers to the post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="step-response-plot-requirements" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="step-response-plot-requirements"><span class="header-section-number">11.2</span> Step Response Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>All three runs, time-shifted so each plunge is at <span class="math inline">\(t = 0\)</span>; scatter markers size 10, one color per run, in the legend with each run’s <span class="math inline">\(\tau_{63}\)</span></li>
+<li>The first-order model (<a href="#eq-step" class="quarto-xref">Equation&nbsp;3</a>) at the mean <span class="math inline">\(\tau\)</span> overlaid as a black line, in the legend</li>
+<li>x-limits focused on the transient (a little pre-step, through clear settling); major and minor grids; top/right spines removed</li>
+<li>Axis labels with units; title “FirstName LastName’s Temperature Plot” with the date</li>
+</ul>
+</section>
+<section id="error-fraction-plot-requirements" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="error-fraction-plot-requirements"><span class="header-section-number">11.3</span> Error Fraction Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li><span class="math inline">\(\ln\Gamma\)</span> vs.&nbsp;time: red scatter markers size 10; the linear fit as a solid blue 2 pt line</li>
+<li>Major and minor grids; top/right spines removed; legend clear of the data</li>
+<li>Axis labels (the y-label should state the definition of <span class="math inline">\(\Gamma\)</span>); title “FirstName LastName’s Error Fraction Plot” with the date</li>
+<li><code>ax.text</code> annotation: slope ± CI, <span class="math inline">\(\tau \pm\)</span> CI (ms), and <span class="math inline">\(s_{yx}\)</span></li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="11.4">
+<h3 data-number="11.4" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">11.4</span> Post-Lab Questions</h3>
+<ol type="1">
+<li>Report all four numbers: <span class="math inline">\(\tau_{63}\)</span> for each run, and <span class="math inline">\(\tau_{ef} \pm\)</span> CI for your best run. Are they consistent?</li>
+<li>Your sensor settles (within 1%) in <span class="math inline">\(5\tau\)</span>. A control system reads this thermocouple after a sudden process change — how long must it wait before trusting the reading? Show the arithmetic from your measured <span class="math inline">\(\tau\)</span>.</li>
+<li>Using <span class="math inline">\(\tau = mc_p/(hA)\)</span>: qualitatively, how would <span class="math inline">\(\tau\)</span> change for (a) a bead twice the diameter, and (b) the same bead in still <em>air</em> instead of stirred water? Which factor changes in each case?</li>
+<li>Lab 04 taught you to choose sample rates against the signal’s content. An exponential with <span class="math inline">\(\tau = 45\)</span> ms has significant frequency content out to roughly <span class="math inline">\(f \approx 1/(2\pi\tau)\)</span> and beyond. Evaluate: was 1000 Hz overkill, adequate, or marginal? Would 50 Hz have been defensible?</li>
+<li>In Part-6 you used the LIGT for <span class="math inline">\(T_{ss}\)</span> rather than the tail of your data. Suppose you had used the data tail and it sat 0.5 °C below the true bath temperature. Sketch (in words) what happens to <span class="math inline">\(\ln\Gamma\)</span> at late times, and which direction the fitted <span class="math inline">\(\tau\)</span> moves.</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="before-you-leave"><span class="header-section-number">12</span> Before You Leave</h2>
+<ul>
+<li><strong>Hot plate off first</strong>; let the water cool before anyone moves the beaker (TA handles it).</li>
+<li>Master Enable and the 5 V switch off before rewiring; the AD8495 breakout and LM358 back to their containers, pins unbent; thermocouple dried gently and returned.</li>
+<li>Show your step-response plot to a TA before teardown — a failed run costs two minutes now and a week later.</li>
+<li>Confirm your data files have synced to OneDrive (check on a second device) and that <strong>both</strong> partners have everything.</li>
+<li>Clean the station (wipe any water spots), collect your belongings, and log off.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

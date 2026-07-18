@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-06: Strain Gauges, the Wheatstone Bridge, and Uncertainty in Young’s Modulus</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab06_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab06_files/libs/quarto-html/quarto.js"></script>
+<script src="lab06_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab06_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab06_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab06_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab06_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab06_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab06_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab06_files/libs/bootstrap/bootstrap-791ceca6b2ec3cae9ef2a359bbe8f8f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning Objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#extend-your-folder-structure" id="toc-extend-your-folder-structure" class="nav-link" data-scroll-target="#extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</a></li>
+  <li><a href="#read-the-background-section" id="toc-read-the-background-section" class="nav-link" data-scroll-target="#read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#python-quick-reference-new-this-lab" id="toc-python-quick-reference-new-this-lab" class="nav-link" data-scroll-target="#python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background"><span class="header-section-number">4</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#the-strain-gauge" id="toc-the-strain-gauge" class="nav-link" data-scroll-target="#the-strain-gauge"><span class="header-section-number">4.1</span> The Strain Gauge</a></li>
+  <li><a href="#the-wheatstone-half-bridge" id="toc-the-wheatstone-half-bridge" class="nav-link" data-scroll-target="#the-wheatstone-half-bridge"><span class="header-section-number">4.2</span> The Wheatstone Half-Bridge</a></li>
+  <li><a href="#amplification-and-what-you-actually-measure" id="toc-amplification-and-what-you-actually-measure" class="nav-link" data-scroll-target="#amplification-and-what-you-actually-measure"><span class="header-section-number">4.3</span> Amplification, and What You Actually Measure</a></li>
+  <li><a href="#stress-in-an-end-loaded-cantilever" id="toc-stress-in-an-end-loaded-cantilever" class="nav-link" data-scroll-target="#stress-in-an-end-loaded-cantilever"><span class="header-section-number">4.4</span> Stress in an End-Loaded Cantilever</a></li>
+  <li><a href="#drift-and-the-bracketing-procedure" id="toc-drift-and-the-bracketing-procedure" class="nav-link" data-scroll-target="#drift-and-the-bracketing-procedure"><span class="header-section-number">4.5</span> Drift, and the Bracketing Procedure</a></li>
+  <li><a href="#propagation-of-uncertainty-and-the-power-rule" id="toc-propagation-of-uncertainty-and-the-power-rule" class="nav-link" data-scroll-target="#propagation-of-uncertainty-and-the-power-rule"><span class="header-section-number">4.6</span> Propagation of Uncertainty and the Power Rule</a></li>
+  </ul></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">5</span> Part-1: Measure the Beam (Week 1)</a></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">6</span> Part-2: Build the Bridge and Amplifier (Week 1)</a></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">7</span> Part-3: Acquire the Load Data (Week 1)</a></li>
+  <li><a href="#sec-part-4" id="toc-sec-part-4" class="nav-link" data-scroll-target="#sec-part-4"><span class="header-section-number">8</span> Part-4: Fit Young’s Modulus (Week 1)</a>
+  <ul class="collapse">
+  <li><a href="#example-result" id="toc-example-result" class="nav-link" data-scroll-target="#example-result"><span class="header-section-number">8.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-week2" id="toc-sec-week2" class="nav-link" data-scroll-target="#sec-week2"><span class="header-section-number">9</span> WEEK 2 RESUMES HERE</a></li>
+  <li><a href="#sec-part-5" id="toc-sec-part-5" class="nav-link" data-scroll-target="#sec-part-5"><span class="header-section-number">10</span> Part-5: The Uncertainty Budget</a>
+  <ul class="collapse">
+  <li><a href="#example-result-1" id="toc-example-result-1" class="nav-link" data-scroll-target="#example-result-1"><span class="header-section-number">10.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-6" id="toc-sec-part-6" class="nav-link" data-scroll-target="#sec-part-6"><span class="header-section-number">11</span> Part-6: Two Answers, One Question (Week 2)</a></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">12</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#week-1-submission-items" id="toc-week-1-submission-items" class="nav-link" data-scroll-target="#week-1-submission-items"><span class="header-section-number">12.1</span> Week 1 Submission Items</a></li>
+  <li><a href="#week-2-submission-items" id="toc-week-2-submission-items" class="nav-link" data-scroll-target="#week-2-submission-items"><span class="header-section-number">12.2</span> Week 2 Submission Items</a></li>
+  <li><a href="#stressstrain-plot-requirements" id="toc-stressstrain-plot-requirements" class="nav-link" data-scroll-target="#stressstrain-plot-requirements"><span class="header-section-number">12.3</span> Stress–Strain Plot Requirements</a></li>
+  <li><a href="#uncertainty-budget-plot-requirements" id="toc-uncertainty-budget-plot-requirements" class="nav-link" data-scroll-target="#uncertainty-budget-plot-requirements"><span class="header-section-number">12.4</span> Uncertainty Budget Plot Requirements</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">12.5</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave-both-weeks" id="toc-before-you-leave-both-weeks" class="nav-link" data-scroll-target="#before-you-leave-both-weeks"><span class="header-section-number">13</span> Before You Leave (both weeks)</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lab06.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-06: Strain Gauges, the Wheatstone Bridge, and Uncertainty in Young’s Modulus</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<div class="callout callout-style-default callout-important callout-titled" title="This is a TWO-WEEK lab">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+This is a TWO-WEEK lab
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Week 1:</strong> Parts 1–4 — measure the beam, build the bridge + amplifier, acquire the load data, and fit Young’s modulus. <strong>Week 2:</strong> Parts 5–6 — uncertainty budget and the propagation-vs-fit comparison. Resume at the banner in <a href="#sec-week2" class="quarto-xref">Section&nbsp;9</a>.</p>
+</div>
+</div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning Objective</h2>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li>Understand how a <strong>strain gauge</strong> converts deformation into a resistance change, and why a <strong>Wheatstone bridge</strong> is needed to read it</li>
+<li>Build a <strong>half-bridge</strong> (two active gauges) on a cantilevered beam and amplify its output with your Lab 05 instrumentation amplifier at <span class="math inline">\(G \approx 500\)</span></li>
+<li>Use a <strong>bracketing procedure</strong> (unload–load–unload) to cancel the slow drift that plagues high-gain bridge measurements</li>
+<li>Measure <strong>Young’s modulus</strong> of the beam from a stress–strain regression, and compare against published values</li>
+<li>Construct a full <strong>uncertainty budget</strong> for <span class="math inline">\(E\)</span> by propagation of error, and learn the power rule that makes it fast</li>
+<li>Compare <strong>propagated uncertainty</strong> against the <strong>curve-fit confidence interval</strong> — and understand why they answer different questions</li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="hardware-instruments" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
+<ul>
+<li>A strain gauge’s resistance changes by milliohms. Why can’t you just measure that with your DMM?</li>
+<li>In the half-bridge, why do the two gauges sit on <em>opposite faces</em> of the beam? What common disturbance does that arrangement cancel?</li>
+<li>Why does this measurement need the AD622 at <span class="math inline">\(G \approx 500\)</span> — and why the <em>instrumentation</em> amplifier specifically (recall Lab 05 Part-6)?</li>
+<li>What does the zero-load amplifier output look like, and why isn’t it zero?</li>
+<li>Why must nobody touch the wiring during data collection?</li>
+</ul>
+</section>
+<section id="programming" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.2</span> Programming</h4>
+<ul>
+<li>What do <code>v[:-1]</code> and <code>v[1:]</code> return, and how do they pair each loaded reading with its bracketing unloaded readings?</li>
+<li>How does a list of <code>(name, value, uncertainty, exponent)</code> tuples plus one loop become a complete uncertainty budget?</li>
+<li>How do you draw a bar chart with <code>ax.bar</code>?</li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>Why does averaging the <em>before</em> and <em>after</em> deltas cancel a linear drift?</li>
+<li>In <span class="math inline">\(E = 3mgLV_iG(GF)/(wt^2\Delta V)\)</span>, why does <span class="math inline">\(t\)</span>’s uncertainty count double?</li>
+<li>Your propagated <span class="math inline">\(u_E\)</span> is larger than the curve-fit CI. Which sources of error does the fit CI <em>not</em> see, and why not?</li>
+<li>If the gauge factor were wrong by 5%, by how much would your <span class="math inline">\(E\)</span> be wrong?</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section <strong>before Week 1</strong>.</p>
+<section id="extend-your-folder-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</h3>
+<p>Add a Lab_06 folder set to your <code>ME3300</code> folder:</p>
+<pre class="text"><code>ME3300/
+├── Lab_01/ ... Lab_05/
+├── Lab_06/
+│   ├── Code/
+│   │   ├── Lab06_Prelab_Walkthrough.ipynb
+│   │   └── FirstName_LastName_Lab06.ipynb
+│   ├── Data/
+│   └── Figures/</code></pre>
+<p>No new packages are needed this week.</p>
+</section>
+<section id="read-the-background-section" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</h3>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It derives every equation this lab runs on: the gauge relation, the half-bridge output, the beam-bending stress, and the uncertainty-propagation power rule.</p>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Download <code>Lab06_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_06/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> skills on a toy problem (the density of a measured cylinder):</p>
+<ul>
+<li>the <strong>power rule</strong> for propagating uncertainty through products, quotients, and powers</li>
+<li>building an <strong>uncertainty budget</strong> with a list of <code>(name, value, u, exponent)</code> tuples and one loop</li>
+<li>drawing the budget as a <strong>bar chart</strong> (<code>ax.bar</code>)</li>
+<li>pairing neighboring readings with <strong><code>v[:-1]</code> and <code>v[1:]</code></strong> slices — the bracketing trick</li>
+</ul>
+<p>As always, working through the prelab will allow you to answer the <strong>checkpoint</strong> questions in the <strong>Prelab quiz on Canvas</strong> before your lab session.</p>
+</section>
+<section id="python-quick-reference-new-this-lab" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</h3>
+<div id="tbl-quickref" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: New Python syntax and functions introduced in Lab 06
+</figcaption>
+<div aria-describedby="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>All but the last element</td>
+<td><code>v[:-1]</code></td>
+</tr>
+<tr class="even">
+<td>All but the first element</td>
+<td><code>v[1:]</code></td>
+</tr>
+<tr class="odd">
+<td>Pair neighbors (before/after)</td>
+<td><code>dv1 = v_load - v_unl[:-1]</code>, <code>dv2 = v_load - v_unl[1:]</code></td>
+</tr>
+<tr class="even">
+<td>A table as data</td>
+<td><code>vars = [('m', 1.0, 0.01, +1), ...]</code> (list of tuples)</td>
+</tr>
+<tr class="odd">
+<td>Unpack tuples in a loop</td>
+<td><code>for name, x, u, p in vars:</code></td>
+</tr>
+<tr class="even">
+<td>Relative uncertainty term</td>
+<td><code>p * u / x</code></td>
+</tr>
+<tr class="odd">
+<td>Bar chart</td>
+<td><code>ax.bar(names, values)</code></td>
+</tr>
+<tr class="even">
+<td>Nearest index lookup</td>
+<td><code>i = np.argmin(np.abs(masses - 1.0))</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>Strain measurement is one of the workhorse techniques of mechanical engineering: load cells, pressure transducers, torque sensors, and flight-test instrumentation are all, underneath, strain gauges on cleverly shaped metal. This two-week lab builds that entire measurement chain from parts you now understand individually — and then does something most courses skip: it asks, rigorously, <em>how well</em> you know your answer.</p>
+<p><strong>Week 1</strong> is construction and measurement. Two strain gauges are bonded to a cantilevered steel beam; you will wire them into a Wheatstone half-bridge, amplify the bridge’s sub-millivolt output with your Lab 05 AD622 at a gain near 500, and record the output as you hang calibrated masses from the beam’s end. Beam theory converts each mass into a bending <strong>stress</strong>; the bridge converts each voltage into a <strong>strain</strong>; the slope of stress vs.&nbsp;strain is <strong>Young’s modulus</strong> — a fundamental material property, measured by you, with equipment you built. This is also the payoff of Lab 05’s common-mode demo: the bridge’s tiny differential signal rides on volts of common-mode voltage, exactly the situation the in-amp exists for.</p>
+<p>A gain of 500 comes with a price: <em>everything</em> is amplified — including slow thermal drift in the bridge. You will defeat drift the way practicing engineers do, with procedure rather than better hardware: every loaded reading is <strong>bracketed</strong> by zero-load readings taken immediately before and after, and the two difference estimates are averaged.</p>
+<p><strong>Week 2</strong> is about honesty. Your <span class="math inline">\(E\)</span> depends on nine measured quantities — masses, gravity, three lengths, two gain-like factors, an excitation voltage, and a voltage change — each with its own uncertainty. You will propagate all nine into a single <strong>uncertainty budget</strong> for <span class="math inline">\(E\)</span>, see at a glance which ones actually matter (the answer will surprise whoever lovingly measured the beam with a micrometer), and compare the propagated total against the curve-fit confidence interval from Week 1. Those two numbers disagree, and understanding <em>why</em> they disagree — scatter versus systematic error — is among the most transferable lessons this course offers.</p>
+</section>
+<section id="sec-background" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-background"><span class="header-section-number">4</span> Background</h2>
+<section id="the-strain-gauge" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-strain-gauge"><span class="header-section-number">4.1</span> The Strain Gauge</h3>
+<p>A metallic strain gauge is a thin zig-zag foil grid on a flexible backing, bonded to the surface it measures. Stretch the surface and the foil stretches with it: longer, thinner conductors mean higher resistance. For small strains the relationship is linear:</p>
+<p><span id="eq-gf"><span class="math display">\[\frac{\Delta R}{R} = GF \cdot \varepsilon \tag{1}\]</span></span></p>
+<p>where <span class="math inline">\(\varepsilon\)</span> is the surface strain (m/m — dimensionless) and <span class="math inline">\(GF\)</span> is the <strong>gauge factor</strong>, about 2 for metallic foil gauges (<span class="math inline">\(GF = 2.012\)</span> for this apparatus). The catch is scale: engineering strains here are on the order of <span class="math inline">\(100\ \mu\varepsilon\)</span> (<span class="math inline">\(100 \times 10^{-6}\)</span>), so a 350 Ω gauge changes by <span class="math inline">\(\Delta R \approx 350 \times 2 \times 10^{-4} = 0.07\)</span> Ω. Your DMM cannot resolve that reliably, and lead-wire resistance alone would swamp it. Reading strain gauges requires a circuit built for the job.</p>
+</section>
+<section id="the-wheatstone-half-bridge" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="the-wheatstone-half-bridge"><span class="header-section-number">4.2</span> The Wheatstone Half-Bridge</h3>
+<p>The Wheatstone bridge (<a href="#fig-bridge-schematic" class="quarto-xref">Figure&nbsp;1</a>) converts a small <em>resistance</em> change into a small <em>voltage</em> — which amplifiers handle superbly. Two resistor pairs form two voltage dividers across the excitation <span class="math inline">\(V_i\)</span>; the output is the <em>difference</em> between the divider midpoints. With all four resistances equal, that difference is exactly zero — the bridge is <em>balanced</em> — and any small unbalance appears directly as output voltage.</p>
+<p>This lab’s beam carries <strong>two</strong> gauges at the same axial station, one on top and one underneath (<a href="#fig-beam" class="quarto-xref">Figure&nbsp;2</a>). Under an end load the top surface stretches (<span class="math inline">\(R + \Delta R\)</span>) while the bottom compresses (<span class="math inline">\(R - \Delta R\)</span>). Wiring them as the left-side dividers of the bridge — the <strong>half-bridge</strong> configuration — doubles the signal, and for equal-and-opposite arm changes the output is exactly linear in <span class="math inline">\(\Delta R\)</span>. Two precision 350 Ω resistors complete the right side. The output is:</p>
+<p><span id="eq-halfbridge"><span class="math display">\[V_{bridge} = V_i \, \frac{\Delta R}{2R} = V_i \, \frac{GF \cdot \varepsilon}{2} \tag{2}\]</span></span></p>
+<p>The half-bridge buys one more thing, and it is the reason the two gauges share one beam location: <strong>temperature compensation</strong>. A temperature change alters both gauges’ resistance <em>identically</em> — both arms of the left divider move together, its midpoint stays put, and the output doesn’t budge. Strain moves the arms <em>oppositely</em> and passes straight through. The bridge is a hardware implementation of “reject what is common, keep what differs” — the same idea as the in-amp’s common-mode rejection, one level further upstream.</p>
+<div id="fig-bridge-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bridge-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Half_Bridge_Schematic.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bridge-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The half-bridge on the AD622. The two beam gauges form the left dividers; the bridge output feeds the in-amp differentially.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="amplification-and-what-you-actually-measure" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="amplification-and-what-you-actually-measure"><span class="header-section-number">4.3</span> Amplification, and What You Actually Measure</h3>
+<p>Plug numbers into <a href="#eq-halfbridge" class="quarto-xref">Equation&nbsp;2</a>: <span class="math inline">\(V_i = 5\)</span> V, <span class="math inline">\(GF = 2\)</span>, <span class="math inline">\(\varepsilon = 100\ \mu\varepsilon\)</span> gives <span class="math inline">\(V_{bridge} = 0.5\)</span> mV. Hence the AD622 at <span class="math inline">\(G \approx 500\)</span> (<span class="math inline">\(R_G = 102\)</span> Ω, sized with Lab 05’s gain equation), lifting the signal to comfortable few-hundred-millivolt scale. What your DAQ records is the amplified change from the unloaded state, <span class="math inline">\(\Delta V = G \cdot \delta V_{bridge}\)</span>; inverting the chain gives strain:</p>
+<p><span id="eq-strain"><span class="math display">\[\varepsilon = \frac{2\, \Delta V}{V_i \, G \cdot GF} \tag{3}\]</span></span></p>
+<p>Why the <em>instrumentation</em> amplifier and not a humble non-inverting stage? Both bridge output nodes sit near <span class="math inline">\(V_i/2 = 2.5\)</span> V. The signal is the millivolt-scale <em>difference</em> between them — Lab 05 Part-6, no longer a demo.</p>
+</section>
+<section id="stress-in-an-end-loaded-cantilever" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="stress-in-an-end-loaded-cantilever"><span class="header-section-number">4.4</span> Stress in an End-Loaded Cantilever</h3>
+<p>From beam theory, bending stress at the surface is <span class="math inline">\(\sigma = Mc/I\)</span> with bending moment <span class="math inline">\(M = P L\)</span> at the gauge station (<span class="math inline">\(L\)</span> = gauge-to-load distance, <span class="math inline">\(P = mg\)</span>), surface distance <span class="math inline">\(c = t/2\)</span>, and rectangular second moment <span class="math inline">\(I = w t^3/12\)</span>:</p>
+<p><span id="eq-stress"><span class="math display">\[\sigma = \frac{M c}{I} = \frac{(mgL)(t/2)}{w t^3/12} = \frac{6\,m g L}{w t^2} \tag{4}\]</span></span></p>
+<p>(Watch the algebra: one <span class="math inline">\(t\)</span> cancels, leaving <span class="math inline">\(t^2\)</span> in the denominator — a famous typo trap.) Hooke’s law links the two sides of your measurement, <span class="math inline">\(\sigma = E\,\varepsilon\)</span>, so plotting <a href="#eq-stress" class="quarto-xref">Equation&nbsp;4</a> against <a href="#eq-strain" class="quarto-xref">Equation&nbsp;3</a> for a range of masses gives a line whose slope is <strong>Young’s modulus</strong> — fitted, with confidence intervals, by the Lab 02 machinery. For the uncertainty work in Week 2, the whole chain collapses into one formula by substituting <a href="#eq-strain" class="quarto-xref">Equation&nbsp;3</a> into <span class="math inline">\(E = \sigma/\varepsilon\)</span>:</p>
+<p><span id="eq-E-single"><span class="math display">\[E = \frac{3\,m g L\, V_i\, G \cdot GF}{w\, t^2\, \Delta V} \tag{5}\]</span></span></p>
+<div id="fig-beam" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-beam-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Cantilever_Beam_Gauges.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-beam-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The instrumented cantilever. Opposite-face gauges at one station: tension above, compression below.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="drift-and-the-bracketing-procedure" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="drift-and-the-bracketing-procedure"><span class="header-section-number">4.5</span> Drift, and the Bracketing Procedure</h3>
+<p>At <span class="math inline">\(G = 500\)</span>, a 20 µV wander at the bridge — thermal effects in gauges, resistors, and connections — is a 10 mV wander at your DAQ, comparable to the signal from 100 g. You will see it: the zero-load output creeps over the session. The countermeasure is procedural. For each mass, take an unloaded reading, a loaded reading, and another unloaded reading, and form two estimates of the change: <span class="math inline">\(\Delta V_1 = V_{loaded} - V_{unl,before}\)</span> and <span class="math inline">\(\Delta V_2 = V_{loaded} - V_{unl,after}\)</span>. Drift pushes one estimate up and the other down by nearly the same amount, so their <strong>average cancels linear drift</strong> — and their <em>disagreement</em> hands you a free, honest estimate of the uncertainty in <span class="math inline">\(\Delta V\)</span> (you will use exactly that in Week 2).</p>
+</section>
+<section id="propagation-of-uncertainty-and-the-power-rule" class="level3" data-number="4.6">
+<h3 data-number="4.6" class="anchored" data-anchor-id="propagation-of-uncertainty-and-the-power-rule"><span class="header-section-number">4.6</span> Propagation of Uncertainty and the Power Rule</h3>
+<p>Every measured input carries uncertainty; the question is how much each one matters to the result. For a result <span class="math inline">\(R = f(x_1, x_2, \ldots)\)</span> with independent uncertainties <span class="math inline">\(u_{x_i}\)</span>, the standard (RSS) propagation is:</p>
+<p><span id="eq-rss"><span class="math display">\[u_R = \sqrt{\sum_i \left( \frac{\partial R}{\partial x_i}\, u_{x_i} \right)^2} \tag{6}\]</span></span></p>
+<p>Equation <a href="#eq-E-single" class="quarto-xref">Equation&nbsp;5</a> is a pure product of powers, <span class="math inline">\(E = C \prod x_i^{\,p_i}\)</span>, and for that form the partial derivatives collapse into something wonderfully simple — the <strong>power rule</strong>:</p>
+<p><span id="eq-power-rule"><span class="math display">\[\frac{u_E}{E} = \sqrt{ \sum_i \left( p_i \, \frac{u_{x_i}}{x_i} \right)^2 } \tag{7}\]</span></span></p>
+<p>In words: convert every uncertainty to a <em>relative</em> (percent) uncertainty, multiply each by its exponent’s magnitude, and combine by root-sum-square. The exponents in <a href="#eq-E-single" class="quarto-xref">Equation&nbsp;5</a> are <span class="math inline">\(+1\)</span> for <span class="math inline">\(m, g, L, V_i, G, GF\)</span>; <span class="math inline">\(-1\)</span> for <span class="math inline">\(w\)</span> and <span class="math inline">\(\Delta V\)</span>; and <span class="math inline">\(-2\)</span> for <span class="math inline">\(t\)</span> — thickness uncertainty counts double. The prelab walkthrough derives and practices this rule; in lab it turns a nine-variable propagation into ten lines of Python.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">5</span> Part-1: Measure the Beam (Week 1)</h2>
+<p>Three lengths, three instruments — chosen so each dimension gets appropriate resolution.</p>
+<ol type="1">
+<li>With the <strong>tape measure</strong>: the distance <span class="math inline">\(L\)</span> from the <em>center of the gauges</em> to the load point (the hanger groove). Note the tape’s resolution.</li>
+<li>With the <strong>caliper</strong>: the beam width <span class="math inline">\(w\)</span>. Note its resolution.</li>
+<li>With the <strong>micrometer</strong>: the beam thickness <span class="math inline">\(t\)</span>. Note its resolution. Measure all three dimensions <strong>three times each</strong> and record every reading — the spreads feed Week 2.</li>
+<li>Determine local gravity from the <a href="https://www.sensorsone.com/local-gravity-calculator/">local gravity calculator</a> using latitude 46.7324 and elevation 2579 ft. (It differs from 9.81 in the third decimal — and you will find out in Week 2 whether that matters.)</li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q1.</strong> Record all measurements (three per dimension), their means, each instrument’s resolution, and local <span class="math inline">\(g\)</span>.</p>
+<p><strong>Q2.</strong> Why does <span class="math inline">\(t\)</span> get the micrometer while <span class="math inline">\(L\)</span> makes do with a tape measure? Answer with the exponents of <a href="#eq-E-single" class="quarto-xref">Equation&nbsp;5</a> in hand — which dimension can least afford error?</p>
+</div>
+</div>
+</section>
+<section id="sec-part-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">6</span> Part-2: Build the Bridge and Amplifier (Week 1)</h2>
+<p>Build with <strong>supplies off and WaveForms closed</strong>. Your guides: <a href="#fig-bridge-schematic" class="quarto-xref">Figure&nbsp;1</a> and the photo in <a href="#fig-bridge-build" class="quarto-xref">Figure&nbsp;3</a>.</p>
+<div id="fig-bridge-build" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bridge-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Bridge_Circuit_Build_ADS.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bridge-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The half-bridge and AD622 on the breadboard.
+</figcaption>
+</figure>
+</div>
+<ol type="1">
+<li>Identify the two gauge lead pairs at the beam (note which is the top gauge). <strong>Measure each gauge’s resistance with the DMM</strong> — expect ≈350 Ω. Handle the leads gently; the bonded foil does not forgive tugging.</li>
+<li>Wire the half-bridge per <a href="#fig-bridge-schematic" class="quarto-xref">Figure&nbsp;1</a>: gauges as the left arms, the two precision 350 Ω resistors as the right arms. Excitation from the ADS <strong>5 V switch</strong>; bridge ground to the GND rail.</li>
+<li>Rebuild your Lab 05 AD622 with <span class="math inline">\(R_G = 102\)</span> Ω (<strong>measure it</strong>; compute <span class="math inline">\(G\)</span> from Lab 05’s gain equation). Bridge midpoints → pins 3 and 2; ±12 V rails; <strong>REF (pin 5) → GND</strong>; OUT → Scope 1+ (1− → GND).</li>
+<li>TA check. Then power up (5 V switch on; ±12 V via Supplies), and <strong>measure the actual excitation <span class="math inline">\(V_i\)</span> at the bridge with the DMM</strong> — <a href="#eq-strain" class="quarto-xref">Equation&nbsp;3</a> uses this number, not the nominal 5.</li>
+<li>Open the WaveForms <strong>Scope</strong> and look at the output live (GUI first, as always): a steady DC level — the <em>zero-load output</em> — most likely not zero, and possibly a volt or more. Watch it for a minute: it will wander slightly. Now press <em>gently</em> on the beam tip with a fingertip and watch the trace respond; compare <a href="#fig-zeroload" class="quarto-xref">Figure&nbsp;4</a>. Close WaveForms when done.</li>
+</ol>
+<div id="fig-zeroload" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-zeroload-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Scope_ZeroLoad_Drift.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-zeroload-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Zero-load output and its response to a gentle fingertip load.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q3.</strong> Record both gauge resistances, <span class="math inline">\(R_G\)</span>, your computed <span class="math inline">\(G\)</span>, and the measured <span class="math inline">\(V_i\)</span>. The gauges read ≈350 Ω on the DMM — why is the DMM nonetheless hopeless for measuring the <em>strain-induced change</em> in that resistance?</p>
+<p><strong>Q4.</strong> The zero-load output is not zero. Give two physical reasons. Why is that acceptable — what does your measurement procedure do about it?</p>
+<p><strong>Q5.</strong> What <em>extraneous effect</em> does the half-bridge configuration compensate for, and how does having the two gauges at the <em>same location on opposite faces</em> accomplish it?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-3" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">7</span> Part-3: Acquire the Load Data (Week 1)</h2>
+<p>Open <code>FirstName_LastName_Lab06.ipynb</code> (starter on Canvas). One script walks you through the whole bracketed loading sequence: for each mass, it takes an unloaded reading, prompts you to load, takes the loaded reading, prompts you to unload, and reads zero again. Each reading averages 10 seconds at 50 Hz.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Hands off the wires">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hands off the wires
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At <span class="math inline">\(G = 500\)</span>, shifting a jumper wire or leaning on the bench moves your readings by more than the smallest mass does. Once acquisition starts: only the loader’s hands near the apparatus, only on the weights, and gently — no bouncing the beam.</p>
+</div>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dwfpy <span class="im">as</span> dwf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>masses <span class="op">=</span> np.arange(<span class="fl">0.4</span>, <span class="fl">2.01</span>, <span class="fl">0.2</span>)     <span class="co"># kg</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>v_unloaded <span class="op">=</span> []                         <span class="co"># 10 readings (one per bracket)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>v_loaded   <span class="op">=</span> []                         <span class="co"># 9 readings</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>fs, duration <span class="op">=</span> <span class="dv">50</span>, <span class="fl">10.0</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    supplies <span class="op">=</span> device.analog_io          <span class="co"># ±12 V for the AD622</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="fl">12.0</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V+'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Voltage'</span>].value <span class="op">=</span> <span class="op">-</span><span class="fl">12.0</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    supplies[<span class="st">'V-'</span>][<span class="st">'Enable'</span>].value  <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    supplies.master_enable <span class="op">=</span> <span class="va">True</span>        <span class="co"># (bridge runs off the 5 V switch)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    scope <span class="op">=</span> device.analog_input</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> read_mean():</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""One 10-second averaged reading of the amplifier output."""</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> scope[<span class="st">'ch1'</span>].get_data().mean()</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>(<span class="st">"Beam UNLOADED and still. Hands off the bench, then Enter..."</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    v_unloaded.append(read_mean())</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  unloaded: </span><span class="sc">{</span>v_unloaded[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.5f}</span><span class="ss"> V"</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m <span class="kw">in</span> masses:</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span>(<span class="ss">f"GENTLY hang </span><span class="sc">{</span>m<span class="sc">:.1f}</span><span class="ss"> kg, let it settle, then Enter..."</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        v_loaded.append(read_mean())</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>m<span class="sc">:.1f}</span><span class="ss"> kg loaded: </span><span class="sc">{</span>v_loaded[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.5f}</span><span class="ss"> V"</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span>(<span class="st">"GENTLY remove the mass, then Enter..."</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        v_unloaded.append(read_mean())</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  unloaded: </span><span class="sc">{</span>v_unloaded[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.5f}</span><span class="ss"> V"</span>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    supplies.master_enable <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>v_unloaded <span class="op">=</span> np.array(v_unloaded)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>v_loaded   <span class="op">=</span> np.array(v_loaded)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>np.savetxt(<span class="st">'../Data/StrainBridge_Loads.csv'</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>           np.column_stack([masses, v_loaded,</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>                            v_unloaded[:<span class="op">-</span><span class="dv">1</span>], v_unloaded[<span class="dv">1</span>:]]),</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>           header<span class="op">=</span><span class="st">'mass_kg,v_loaded_V,v_unl_before_V,v_unl_after_V'</span>,</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>           delimiter<span class="op">=</span><span class="st">','</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The structure is all Lab 04–05 material (a prompted <code>input()</code> loop, a helper <code>def</code>, <code>scope.single</code> averaging); the one new idiom is at the very bottom:</p>
+<ul>
+<li><strong><code>v_unloaded[:-1]</code> and <code>v_unloaded[1:]</code></strong> — slices meaning <em>all but the last</em> and <em>all but the first</em>. The ten unloaded readings interleave the nine loaded ones, so <code>[:-1]</code> lines each loaded reading up with the zero <em>before</em> it, and <code>[1:]</code> with the zero <em>after</em> it. Two shifted views of one array — no loop required. (Practiced in the prelab.)</li>
+<li>Note each unloaded reading does double duty: it closes one mass’s bracket and opens the next. Nineteen readings, nine fully bracketed load points.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q6.</strong> Watch the printed unloaded values as the run proceeds and record the first and last. How much did the zero drift over the session, and what would that drift have done to your data if you had used only one zero reading at the start?</p>
+<p><strong>Q7.</strong> What is <em>hysteresis</em>? Where in this experiment could it appear, and what parts of the procedure (gentle loading, settling time, bracketing) help mitigate it?</p>
+</div>
+</div>
+</section>
+<section id="sec-part-4" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-part-4"><span class="header-section-number">8</span> Part-4: Fit Young’s Modulus (Week 1)</h2>
+<p>Analysis time — deltas, stress, strain, slope. First enter your measured parameters:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Beam geometry (Part-1, measured)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>L  <span class="op">=</span> <span class="fl">0.3595</span>      <span class="co"># m — gauge center to load point (tape measure, res 1 mm)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>w  <span class="op">=</span> <span class="fl">0.03805</span>     <span class="co"># m — beam width (caliper, res 0.02 mm)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>t  <span class="op">=</span> <span class="fl">0.00640</span>     <span class="co"># m — beam thickness (micrometer, res 0.01 mm)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Local gravity (Part-1, sensorsone.com: lat 46.7324, elev 2579 ft)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>g  <span class="op">=</span> <span class="fl">9.8051</span>      <span class="co"># m/s^2</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Bridge and amplifier (Part-2, measured)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>GF   <span class="op">=</span> <span class="fl">2.012</span>     <span class="co"># gauge factor (apparatus datasheet)</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>R_G  <span class="op">=</span> <span class="fl">101.7</span>     <span class="co"># ohms — measured gain resistor</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>G    <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="fl">50500.0</span> <span class="op">/</span> R_G          <span class="co"># AD622 gain (Lab 05, Eq. 3)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>V_i  <span class="op">=</span> <span class="fl">4.987</span>     <span class="co"># V — excitation, measured at the bridge with the DMM</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"amplifier gain G = </span><span class="sc">{</span>G<span class="sc">:.1f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then the deltas and the fit — <a href="#eq-strain" class="quarto-xref">Equation&nbsp;3</a> and <a href="#eq-stress" class="quarto-xref">Equation&nbsp;4</a> in code, and the slope machinery of Lab 02:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.loadtxt(<span class="st">'../Data/StrainBridge_Loads.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>masses   <span class="op">=</span> data[:, <span class="dv">0</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>v_load   <span class="op">=</span> data[:, <span class="dv">1</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>v_before <span class="op">=</span> data[:, <span class="dv">2</span>]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>v_after  <span class="op">=</span> data[:, <span class="dv">3</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Two delta estimates per mass; their average cancels linear drift (Eq. 6)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>dv1 <span class="op">=</span> v_load <span class="op">-</span> v_before</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>dv2 <span class="op">=</span> v_load <span class="op">-</span> v_after</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>dV  <span class="op">=</span> (dv1 <span class="op">+</span> dv2) <span class="op">/</span> <span class="dv">2</span>                  <span class="co"># amplified output change (V)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"mass (kg) |  dv1 (mV) |  dv2 (mV) | dV_avg (mV)"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m, a, b, c <span class="kw">in</span> <span class="bu">zip</span>(masses, dv1, dv2, dV):</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>m<span class="sc">:4.1f}</span><span class="ss">   |  </span><span class="sc">{</span>a<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss">  |  </span><span class="sc">{</span>b<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss">  |  </span><span class="sc">{</span>c<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss">"</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Strain from the half-bridge relation (Eq. 5), stress from bending (Eq. 3)</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>strain <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> dV <span class="op">/</span> (V_i <span class="op">*</span> G <span class="op">*</span> GF)                 <span class="co"># m/m</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>stress <span class="op">=</span> <span class="dv">6</span> <span class="op">*</span> masses <span class="op">*</span> g <span class="op">*</span> L <span class="op">/</span> (w <span class="op">*</span> t<span class="op">**</span><span class="dv">2</span>)         <span class="co"># Pa</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Young's modulus = slope of stress vs strain (Lab 02 machinery)</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>coeffs <span class="op">=</span> np.polyfit(strain, stress, <span class="dv">1</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>E_fit  <span class="op">=</span> coeffs[<span class="dv">0</span>]</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>N      <span class="op">=</span> <span class="bu">len</span>(strain)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>nu     <span class="op">=</span> N <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>resid  <span class="op">=</span> stress <span class="op">-</span> np.polyval(coeffs, strain)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>norm_r <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(resid<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>s_yx   <span class="op">=</span> norm_r <span class="op">/</span> np.sqrt(nu)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>S_E    <span class="op">=</span> s_yx <span class="op">/</span> np.sqrt(np.<span class="bu">sum</span>((strain <span class="op">-</span> strain.mean())<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>CI_E   <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>, df<span class="op">=</span>nu) <span class="op">*</span> S_E</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">E = </span><span class="sc">{</span>E_fit<span class="op">/</span><span class="fl">1e9</span><span class="sc">:.2f}</span><span class="ss"> ± </span><span class="sc">{</span>CI_E<span class="op">/</span><span class="fl">1e9</span><span class="sc">:.2f}</span><span class="ss"> GPa (95% CI from the fit)"</span>)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"published: steel 190–210 GPa, aluminum ~69 GPa, brass ~100 GPa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Copy the printed delta table into your logbook (it <em>is</em> the classic strain-lab data table, computed rather than hand-filled), then build the stress–strain figure to match <a href="#fig-example-stressstrain" class="quarto-xref">Figure&nbsp;5</a> — strain in <span class="math inline">\(\mu\varepsilon\)</span>, stress in MPa, fit line, 95% CI band, and <span class="math inline">\(E\)</span> annotated. Format per Post-Lab; save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q8.</strong> Record <span class="math inline">\(E \pm\)</span> CI. Which material is your beam, judging from published moduli? How far (in %) is your <span class="math inline">\(E\)</span> from the published mid-range value?</p>
+<p><strong>Q9.</strong> Compare <code>dv1</code> and <code>dv2</code> in your table: how big is their typical disagreement, and what physical effect from <a href="#sec-background" class="quarto-xref">Section&nbsp;4</a> does it measure? Keep this number — Week 2 uses it.</p>
+</div>
+</div>
+<section id="example-result" class="level3" data-number="8.1">
+<h3 data-number="8.1" class="anchored" data-anchor-id="example-result"><span class="header-section-number">8.1</span> Example Result</h3>
+<div id="fig-example-stressstrain" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-stressstrain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab06_StressStrain.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-stressstrain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Example stress–strain plot (made-up data). Your values will differ, but formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<p><strong>End of Week 1.</strong> Show your stress–strain plot to a TA, then tear down <em>gently</em> (supplies off first; never pull gauge leads), and see Before You Leave. Your notebook and data files carry over to Week 2.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-week2" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-week2"><span class="header-section-number">9</span> WEEK 2 RESUMES HERE</h2>
+<div class="callout callout-style-default callout-important callout-titled" title="Week 2 checklist before you start">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Week 2 checklist before you start
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You need from Week 1: your notebook run through Part-4 (with <code>E_fit</code>, <code>CI_E</code>, <code>dv1</code>, <code>dv2</code>, <code>dV</code> defined), your <code>StrainBridge_Loads.csv</code>, and your logbook geometry/instrument records (Q1, Q3). <strong>No hardware is needed in Week 2</strong> — this is an analysis session. If your Week 1 data is unusable, see your TA for the recovery dataset.</p>
+</div>
+</div>
+</section>
+<section id="sec-part-5" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-part-5"><span class="header-section-number">10</span> Part-5: The Uncertainty Budget</h2>
+<p>Week 1 produced <span class="math inline">\(E\)</span> with a confidence interval from the <em>fit</em>. But the fit only knows about scatter between your nine points — it is blissfully ignorant that your gauge factor, gain, and excitation could each be a little wrong <em>in the same direction for every point</em>. Propagation of error accounts for all of it.</p>
+<p>Assemble the uncertainties, one per variable of <a href="#eq-E-single" class="quarto-xref">Equation&nbsp;5</a>. Most come from your logbook; two deserve comment. The gain’s uncertainty comes from the resistor that sets it (<span class="math inline">\(u_G/G \approx u_{R_G}/R_G\)</span>, since <span class="math inline">\(G - 1 \propto 1/R_G\)</span> and <span class="math inline">\(G \gg 1\)</span>). And <span class="math inline">\(\Delta V\)</span>’s uncertainty is the one your bracketing procedure measured for free (Q9): half the typical disagreement between your two delta estimates.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>u_dV <span class="op">=</span> np.<span class="bu">abs</span>(dv1 <span class="op">-</span> dv2).mean() <span class="op">/</span> <span class="dv">2</span>        <span class="co"># V — empirical, from bracketing</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"empirical u_dV = </span><span class="sc">{</span>u_dV<span class="op">*</span><span class="dv">1000</span><span class="sc">:.2f}</span><span class="ss"> mV"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> budget(m_eval, dV_eval):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Uncertainty budget for E at one mass. Returns (names, contribs, total)."""</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (name, value, uncertainty, exponent in E)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    variables <span class="op">=</span> [</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'m'</span>,   m_eval,  <span class="fl">0.01</span> <span class="op">*</span> m_eval,      <span class="op">+</span><span class="dv">1</span>),   <span class="co"># 1% (weight set)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'g'</span>,   g,       <span class="fl">1e-5</span> <span class="op">*</span> g,           <span class="op">+</span><span class="dv">1</span>),   <span class="co"># 0.001%</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'L'</span>,   L,       <span class="fl">0.0005</span>,             <span class="op">+</span><span class="dv">1</span>),   <span class="co"># tape: half of 1 mm</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'V_i'</span>, V_i,     <span class="fl">0.0005</span>,             <span class="op">+</span><span class="dv">1</span>),   <span class="co"># DMM: half of 1 mV</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'G'</span>,   G,       <span class="fl">0.005</span> <span class="op">*</span> G,          <span class="op">+</span><span class="dv">1</span>),   <span class="co"># R_G tolerance -&gt; gain</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'GF'</span>,  GF,      <span class="fl">0.01</span> <span class="op">*</span> GF,          <span class="op">+</span><span class="dv">1</span>),   <span class="co"># 1% (datasheet)</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'w'</span>,   w,       <span class="fl">0.00001</span>,            <span class="op">-</span><span class="dv">1</span>),   <span class="co"># caliper: half of 0.02 mm</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'t'</span>,   t,       <span class="fl">0.000005</span>,           <span class="op">-</span><span class="dv">2</span>),   <span class="co"># micrometer: half of 0.01 mm</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'dV'</span>,  dV_eval, u_dV,               <span class="op">-</span><span class="dv">1</span>),   <span class="co"># empirical (above)</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    names    <span class="op">=</span> [v[<span class="dv">0</span>] <span class="cf">for</span> v <span class="kw">in</span> variables]</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    rel      <span class="op">=</span> np.array([p <span class="op">*</span> u <span class="op">/</span> x <span class="cf">for</span> _, x, u, p <span class="kw">in</span> variables])</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    contribs <span class="op">=</span> np.<span class="bu">abs</span>(rel) <span class="op">*</span> E_fit           <span class="co"># per-variable, in Pa</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    total    <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(contribs<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> names, contribs, total</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m_eval <span class="kw">in</span> [<span class="fl">0.4</span>, <span class="fl">1.0</span>, <span class="fl">1.4</span>]:</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> np.argmin(np.<span class="bu">abs</span>(masses <span class="op">-</span> m_eval))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    names, contribs, total <span class="op">=</span> budget(masses[i], dV[i])</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- m = </span><span class="sc">{</span>masses[i]<span class="sc">:.1f}</span><span class="ss"> kg ---"</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, cont <span class="kw">in</span> <span class="bu">zip</span>(names, contribs):</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>name<span class="sc">:&gt;3}</span><span class="ss">: ±</span><span class="sc">{</span>cont<span class="op">/</span><span class="fl">1e9</span><span class="sc">:6.3f}</span><span class="ss"> GPa"</span>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  TOTAL: ±</span><span class="sc">{</span>total<span class="op">/</span><span class="fl">1e9</span><span class="sc">:.3f}</span><span class="ss"> GPa  (</span><span class="sc">{</span>total<span class="op">/</span>E_fit<span class="op">*</span><span class="dv">100</span><span class="sc">:.2f}</span><span class="ss"> %)"</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">curve-fit 95% CI, for comparison: ±</span><span class="sc">{</span>CI_E<span class="op">/</span><span class="fl">1e9</span><span class="sc">:.3f}</span><span class="ss"> GPa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>The <strong>list of tuples</strong> is the whole budget as data: each row is one variable of <a href="#eq-E-single" class="quarto-xref">Equation&nbsp;5</a> with its value, uncertainty, and exponent. The loop <code>for name, x, u, p in variables:</code> unpacks a row per pass (Lab 05’s tuple unpacking, now in a loop), and <code>p * u / x</code> is one term of <a href="#eq-power-rule" class="quarto-xref">Equation&nbsp;7</a>. Ten lines replace nine hand-propagated partial derivatives — <em>because</em> the equation is a pure power law; for anything messier you’d be back to <a href="#eq-rss" class="quarto-xref">Equation&nbsp;6</a>.</li>
+<li><strong><code>np.argmin(np.abs(masses - m_eval))</code></strong> finds the index of the mass closest to a requested value — a tidy idiom for “look up this row”.</li>
+<li><strong><code>0.01 * m_eval</code></strong>, etc.: uncertainties assigned per the apparatus — 1% on masses, 1% on <span class="math inline">\(GF\)</span> (datasheet), 0.001% on <span class="math inline">\(g\)</span>, half a resolution step on each length and on <span class="math inline">\(V_i\)</span>, <span class="math inline">\(R_G\)</span>’s tolerance on <span class="math inline">\(G\)</span>, and your empirical <code>u_dV</code>. Substitute <em>your</em> logbook values where they differ.</li>
+</ul>
+<p>Now do it <strong>by hand once</strong>: pick <span class="math inline">\(m = 0.4\)</span> kg and fill in the hand-calculation table in your logbook (variable, value, uncertainty, exponent, contribution in GPa, RSS total), confirming your Python line by line. Then build the bar-chart figure to match <a href="#fig-example-budget" class="quarto-xref">Figure&nbsp;6</a> (contributions at <span class="math inline">\(m = 1.0\)</span> kg, with the curve-fit CI drawn as a reference line):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> np.argmin(np.<span class="bu">abs</span>(masses <span class="op">-</span> <span class="fl">1.0</span>))            <span class="co"># budget at m = 1.0 kg</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>names, contribs, total <span class="op">=</span> budget(masses[i], dV[i])</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">4.0</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fig.patch.set_facecolor(<span class="st">'white'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>bars <span class="op">=</span> ax.bar(names, contribs <span class="op">/</span> <span class="fl">1e9</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>              linewidth<span class="op">=</span><span class="fl">0.5</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ax.axhline(CI_E <span class="op">/</span> <span class="fl">1e9</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f'curve-fit 95% CI (±</span><span class="sc">{</span>CI_E<span class="op">/</span><span class="fl">1e9</span><span class="sc">:.2f}</span><span class="ss"> GPa)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong><code>ax.bar(names, values)</code></strong> is the whole trick for a bar chart — categories on x, heights on y; everything else you know (grids, spines, labels, <code>ax.text</code>) applies unchanged. Finish per the Post-Lab requirements; save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q10.</strong> Complete the hand-calculation table for <span class="math inline">\(m = 0.4\)</span> kg (all nine variables). Does your hand total match Python’s?</p>
+<p><strong>Q11.</strong> Which two or three variables dominate the budget? For each, say concretely what you would change (equipment, procedure, or design) to shrink it. Was the micrometer precision on <span class="math inline">\(t\)</span> worth it?</p>
+<p><strong>Q12.</strong> Compare the totals at 0.4, 1.0, and 1.4 kg. Which contribution shrinks as mass grows, and why do the others stay constant in <em>percent</em> terms?</p>
+</div>
+</div>
+<section id="example-result-1" class="level3" data-number="10.1">
+<h3 data-number="10.1" class="anchored" data-anchor-id="example-result-1"><span class="header-section-number">10.1</span> Example Result</h3>
+<div id="fig-example-budget" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-budget-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab06_UncertaintyBudget.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-budget-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Example uncertainty budget (made-up data). Your values will differ, but formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="sec-part-6" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="sec-part-6"><span class="header-section-number">11</span> Part-6: Two Answers, One Question (Week 2)</h2>
+<p>You now hold two uncertainty statements about the same <span class="math inline">\(E\)</span>:</p>
+<ul>
+<li>the <strong>curve-fit 95% CI</strong> (Part-4) — computed from how much your nine points scatter about the line;</li>
+<li>the <strong>propagated uncertainty</strong> (Part-5) — computed from what you know about every instrument in the chain.</li>
+</ul>
+<p>They are not estimates of the same thing, and yours almost certainly disagree. The fit CI sees only <em>random, point-to-point</em> effects: drift residue, reading noise, loading variations. It is completely blind to <em>systematic</em> effects — if your <span class="math inline">\(GF\)</span> is 1% high, <strong>every</strong> point’s strain is 1% low, the points still fall on a beautiful line, the fit is serenely confident, and <span class="math inline">\(E\)</span> is 1% wrong. Propagation counts those shared errors; scatter cannot reveal them.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q13.</strong> Report both numbers side by side. Which is larger, by what factor, and which <em>sources</em> in your Part-5 budget does the fit CI not see?</p>
+<p><strong>Q14.</strong> Suppose the manufacturer’s <span class="math inline">\(GF\)</span> were wrong by 5%. What happens to your stress–strain plot’s <em>appearance</em>, and what happens to your reported <span class="math inline">\(E\)</span>? What is the only way to catch such an error?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">12</span> Post-Lab Assignment</h2>
+<p>Upload your submissions to Canvas. <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u> A full example solution notebook is posted after all sections have met; check your approach against it, but submit your own work.</p>
+<section id="week-1-submission-items" class="level3" data-number="12.1">
+<h3 data-number="12.1" class="anchored" data-anchor-id="week-1-submission-items"><span class="header-section-number">12.1</span> Week 1 Submission Items</h3>
+<ul>
+<li>Your <strong>.ipynb</strong> notebook through Part-4, restarted and run top-to-bottom</li>
+<li>Stress–strain plot, <strong>.pdf</strong></li>
+<li>Week 1 post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="week-2-submission-items" class="level3" data-number="12.2">
+<h3 data-number="12.2" class="anchored" data-anchor-id="week-2-submission-items"><span class="header-section-number">12.2</span> Week 2 Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook (<code>FirstName_LastName_Lab06.ipynb</code>) including the budget</li>
+<li>Uncertainty budget bar chart, <strong>.pdf</strong></li>
+<li>A photo/scan of your <strong>hand-calculation table</strong> (Q10)</li>
+<li>Week 2 post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="stressstrain-plot-requirements" class="level3" data-number="12.3">
+<h3 data-number="12.3" class="anchored" data-anchor-id="stressstrain-plot-requirements"><span class="header-section-number">12.3</span> Stress–Strain Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>Data: red open circles, size 75; fit: solid blue, 2 pt; 95% CI: dashed black, 1 pt</li>
+<li>Strain axis in <span class="math inline">\(\mu\varepsilon\)</span>; stress axis in MPa; major and minor grids; top/right spines removed</li>
+<li>Axis labels with units; title “FirstName LastName’s Stress vs.&nbsp;Strain Plot” with the date</li>
+<li><code>ax.text</code> annotation: <span class="math inline">\(E \pm\)</span> CI in GPa (2 decimals) and <span class="math inline">\(s_{yx}\)</span> with units</li>
+</ul>
+</section>
+<section id="uncertainty-budget-plot-requirements" class="level3" data-number="12.4">
+<h3 data-number="12.4" class="anchored" data-anchor-id="uncertainty-budget-plot-requirements"><span class="header-section-number">12.4</span> Uncertainty Budget Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>One bar per variable of <a href="#eq-E-single" class="quarto-xref">Equation&nbsp;5</a> (all nine), heights in GPa, steel-blue with black edges</li>
+<li>The curve-fit 95% CI drawn as a dashed red horizontal reference line, in the legend</li>
+<li>y-axis major grid; top/right spines removed; axis labels; title “FirstName LastName’s Uncertainty Budget Plot (m = 1.0 kg)” with the date</li>
+<li><code>ax.text</code> annotation: the RSS total <span class="math inline">\(u_E\)</span> in GPa and in percent</li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="12.5">
+<h3 data-number="12.5" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">12.5</span> Post-Lab Questions</h3>
+<ol type="1">
+<li>Report <span class="math inline">\(E \pm\)</span> CI (fit) and <span class="math inline">\(E \pm u_E\)</span> (propagated). What material is the beam?</li>
+<li>Derive the power-rule exponent for <span class="math inline">\(t\)</span>: starting from <a href="#eq-stress" class="quarto-xref">Equation&nbsp;4</a> and <span class="math inline">\(c\)</span>, <span class="math inline">\(I\)</span>, show why thickness enters <span class="math inline">\(E\)</span> as <span class="math inline">\(t^{-2}\)</span> and therefore counts double in <a href="#eq-power-rule" class="quarto-xref">Equation&nbsp;7</a>.</li>
+<li>Rank your top three uncertainty contributors and propose one concrete improvement for each. Which proposed improvement buys the most for the least effort?</li>
+<li>Why is the propagated <span class="math inline">\(u_E\)</span> larger than the fit CI? Name two error sources included in the former and invisible to the latter, and explain <em>why</em> the fit cannot see them.</li>
+<li>A colleague suggests using a <em>quarter</em>-bridge (one active gauge, three fixed resistors) to save a gauge. Name two things you would lose, referring to <a href="#eq-halfbridge" class="quarto-xref">Equation&nbsp;2</a> and the temperature-compensation argument.</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave-both-weeks" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="before-you-leave-both-weeks"><span class="header-section-number">13</span> Before You Leave (both weeks)</h2>
+<ul>
+<li><strong>Supplies off</strong> (Master Enable and the 5 V switch) before touching any wire.</li>
+<li>Week 1: leave the gauges wired to the beam exactly as found; remove only <em>your</em> breadboard wiring. Never pull on gauge leads.</li>
+<li>Return weights to their rack in order; chips to their containers; wires to the bin, sorted by color.</li>
+<li>Confirm your data files have synced to OneDrive (check on a second device) and that <strong>both</strong> partners have everything.</li>
+<li>Clean the station, collect your belongings, and log off.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

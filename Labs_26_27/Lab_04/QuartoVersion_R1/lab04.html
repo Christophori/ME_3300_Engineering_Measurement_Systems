@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-04: Signal Generation, Sampling, and Aliasing</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab04_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab04_files/libs/quarto-html/quarto.js"></script>
+<script src="lab04_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab04_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab04_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab04_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab04_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab04_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab04_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab04_files/libs/bootstrap/bootstrap-791ceca6b2ec3cae9ef2a359bbe8f8f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning Objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#extend-your-folder-structure" id="toc-extend-your-folder-structure" class="nav-link" data-scroll-target="#extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</a></li>
+  <li><a href="#read-the-background-section" id="toc-read-the-background-section" class="nav-link" data-scroll-target="#read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#python-quick-reference-new-this-lab" id="toc-python-quick-reference-new-this-lab" class="nav-link" data-scroll-target="#python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background"><span class="header-section-number">4</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#the-anatomy-of-an-ac-signal" id="toc-the-anatomy-of-an-ac-signal" class="nav-link" data-scroll-target="#the-anatomy-of-an-ac-signal"><span class="header-section-number">4.1</span> The Anatomy of an AC Signal</a></li>
+  <li><a href="#sampling-and-the-nyquist-frequency" id="toc-sampling-and-the-nyquist-frequency" class="nav-link" data-scroll-target="#sampling-and-the-nyquist-frequency"><span class="header-section-number">4.2</span> Sampling and the Nyquist Frequency</a></li>
+  <li><a href="#aliasing-and-the-folding-formula" id="toc-aliasing-and-the-folding-formula" class="nav-link" data-scroll-target="#aliasing-and-the-folding-formula"><span class="header-section-number">4.3</span> Aliasing and the Folding Formula</a></li>
+  <li><a href="#the-led-circuit" id="toc-the-led-circuit" class="nav-link" data-scroll-target="#the-led-circuit"><span class="header-section-number">4.4</span> The LED Circuit</a></li>
+  <li><a href="#your-eye-is-also-a-sensor" id="toc-your-eye-is-also-a-sensor" class="nav-link" data-scroll-target="#your-eye-is-also-a-sensor"><span class="header-section-number">4.5</span> Your Eye Is Also a Sensor</a></li>
+  </ul></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">5</span> Part-1: Build the LED Circuits</a></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">6</span> Part-2: Meet the Wavegen (GUI First)</a></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">7</span> Part-3: Two Instruments, One Voltage</a>
+  <ul class="collapse">
+  <li><a href="#example-result" id="toc-example-result" class="nav-link" data-scroll-target="#example-result"><span class="header-section-number">7.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-4" id="toc-sec-part-4" class="nav-link" data-scroll-target="#sec-part-4"><span class="header-section-number">8</span> Part-4: The Aliasing Sweep</a>
+  <ul class="collapse">
+  <li><a href="#predict-first" id="toc-predict-first" class="nav-link" data-scroll-target="#predict-first"><span class="header-section-number">8.1</span> Predict First</a></li>
+  <li><a href="#run-the-sweep" id="toc-run-the-sweep" class="nav-link" data-scroll-target="#run-the-sweep"><span class="header-section-number">8.2</span> Run the Sweep</a></li>
+  <li><a href="#plot-all-five-panels" id="toc-plot-all-five-panels" class="nav-link" data-scroll-target="#plot-all-five-panels"><span class="header-section-number">8.3</span> Plot All Five Panels</a></li>
+  <li><a href="#example-result-1" id="toc-example-result-1" class="nav-link" data-scroll-target="#example-result-1"><span class="header-section-number">8.4</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-5" id="toc-sec-part-5" class="nav-link" data-scroll-target="#sec-part-5"><span class="header-section-number">9</span> Part-5: Digital Output — and Fooling the DAQ in Person</a>
+  <ul class="collapse">
+  <li><a href="#blink-an-led-from-python" id="toc-blink-an-led-from-python" class="nav-link" data-scroll-target="#blink-an-led-from-python"><span class="header-section-number">9.1</span> Blink an LED from Python</a></li>
+  <li><a href="#eye-vs.-daq" id="toc-eye-vs.-daq" class="nav-link" data-scroll-target="#eye-vs.-daq"><span class="header-section-number">9.2</span> Eye vs.&nbsp;DAQ</a></li>
+  <li><a href="#example-result-2" id="toc-example-result-2" class="nav-link" data-scroll-target="#example-result-2"><span class="header-section-number">9.3</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-6" id="toc-sec-part-6" class="nav-link" data-scroll-target="#sec-part-6"><span class="header-section-number">10</span> Part-6: The Flicker-Fusion Threshold</a></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#submission-items" id="toc-submission-items" class="nav-link" data-scroll-target="#submission-items"><span class="header-section-number">11.1</span> Submission Items</a></li>
+  <li><a href="#static-comparison-plot-requirements" id="toc-static-comparison-plot-requirements" class="nav-link" data-scroll-target="#static-comparison-plot-requirements"><span class="header-section-number">11.2</span> Static Comparison Plot Requirements</a></li>
+  <li><a href="#aliasing-sweep-plot-requirements" id="toc-aliasing-sweep-plot-requirements" class="nav-link" data-scroll-target="#aliasing-sweep-plot-requirements"><span class="header-section-number">11.3</span> Aliasing Sweep Plot Requirements</a></li>
+  <li><a href="#eye-vs-daq-plot-requirements" id="toc-eye-vs-daq-plot-requirements" class="nav-link" data-scroll-target="#eye-vs-daq-plot-requirements"><span class="header-section-number">11.4</span> Eye-vs-DAQ Plot Requirements</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">11.5</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave" id="toc-before-you-leave" class="nav-link" data-scroll-target="#before-you-leave"><span class="header-section-number">12</span> Before You Leave</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lab04.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-04: Signal Generation, Sampling, and Aliasing</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning Objective</h2>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li><strong>Generate signals</strong> with the ADS Wavegen — first by hand in the GUI, then scripted from Python with <code>dwfpy</code></li>
+<li><strong>Compare two instruments</strong> measuring the same DC voltage (handheld DMM vs.&nbsp;a scripted ADS acquisition) and reason about accuracy, precision, and resolution</li>
+<li>Understand <strong>sampling</strong>: sample rate, the Nyquist frequency, and the folding formula that predicts what an undersampled signal <em>looks like</em></li>
+<li><strong>Demonstrate aliasing deliberately</strong> with a five-frequency sweep — and predict every apparent frequency <em>before</em> you capture it</li>
+<li>Drive a <strong>digital output</strong> (an LED) from Python and understand the difference between software timing and hardware timing</li>
+<li>Measure the bandwidth of a sensor you own: your own eyes, via the <strong>flicker-fusion threshold</strong></li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="hardware-instruments" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
+<ul>
+<li>What do the Wavegen’s <em>frequency</em>, <em>amplitude</em>, and <em>offset</em> settings each do to the output signal?</li>
+<li>Why does the LED need a series resistor? What happens without one?</li>
+<li>Why does this lab loop W1 back into Scope Channel 1 with a wire, when both live inside the same ADS?</li>
+<li>What voltage does a DIO pin supply when HIGH, and how is that different from W1?</li>
+<li>Why is neither the DMM nor the ADS the “true” value in the static comparison?</li>
+</ul>
+</section>
+<section id="programming" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.2</span> Programming</h4>
+<ul>
+<li>Which <code>dwfpy</code> object is the Wavegen? How do you make W1 output a 100 Hz sine from Python?</li>
+<li>What does <code>float(input(...))</code> return, and why is the <code>float(...)</code> needed?</li>
+<li>What does <code>time.sleep(0.25)</code> do — and why is a <code>time.sleep</code> loop <em>not</em> a precision timer?</li>
+<li>What does a <code>while True:</code> loop do, and how does <code>break</code> get you out of it?</li>
+<li>How do you build a five-panel figure with <code>plt.subplots</code>, and how do you loop over its axes?</li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>What is the Nyquist frequency for a 1000 Hz sample rate? For 48 kHz?</li>
+<li>A 550 Hz sine is sampled at 1000 Hz. What frequency appears in the data?</li>
+<li>Why can two <em>different</em> input signals produce <em>identical</em> sampled data? What does that imply about fixing aliasing after the fact?</li>
+<li>Your data shows a clean 0.5 Hz square wave, but your eyes saw the LED blinking fast. Which one is lying, and why?</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section.</p>
+<section id="extend-your-folder-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</h3>
+<p>Add a Lab_04 folder set to your <code>ME3300</code> folder:</p>
+<pre class="text"><code>ME3300/
+├── Lab_01/
+├── Lab_02/
+├── Lab_03/
+├── Lab_04/
+│   ├── Code/
+│   │   ├── Lab04_Prelab_Walkthrough.ipynb
+│   │   └── FirstName_LastName_Lab04.ipynb
+│   ├── Data/
+│   └── Figures/</code></pre>
+<p>No new packages are needed this week — <code>dwfpy</code> (added in Lab 03) covers everything.</p>
+</section>
+<section id="read-the-background-section" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</h3>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It defines the anatomy of an AC signal, derives the Nyquist frequency and the folding formula you will use to <em>predict</em> every result in this lab, and explains the LED circuit you will build.</p>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Download <code>Lab04_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_04/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> Python skills using simulated signals:</p>
+<ul>
+<li>generating and <em>sampling</em> sine waves in NumPy — seeing aliasing before you touch hardware</li>
+<li>the folding formula and Python’s <code>round()</code></li>
+<li>reading numbers from the keyboard with <code>float(input(...))</code></li>
+<li><code>while True:</code> loops and <code>break</code></li>
+<li>pausing with <code>time.sleep</code></li>
+<li>multi-panel figures with <code>plt.subplots(5, 1)</code> and looping over the axes</li>
+</ul>
+<p>As always, working through the prelab will allow you to answer the <strong>checkpoint</strong> questions in the <strong>Prelab quiz on Canvas</strong> before your lab session.</p>
+</section>
+<section id="python-quick-reference-new-this-lab" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</h3>
+<div id="tbl-quickref" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: New Python syntax and functions introduced in Lab 04
+</figcaption>
+<div aria-describedby="tbl-quickref-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Open the Wavegen from Python</td>
+<td><code>wavegen = device.analog_output</code></td>
+</tr>
+<tr class="even">
+<td>Output a DC level on W1</td>
+<td><code>wavegen['ch1'].setup('dc', offset=3.0, start=True)</code></td>
+</tr>
+<tr class="odd">
+<td>Output a sine on W1</td>
+<td><code>wavegen['ch1'].setup('sine', frequency=100, amplitude=2.0, offset=2.5, start=True)</code></td>
+</tr>
+<tr class="even">
+<td>Output a square wave on W1</td>
+<td><code>wavegen['ch1'].setup('square', ...)</code></td>
+</tr>
+<tr class="odd">
+<td>Claim DIO 0 as an output</td>
+<td><code>led = device.digital_io[0]</code> then <code>led.setup(enabled=True, configure=True)</code></td>
+</tr>
+<tr class="even">
+<td>Set the pin high / low</td>
+<td><code>led.output_state = True</code> / <code>False</code></td>
+</tr>
+<tr class="odd">
+<td>Pause the script</td>
+<td><code>time.sleep(0.25)</code> (needs <code>import time</code>)</td>
+</tr>
+<tr class="even">
+<td>Ask the user for a number</td>
+<td><code>v = float(input('Reading (V): '))</code></td>
+</tr>
+<tr class="odd">
+<td>Nearest whole number</td>
+<td><code>round(1.125)</code></td>
+</tr>
+<tr class="even">
+<td>Loop until you <code>break</code></td>
+<td><code>while True:</code> … <code>break</code></td>
+</tr>
+<tr class="odd">
+<td>Sample-time array</td>
+<td><code>t = np.arange(n) / fs</code></td>
+</tr>
+<tr class="even">
+<td>Five stacked plots</td>
+<td><code>fig, axes = plt.subplots(5, 1, figsize=(6.5, 10.0))</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Recall the dwfpy device model from Lab 03: every WaveForms GUI instrument is an object in code. This week adds the second row to your working set — <code>wavegen['ch1']</code> is the GUI’s <strong>W1</strong>.</p>
+<div id="tbl-device-model" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-device-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: The dwfpy device model; this lab’s new instruments in bold
+</figcaption>
+<div aria-describedby="tbl-device-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>WaveForms GUI instrument</th>
+<th>dwfpy object</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scope / Logger (analog inputs)</td>
+<td><code>device.analog_input</code></td>
+</tr>
+<tr class="even">
+<td><strong>Wavegen (signal generator)</strong></td>
+<td><strong><code>device.analog_output</code></strong></td>
+</tr>
+<tr class="odd">
+<td>Supplies (power)</td>
+<td><code>device.analog_io</code></td>
+</tr>
+<tr class="even">
+<td><strong>Static I/O (digital pins)</strong></td>
+<td><strong><code>device.digital_io</code></strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>In Labs 02 and 03 you measured signals the world handed you — a pendulum swung, and you recorded what its sensors did. This week you take control of the <em>source</em> side of the measurement chain: you will <strong>generate</strong> signals with known frequency, amplitude, and offset, and then study how faithfully a sampled measurement reproduces them. Every calibration you ever perform, and every test rig you ever build, rests on this ability to produce a known input on demand.</p>
+<p>The scientific payload of the lab is <strong>sampling theory</strong>. A DAQ cannot watch a signal continuously — it takes snapshots at the sample rate <span class="math inline">\(f_s\)</span>. You have chosen sample rates twice already this course (100 Hz in Lab 02, 1000 Hz in Lab 03) mostly by trusting the manual. This week you learn the rule that governs that choice, and — more memorably — you will watch what happens when the rule is broken: a fast signal masquerading, in your data, as a slow one that <em>is not there</em>. This impostor phenomenon is called <strong>aliasing</strong>, and it has caused real engineering failures: vibration monitors that missed dangerous machine resonances, and audio systems haunted by phantom tones. By the end of the session you will have seen an LED blinking rapidly in front of your eyes while your own data insists — cleanly, plausibly, and wrongly — that it blinked once every two seconds.</p>
+<p>Along the way you will also:</p>
+<ul>
+<li>run a <strong>two-instrument showdown</strong> (handheld DMM vs.&nbsp;scripted ADS acquisition) on known DC levels, sharpening the accuracy/precision/resolution vocabulary from Lab 01;</li>
+<li>write Python that drives a <strong>digital output pin</strong>, the simplest form of computer control of the physical world, and discover why software loops make poor clocks;</li>
+<li>measure your own <strong>flicker-fusion threshold</strong> — the frequency at which your eyes stop resolving blinking light — because your visual system is also a measurement system, with a bandwidth you can characterize like any other sensor’s.</li>
+</ul>
+</section>
+<section id="sec-background" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-background"><span class="header-section-number">4</span> Background</h2>
+<section id="the-anatomy-of-an-ac-signal" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-anatomy-of-an-ac-signal"><span class="header-section-number">4.1</span> The Anatomy of an AC Signal</h3>
+<p>This lab’s working signal is a sine wave riding on a DC level:</p>
+<p><span id="eq-test-signal"><span class="math display">\[y(t) = V_{offset} + A \sin(2\pi f t) \tag{1}\]</span></span></p>
+<p>where <span class="math inline">\(A\)</span> is the <strong>amplitude</strong>, <span class="math inline">\(f\)</span> the <strong>frequency</strong> in Hz, and <span class="math inline">\(V_{offset}\)</span> the <strong>DC offset</strong>. Two derived quantities appear constantly on instrument panels: the <strong>peak-to-peak voltage</strong> <span class="math inline">\(V_{pp} = 2A\)</span> and the <strong>period</strong> <span class="math inline">\(T = 1/f\)</span>. <a href="#fig-signal-anatomy" class="quarto-xref">Figure&nbsp;1</a> labels all of them on this lab’s standard test signal (<span class="math inline">\(V_{offset} = 2.5\)</span> V, <span class="math inline">\(A = 2\)</span> V), which conveniently spans 0.5–4.5 V — safely inside the ADS’s range, and always positive so it can light an LED.</p>
+<div id="fig-signal-anatomy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-signal-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/AC_Signal_Anatomy.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signal-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The anatomy of an AC signal: amplitude, peak-to-peak voltage, DC offset, and period, shown on this lab’s standard test signal.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="sampling-and-the-nyquist-frequency" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="sampling-and-the-nyquist-frequency"><span class="header-section-number">4.2</span> Sampling and the Nyquist Frequency</h3>
+<p>A DAQ samples a continuous signal at discrete instants <span class="math inline">\(t_k = k/f_s\)</span>, producing snapshots <span class="math inline">\(y(t_k)\)</span> and discarding everything in between. How fast is fast enough? The celebrated answer is the <strong>Nyquist criterion</strong>: a sampled signal can only faithfully represent frequencies below the <strong>Nyquist frequency</strong>,</p>
+<p><span id="eq-nyquist"><span class="math display">\[f_N = \frac{f_s}{2} \tag{2}\]</span></span></p>
+<p>i.e., you need <em>more than two samples per cycle</em> of the fastest content in your signal. At <span class="math inline">\(f_s = 1000\)</span> Hz — this lab’s fixed sample rate — the Nyquist frequency is 500 Hz.</p>
+</section>
+<section id="aliasing-and-the-folding-formula" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="aliasing-and-the-folding-formula"><span class="header-section-number">4.3</span> Aliasing and the Folding Formula</h3>
+<p>What happens to a signal component <em>above</em> <span class="math inline">\(f_N\)</span>? It does not disappear, and it does not raise an error. Something worse happens: the samples it leaves behind are <strong>exactly consistent with a lower frequency</strong>, and that impostor frequency is what you see in your data. <a href="#fig-alias-illustration" class="quarto-xref">Figure&nbsp;2</a> shows the mechanism: a 9 Hz sine sampled at only 10 Hz leaves samples that trace out a perfect 1 Hz wave.</p>
+<div id="fig-alias-illustration" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-alias-illustration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Sampling_Alias_Illustration.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-alias-illustration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: A 9 Hz signal (gray) sampled at 10 Hz (red dots). The samples are indistinguishable from a 1 Hz sine (blue dashed) — the alias. Nothing in the sampled data reveals the deception.
+</figcaption>
+</figure>
+</div>
+<p>The apparent (alias) frequency is predicted by the <strong>folding formula</strong>:</p>
+<p><span id="eq-folding"><span class="math display">\[f_{apparent} = \left| \, f_{signal} - \operatorname{round}\!\left(\frac{f_{signal}}{f_s}\right) \cdot f_s \, \right| \tag{3}\]</span></span></p>
+<p>where <span class="math inline">\(\operatorname{round}(\cdot)\)</span> is rounding to the nearest whole number. Below <span class="math inline">\(f_N\)</span> the formula returns <span class="math inline">\(f_{signal}\)</span> unchanged (no aliasing); above <span class="math inline">\(f_N\)</span> the apparent frequency “folds” back down, as <a href="#fig-folding" class="quarto-xref">Figure&nbsp;3</a> shows. The five red dots are the frequencies you will generate in Part-4 — take a moment now to read their predicted apparent frequencies off the vertical axis.</p>
+<div id="fig-folding" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-folding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Folding_Diagram.png" class="img-fluid figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-folding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The folding diagram for <span class="math inline">\(f_s = 1000\)</span> Hz: apparent frequency vs.&nbsp;true signal frequency. Above <span class="math inline">\(f_N\)</span>, frequency folds back like light off a mirror — hence the name. Red dots: this lab’s sweep frequencies.
+</figcaption>
+</figure>
+</div>
+<p>One consequence deserves emphasis, because it is the deepest lesson of this lab: <strong>aliasing is irreversible</strong>. Once a 550 Hz signal has been sampled at 1000 Hz, the data is <em>identical</em> to that of a 450 Hz signal — not similar, identical. No later processing can tell them apart. Real DAQ systems therefore remove high-frequency content with analog <strong>anti-aliasing filters</strong> <em>before</em> the sampler, because afterward is too late. (You will build exactly such a filter in a later lab.)</p>
+</section>
+<section id="the-led-circuit" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="the-led-circuit"><span class="header-section-number">4.4</span> The LED Circuit</h3>
+<p>An LED (light-emitting diode) passes current — and emits light — in one direction only, once the voltage across it exceeds its <strong>forward voltage</strong> <span class="math inline">\(V_f\)</span> (about 1.8–2.2 V for ordinary red/green LEDs). An LED does not limit its own current: connected directly across a supply it will happily destroy itself. The series resistor sets the current:</p>
+<p><span id="eq-led-current"><span class="math display">\[I = \frac{V_{supply} - V_f}{R} \tag{4}\]</span></span></p>
+<p>With this lab’s 330 Ω resistor and a 5 V drive, <span class="math inline">\(I \approx (5 - 2)/330 \approx 9\)</span> mA — bright, and comfortably inside a standard LED’s ~20 mA limit. <a href="#fig-led-schematic" class="quarto-xref">Figure&nbsp;4</a> shows the two circuits you will build: one LED driven by the Wavegen (W1) and one by digital pin DIO 0. Note the polarity: LEDs only work one way around.</p>
+<div id="fig-led-schematic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-led-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/LED_Circuit_Schematic.png" class="img-fluid figure-img" style="width:95.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-led-schematic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The two LED circuits, plus the Scope Channel 1 tap used to record what the W1 LED receives.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="your-eye-is-also-a-sensor" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="your-eye-is-also-a-sensor"><span class="header-section-number">4.5</span> Your Eye Is Also a Sensor</h3>
+<p>A blinking LED looks <em>steady</em> if it blinks fast enough. The changeover frequency — the <strong>flicker-fusion threshold</strong> — is typically 50–90 Hz, varying with brightness, contrast, where the image lands on your retina (peripheral vision is more flicker-sensitive), and from person to person. Above the threshold your visual system fuses the flicker into steady light, but the flicker is still physically there — and “invisible” flicker from cheap LED lighting and displays is a documented cause of eyestrain and headaches, which is why lighting standards (e.g., IEEE 1789) regulate it. In Part-6 you will measure your own threshold, using the Wavegen as a precision flicker source. Your eye is not literally a discrete sampler like the ADS, but it <em>is</em> a measurement system with finite bandwidth — and this lab is, at heart, about knowing the bandwidth of every instrument you use, including the two built into your head.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">5</span> Part-1: Build the LED Circuits</h2>
+<p>Your guides are <a href="#fig-led-schematic" class="quarto-xref">Figure&nbsp;4</a> and the annotated photo in <a href="#fig-circuit-build" class="quarto-xref">Figure&nbsp;5</a>. This is the simplest circuit of the course — two LEDs, two resistors, four signal wires.</p>
+<div id="fig-circuit-build" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-circuit-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/LED_Circuit_Build_ADS.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-circuit-build-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: The breadboard build: both LED branches and the Channel 1 tap.
+</figcaption>
+</figure>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 17%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Connection</th>
+<th>ADS pin</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>LED 1 branch input</td>
+<td><strong>W1</strong></td>
+<td>Wavegen drive signal</td>
+</tr>
+<tr class="even">
+<td>LED 2 branch input</td>
+<td><strong>DIO 0</strong></td>
+<td>Digital (on/off) drive</td>
+</tr>
+<tr class="odd">
+<td>Both LED cathodes (via breadboard rail)</td>
+<td>GND</td>
+<td>Return path</td>
+</tr>
+<tr class="even">
+<td>W1 node (before the resistor)</td>
+<td><strong>1+</strong></td>
+<td>Scope records the drive signal</td>
+</tr>
+<tr class="odd">
+<td>GND rail</td>
+<td><strong>1−</strong></td>
+<td>Ch. 1 reference</td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>Wire both branches per the table: pin → 330 Ω resistor → LED anode (<strong>long leg</strong>) → LED cathode (short leg) → GND rail. Add the Channel 1 tap at the W1 node.</li>
+<li>Check each LED with your DMM in <strong>diode-test mode</strong>: probes matching the LED’s polarity should light it faintly and read <span class="math inline">\(V_f\)</span>; reversed, it should read over-limit. This is the DMM habit from Labs 01–03 applied to a new component.</li>
+<li>Nothing should be lit yet — W1 and DIO 0 both idle at 0 V.</li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q1.</strong> Record the forward voltage <span class="math inline">\(V_f\)</span> your DMM’s diode test reports for each LED. Using <a href="#eq-led-current" class="quarto-xref">Equation&nbsp;4</a>, what current will flow in the W1 branch when W1 outputs 5 V? When DIO 0 outputs its 3.3 V HIGH?</p>
+<p><strong>Q2.</strong> In one sentence: what would happen to the LED if you omitted the 330 Ω resistor, and <em>why</em> doesn’t the LED protect itself?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">6</span> Part-2: Meet the Wavegen (GUI First)</h2>
+<p>New instrument, same course rule as Lab 03: <strong>explore it live in the GUI before you automate it</strong>. The Wavegen is the ADS’s built-in signal generator — the source you will trust for every frequency in this lab — and five minutes of knob-turning now will make the scripted version obvious later.</p>
+<ol type="1">
+<li>Open <strong>WaveForms</strong>, then the <strong>Wavegen</strong> and <strong>Scope</strong> instruments side by side.</li>
+<li>Configure <strong>W1</strong> (Channel 1 output): <strong>Sine</strong>, Frequency <strong>1 Hz</strong>, Amplitude <strong>2 V</strong>, Offset <strong>2.5 V</strong> — the standard test signal of <a href="#eq-test-signal" class="quarto-xref">Equation&nbsp;1</a> and <a href="#fig-signal-anatomy" class="quarto-xref">Figure&nbsp;1</a>. Match <a href="#fig-wavegen-setup" class="quarto-xref">Figure&nbsp;6</a>. Click <strong>Run</strong>.</li>
+<li>Watch the LED: it should pulse smoothly, brightening and dimming once per second. You are watching <a href="#eq-test-signal" class="quarto-xref">Equation&nbsp;1</a> in hardware.</li>
+<li>In the Scope, enable Channel 1 (range ±5 V) and start acquiring. The trace should show the 0.5–4.5 V sine feeding the LED branch. Use the Scope’s <strong>X cursors</strong> to measure the time between two successive peaks and compare with <span class="math inline">\(T = 1/f\)</span>; match <a href="#fig-scope-loopback" class="quarto-xref">Figure&nbsp;7</a>.</li>
+<li>Now raise the frequency: 10 Hz, then 50 Hz, then <strong>100 Hz</strong>. Watch the LED at each step and note what your eyes report.</li>
+<li>Switch the waveform to <strong>Square</strong> and back. When you are done exploring, <strong>close WaveForms fully</strong> (check the system tray) so your scripts can claim the device.</li>
+</ol>
+<div id="fig-wavegen-setup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wavegen-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Wavegen_Sine_Setup.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wavegen-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Wavegen configured for the standard test signal.
+</figcaption>
+</figure>
+</div>
+<div id="fig-scope-loopback" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scope-loopback-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Scope_Wavegen_Loopback.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scope-loopback-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Scope view of the W1 loopback, with cursors measuring one period.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q3.</strong> Record the cursor-measured period at 1 Hz. Does it match <span class="math inline">\(1/f\)</span>? What is the <em>expected</em> period at 100 Hz?</p>
+<p><strong>Q4.</strong> Describe what the LED looked like at 1, 10, 50, and 100 Hz. At what frequency (roughly) did it stop looking like a blinking light? Keep this note — Part-6 measures it properly.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why the loopback wire?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>W1 and the Scope live in the same box, but the ADS does not internally connect them — and that is a feature. The Scope measures whatever its probe touches, exactly as it would on an external circuit. Here it monitors the actual voltage arriving at your LED branch, which is the honest quantity to record.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-3" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">7</span> Part-3: Two Instruments, One Voltage</h2>
+<p>Which do you trust: the handheld DMM or the ADS? In this part a script sets W1 to known DC levels — 0 through 5 V — and at each level you record the voltage two ways: reading the DMM yourself, and letting the script average a 2-second ADS capture. This is Lab 03’s automation philosophy again: the script handles the repetitive setting/capturing/bookkeeping, and pauses for the one thing only you can do (read the DMM).</p>
+<p>Open your notebook <code>FirstName_LastName_Lab04.ipynb</code> (kernel: your <code>.venv</code>; starter notebook on Canvas as usual). Clip your DMM across the LED — probes on the W1 node and GND.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Close WaveForms first!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Close WaveForms first!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Same rule as Lab 03: the ADS accepts one controlling program at a time. Close WaveForms fully before running dwfpy cells.</p>
+</div>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dwfpy <span class="im">as</span> dwf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>set_points   <span class="op">=</span> np.arange(<span class="fl">0.0</span>, <span class="fl">5.5</span>, <span class="fl">1.0</span>)   <span class="co"># 0, 1, 2, 3, 4, 5 V</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dmm_readings <span class="op">=</span> []                          <span class="co"># typed in from the handheld DMM</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>ads_means    <span class="op">=</span> []                          <span class="co"># computed from the ADS capture</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>fs, duration <span class="op">=</span> <span class="dv">1000</span>, <span class="fl">2.0</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    wavegen <span class="op">=</span> device.analog_output         <span class="co"># the Wavegen instrument</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    scope   <span class="op">=</span> device.analog_input</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v_set <span class="kw">in</span> set_points:</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        wavegen[<span class="st">'ch1'</span>].setup(<span class="st">'dc'</span>, offset<span class="op">=</span>v_set, start<span class="op">=</span><span class="va">True</span>)   <span class="co"># W1 = v_set</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        reading <span class="op">=</span> <span class="bu">float</span>(<span class="bu">input</span>(<span class="ss">f"W1 = </span><span class="sc">{</span>v_set<span class="sc">:.1f}</span><span class="ss"> V. Type the DMM reading (V): "</span>))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        dmm_readings.append(reading)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        volts <span class="op">=</span> scope[<span class="st">'ch1'</span>].get_data()</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        ads_means.append(volts.mean())</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  DMM </span><span class="sc">{</span>reading<span class="sc">:.3f}</span><span class="ss"> V | ADS mean </span><span class="sc">{</span>ads_means[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.6f}</span><span class="ss"> V"</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>np.savetxt(<span class="st">'../Data/Static_Comparison.csv'</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>           np.column_stack([set_points, dmm_readings, ads_means]),</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>           header<span class="op">=</span><span class="st">'set_V,dmm_V,ads_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>New syntax, in the order it appears:</p>
+<ul>
+<li><strong><code>wavegen['ch1'].setup('dc', offset=v_set, start=True)</code></strong> — the Wavegen as code. <code>'dc'</code> is a waveform <em>function</em> just like <code>'sine'</code>; a DC “waveform” ignores frequency and amplitude and simply holds the <code>offset</code> voltage. <code>start=True</code> makes the output live immediately — the exact equivalent of clicking <strong>Run</strong> in the GUI. Note that <code>wavegen['ch1']</code> is the GUI’s <strong>W1</strong>, the same labels-not-indices convention as <code>scope['ch1']</code>.</li>
+<li><strong><code>float(input(...))</code></strong> — <code>input()</code> (Lab 03) always returns <em>text</em>, even if you type <code>3.302</code>. Wrapping it in <code>float(...)</code> converts that text to a number you can do math with. Type only the number — no units.</li>
+<li>Notice the pattern: one <code>with</code> block, <em>two</em> instruments (<code>wavegen</code> and <code>scope</code>) working together. This source-plus-measurement pairing is the skeleton of every automated test you will ever script.</li>
+</ul>
+<p>As you go, watch the LED: it steps up in brightness with each setpoint — a free sanity check that W1 is really changing.</p>
+<p>Then load the results and compute each instrument’s error:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.loadtxt(<span class="st">'../Data/Static_Comparison.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>v_set, v_dmm, v_ads <span class="op">=</span> data[:, <span class="dv">0</span>], data[:, <span class="dv">1</span>], data[:, <span class="dv">2</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>err_dmm <span class="op">=</span> (v_dmm <span class="op">-</span> v_set) <span class="op">*</span> <span class="dv">1000</span>        <span class="co"># error in mV</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>err_ads <span class="op">=</span> (v_ads <span class="op">-</span> v_set) <span class="op">*</span> <span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Build the error plot to match <a href="#fig-example-static" class="quarto-xref">Figure&nbsp;8</a> — both instruments on one axes, errors in mV vs.&nbsp;the set voltage, formatted per the Post-Lab requirements. Save <strong>.pdf</strong> and <strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q5.</strong> Copy your six-row comparison table into your logbook. Which instrument’s errors are larger? Which instrument’s errors follow a <em>pattern</em> (a trend with voltage), and which look random? What does a trend suggest about the <em>type</em> of error?</p>
+<p><strong>Q6.</strong> What is the resolution (smallest displayed step) of your DMM? Estimate the ADS’s effective resolution from the digits that change between repeated captures. Resolution, precision, accuracy: which of the three does averaging 2000 samples improve, and which can it never improve?</p>
+<p><strong>Q7.</strong> The “error” here is measured against the W1 <em>setpoint</em> — but W1 is itself an instrument with its own tolerance. What third piece of equipment would you need to decide which of the three (W1, DMM, ADS) is closest to the truth?</p>
+</div>
+</div>
+<section id="example-result" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="example-result"><span class="header-section-number">7.1</span> Example Result</h3>
+<div id="fig-example-static" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-static-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab04_StaticError.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-static-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Example static comparison plot (made-up data). Your values will differ, but your formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-4" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-part-4"><span class="header-section-number">8</span> Part-4: The Aliasing Sweep</h2>
+<p>Here is the heart of the lab. You will generate five sine frequencies — chosen relative to the fixed Nyquist frequency <span class="math inline">\(f_N = 500\)</span> Hz — capture each at <span class="math inline">\(f_s = 1000\)</span> Hz, and compare what you <em>generated</em> against what the data <em>shows</em>.</p>
+<section id="predict-first" class="level3" data-number="8.1">
+<h3 data-number="8.1" class="anchored" data-anchor-id="predict-first"><span class="header-section-number">8.1</span> Predict First</h3>
+<p>Real experimentalists commit to predictions before looking at data. Compute the apparent frequency <a href="#eq-folding" class="quarto-xref">Equation&nbsp;3</a> predicts for every sweep frequency:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fs  <span class="op">=</span> <span class="dv">1000</span>               <span class="co"># sample rate (Hz), fixed for the whole sweep</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>f_N <span class="op">=</span> fs <span class="op">/</span> <span class="dv">2</span>             <span class="co"># Nyquist frequency (Hz)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>f_signals <span class="op">=</span> [<span class="dv">100</span>, <span class="dv">450</span>, <span class="dv">500</span>, <span class="dv">550</span>, <span class="dv">1125</span>]   <span class="co"># 0.2, 0.9, 1.0, 1.1, 2.25 x f_N</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f_sig <span class="kw">in</span> f_signals:</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    f_app <span class="op">=</span> <span class="bu">abs</span>(f_sig <span class="op">-</span> <span class="bu">round</span>(f_sig <span class="op">/</span> fs) <span class="op">*</span> fs)     <span class="co"># folding formula</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"f_signal = </span><span class="sc">{</span>f_sig<span class="sc">:5d}</span><span class="ss"> Hz -&gt; predicted apparent frequency = </span><span class="sc">{</span>f_app<span class="sc">:.0f}</span><span class="ss"> Hz"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong><code>round()</code></strong> is a Python built-in: <code>round(1.125)</code> → 1, so for <span class="math inline">\(f_{signal} = 1125\)</span> Hz the formula computes <span class="math inline">\(|1125 - 1 \times 1000| = 125\)</span> Hz. Note this whole cell is pure arithmetic — no hardware — which is exactly why you can run it <em>before</em> capturing anything.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q8.</strong> Write the five predictions as a table in your logbook <strong>before running the sweep</strong>: <span class="math inline">\(f_{signal}\)</span>, predicted <span class="math inline">\(f_{apparent}\)</span>, and one short phrase of what you expect the plot to look like. Check each against <a href="#fig-folding" class="quarto-xref">Figure&nbsp;3</a>.</p>
+</div>
+</div>
+</section>
+<section id="run-the-sweep" class="level3" data-number="8.2">
+<h3 data-number="8.2" class="anchored" data-anchor-id="run-the-sweep"><span class="header-section-number">8.2</span> Run the Sweep</h3>
+<p>One script plays signal generator <em>and</em> DAQ:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>duration <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    wavegen <span class="op">=</span> device.analog_output</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    scope   <span class="op">=</span> device.analog_input</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> f_sig <span class="kw">in</span> f_signals:</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        wavegen[<span class="st">'ch1'</span>].setup(<span class="st">'sine'</span>, frequency<span class="op">=</span>f_sig, amplitude<span class="op">=</span><span class="fl">2.0</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                             offset<span class="op">=</span><span class="fl">2.5</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="fl">0.2</span>)                      <span class="co"># let the new output settle</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        volts  <span class="op">=</span> scope[<span class="st">'ch1'</span>].get_data()</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        time_s <span class="op">=</span> np.arange(n) <span class="op">/</span> fs           <span class="co"># sample times: 0, 1/fs, 2/fs, ...</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        np.savetxt(<span class="ss">f'../Data/Alias_</span><span class="sc">{</span>f_sig<span class="sc">}</span><span class="ss">Hz.csv'</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>                   np.column_stack([time_s, volts]),</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>                   header<span class="op">=</span><span class="st">'Time (s),Channel 1 (V)'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"saved Alias_</span><span class="sc">{</span>f_sig<span class="sc">}</span><span class="ss">Hz.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><strong><code>time.sleep(0.2)</code></strong> pauses the script for 0.2 seconds — here, giving the Wavegen a beat to settle on its new frequency before the capture starts. <code>sleep</code> is the workhorse for “wait a moment” in instrument scripts.</li>
+<li><strong><code>np.arange(n) / fs</code></strong> builds the sample-time array <span class="math inline">\(t_k = k/f_s\)</span>: the integers 0…n−1, divided by the sample rate. Compare with <code>np.linspace</code> (Lab 01), which needs the <em>endpoint</em>; <code>arange</code>-over-rate is the natural idiom when you know the count and the rate.</li>
+<li>The five captures land as five CSV files with <code>#</code>-header lines — load them with <code>np.loadtxt(..., comments='#')</code> exactly as in Lab 03.</li>
+</ul>
+<p>While it runs, glance at the LED: at these frequencies it looks steadily lit (Q4 explains why) even as the <em>data</em> is about to tell five very different stories.</p>
+</section>
+<section id="plot-all-five-panels" class="level3" data-number="8.3">
+<h3 data-number="8.3" class="anchored" data-anchor-id="plot-all-five-panels"><span class="header-section-number">8.3</span> Plot All Five Panels</h3>
+<p>A shared figure with stacked panels is the standard way to compare captures, and it introduces one new tool:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>observed <span class="op">=</span> [<span class="st">'?'</span>, <span class="st">'?'</span>, <span class="st">'?'</span>, <span class="st">'?'</span>, <span class="st">'?'</span>]     <span class="co"># fill in after inspecting each panel</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x_max_ms <span class="op">=</span> [<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">40</span>]          <span class="co"># time window per panel (ms)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">5</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">10.0</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fig.patch.set_facecolor(<span class="st">'white'</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, f_sig, obs, x_max <span class="kw">in</span> <span class="bu">zip</span>(axes, f_signals, observed, x_max_ms):</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.loadtxt(<span class="ss">f'../Data/Alias_</span><span class="sc">{</span>f_sig<span class="sc">}</span><span class="ss">Hz.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    t, v <span class="op">=</span> data[:, <span class="dv">0</span>], data[:, <span class="dv">1</span>]</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    f_app <span class="op">=</span> <span class="bu">abs</span>(f_sig <span class="op">-</span> <span class="bu">round</span>(f_sig <span class="op">/</span> fs) <span class="op">*</span> fs)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    ax.plot(t <span class="op">*</span> <span class="dv">1000</span>, v, <span class="st">'o-'</span>, color<span class="op">=</span><span class="st">'red'</span>, markersize<span class="op">=</span><span class="dv">3</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(<span class="dv">0</span>, x_max)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(<span class="dv">0</span>, <span class="dv">5</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Time (ms)'</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Voltage (V)'</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f'$f_</span><span class="ch">{{</span><span class="ss">signal</span><span class="ch">}}</span><span class="ss">$ = </span><span class="sc">{</span>f_sig<span class="sc">}</span><span class="ss"> Hz, $f_s$ = </span><span class="sc">{</span>fs<span class="sc">}</span><span class="ss"> Hz  |  '</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>                 <span class="ss">f'predicted apparent: </span><span class="sc">{</span>f_app<span class="sc">:.0f}</span><span class="ss"> Hz  |  observed: </span><span class="sc">{</span>obs<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                 fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    ax.grid(which<span class="op">=</span><span class="st">'major'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"FirstName LastName's Aliasing Sweep Plot — Date"</span>, y<span class="op">=</span><span class="fl">0.995</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>fig.tight_layout(rect<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><strong><code>plt.subplots(5, 1, figsize=(6.5, 10.0))</code></strong> creates one figure holding a 5-row, 1-column grid of axes; <code>axes</code> is an array you can loop over. Everything you know about formatting a single <code>ax</code> applies unchanged to each panel — that is the point of the axes-object style you have used since Lab 01.</li>
+<li><strong><code>zip(axes, f_signals, observed, x_max_ms)</code></strong> — Lab 03’s <code>zip</code>, now pairing <em>four</em> lists at once. One loop pass = one fully-labeled panel.</li>
+<li>Run it once with the <code>'?'</code> placeholders, then <strong>measure the observed frequency in each panel</strong> — read the time between successive peaks off the axis and invert it — and re-run with <code>observed</code> filled in (e.g., <code>'450 Hz — aliased!'</code>). The observed values are <em>your measurement</em>; the title’s predicted value is the theory it must face.</li>
+</ul>
+<p>Format per the Post-Lab requirements and save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI. Compare with <a href="#fig-example-alias" class="quarto-xref">Figure&nbsp;9</a>.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q9.</strong> For each panel: did the observed frequency match your Q8 prediction? Record the observed values in your Q8 table.</p>
+<p><strong>Q10.</strong> Compare panels 2 (450 Hz) and 4 (550 Hz) closely. Could you tell, from the sampled data alone, which input produced which panel? Explain why this means an anti-aliasing filter must act <em>before</em> the sampler — no software fix can work afterward.</p>
+<p><strong>Q11.</strong> In panel 3 (exactly <span class="math inline">\(f_N\)</span>), what amplitude does the sampled signal show? Re-run the sweep and watch whether it changes. What does the sampled amplitude at exactly <span class="math inline">\(f_N\)</span> depend on?</p>
+<p><strong>Q12.</strong> In Labs 02 and 03 you sampled a swinging pendulum at 100 Hz and 1000 Hz. Estimate the highest frequency present in those signals, and argue from <a href="#eq-nyquist" class="quarto-xref">Equation&nbsp;2</a> whether aliasing could have corrupted your measurements.</p>
+</div>
+</div>
+</section>
+<section id="example-result-1" class="level3" data-number="8.4">
+<h3 data-number="8.4" class="anchored" data-anchor-id="example-result-1"><span class="header-section-number">8.4</span> Example Result</h3>
+<div id="fig-example-alias" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-alias-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab04_Aliasing.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-alias-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Example aliasing sweep (made-up data). Note panels 2 and 4 — two different inputs, one indistinguishable output. Your amplitudes in panel 3 will likely differ (Q11 explains why).
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-5" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-part-5"><span class="header-section-number">9</span> Part-5: Digital Output — and Fooling the DAQ in Person</h2>
+<section id="blink-an-led-from-python" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="blink-an-led-from-python"><span class="header-section-number">9.1</span> Blink an LED from Python</h3>
+<p>The Wavegen produces continuous waveforms; a <strong>digital I/O pin</strong> produces exactly two values — HIGH (3.3 V on the ADS) and LOW (0 V) — under direct program control. It is the simplest way a computer touches the physical world, and the foundation of every actuator, relay, and indicator you will ever script.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    led <span class="op">=</span> device.digital_io[<span class="dv">0</span>]             <span class="co"># DIO 0 — same number as the GUI</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    led.setup(enabled<span class="op">=</span><span class="va">True</span>, configure<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):                    <span class="co"># 20 toggles = 10 full blinks</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        led.output_state <span class="op">=</span> <span class="kw">not</span> led.output_state</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="fl">0.25</span>)                   <span class="co"># 0.25 s per toggle -&gt; 2 Hz blink</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    led.output_state <span class="op">=</span> <span class="va">False</span>               <span class="co"># leave the pin off</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><strong><code>device.digital_io[0]</code></strong> is pin <strong>DIO 0</strong> — here the integer <em>is</em> the GUI’s label, so indexing is safe. <code>setup(enabled=True, ...)</code> makes it an output.</li>
+<li><strong><code>led.output_state = not led.output_state</code></strong> — <code>not</code> flips a <code>True</code>/<code>False</code> value, so each pass through the loop toggles the pin. Two toggles make one full on/off blink, hence 0.25 s per toggle → 2 Hz blinking.</li>
+<li>The blink <em>rate</em> here comes from <code>time.sleep</code> — software timing. Your operating system juggles dozens of programs and gets around to your script when it can, so each “0.25 s” is really “0.25 s, give or take”. Fine at 2 Hz; hopeless as a precision signal source. That is why Part-4 and Part-6 use the Wavegen — its timing runs on dedicated hardware inside the ADS, indifferent to what Windows is doing.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q13.</strong> LED 2 runs at 3.3 V, LED 1 at up to 5 V. Which is brighter, and does the difference match the current ratio predicted by <a href="#eq-led-current" class="quarto-xref">Equation&nbsp;4</a> using your Q1 values?</p>
+<p><strong>Q14.</strong> Name one lab task where software timing (a <code>sleep</code> loop) is perfectly fine, and one where it would ruin the measurement. What is the rough timescale that separates them?</p>
+</div>
+</div>
+</section>
+<section id="eye-vs.-daq" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="eye-vs.-daq"><span class="header-section-number">9.2</span> Eye vs.&nbsp;DAQ</h3>
+<p>Now the demonstration this lab has been building toward. You will make LED 1 blink at 5 Hz — plainly visible flicker — and record it with a sample rate of <strong>4.5 Hz</strong>, a rate that plausibly seems “about right” for a 5 Hz signal but is catastrophically below the Nyquist requirement of <em>more than</em> 10 Hz. Predict the apparent frequency with <a href="#eq-folding" class="quarto-xref">Equation&nbsp;3</a> before you run it.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>f_led    <span class="op">=</span> <span class="fl">5.0</span>      <span class="co"># LED blink frequency (Hz) — clearly visible flicker</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fs_slow  <span class="op">=</span> <span class="fl">4.5</span>      <span class="co"># deliberately BAD sample rate (Hz)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>duration <span class="op">=</span> <span class="fl">20.0</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(fs_slow <span class="op">*</span> duration)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    wavegen <span class="op">=</span> device.analog_output</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    scope   <span class="op">=</span> device.analog_input</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    wavegen[<span class="st">'ch1'</span>].setup(<span class="st">'square'</span>, frequency<span class="op">=</span>f_led, amplitude<span class="op">=</span><span class="fl">2.5</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                         offset<span class="op">=</span><span class="fl">2.5</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Watch the LED — it is blinking at 5 Hz. Capturing for 20 s..."</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    scope.single(sample_rate<span class="op">=</span>fs_slow, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    volts <span class="op">=</span> scope[<span class="st">'ch1'</span>].get_data()</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>t_slow <span class="op">=</span> np.arange(n) <span class="op">/</span> fs_slow</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>np.savetxt(<span class="st">'../Data/EyeVsDAQ_Capture.csv'</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>           np.column_stack([t_slow, volts]),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>           header<span class="op">=</span><span class="st">'Time (s),Channel 1 (V)'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The cell takes a full 20 seconds — the <code>single(...)</code> call is blocking, as in Lab 03. <strong>Spend those 20 seconds watching the LED.</strong> Your eyes and your DAQ are observing the same physical object at the same time; only one of them will get it right.</p>
+<p>Plot the capture (time in seconds, voltage in volts, markers <em>and</em> line) to match <a href="#fig-example-eyevsdaq" class="quarto-xref">Figure&nbsp;10</a>, annotate the three frequencies (blink, sample, apparent), and save <strong>.pdf</strong>/<strong>.png</strong> at 600 DPI.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q15.</strong> What frequency does your captured data show? What did your eyes see during those same 20 seconds? Reconcile the two using <a href="#eq-folding" class="quarto-xref">Equation&nbsp;3</a>.</p>
+<p><strong>Q16.</strong> A colleague argues: “the data is clean and periodic — clearly the LED blinked every ~2 seconds.” Nothing in the file itself contradicts them. What <em>outside knowledge</em> is required to catch the error, and what does that imply about trusting logged data from a system whose sample rate you didn’t choose?</p>
+</div>
+</div>
+</section>
+<section id="example-result-2" class="level3" data-number="9.3">
+<h3 data-number="9.3" class="anchored" data-anchor-id="example-result-2"><span class="header-section-number">9.3</span> Example Result</h3>
+<div id="fig-example-eyevsdaq" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-eyevsdaq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/Python/FirstName_LastName_Lab04_EyeVsDAQ.png" class="img-fluid figure-img" style="width:6.5in">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-eyevsdaq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Example eye-vs-DAQ capture (made-up data). A 5 Hz blink, “measured” as 0.5 Hz. Your plot should show the same character.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-6" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-part-6"><span class="header-section-number">10</span> Part-6: The Flicker-Fusion Threshold</h2>
+<p>Finally, turn the instruments on yourselves. The Wavegen drives LED 1 with a square wave whose frequency climbs in steps; you report, honestly, whether you still see flicker. The frequency where flicker melts into steady light is your flicker-fusion threshold.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Photosensitivity">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Photosensitivity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Flickering light in roughly the 3–30 Hz range can trigger seizures in people with photosensitive epilepsy. This experiment uses one small, dim LED — far milder than a strobe light or full-screen flash — but if you have any history of photosensitivity, do not stare at the LED: let your partner run the test on themselves, and record their data instead. Anyone can opt out of this part without penalty; tell your TA.</p>
+</div>
+</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>freqs_tested <span class="op">=</span> []</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>responses    <span class="op">=</span> []       <span class="co"># 1 = flicker visible, 0 = looks steady</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    wavegen <span class="op">=</span> device.analog_output</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    f <span class="op">=</span> <span class="fl">20.0</span>                                 <span class="co"># start well below fusion</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        wavegen[<span class="st">'ch1'</span>].setup(<span class="st">'square'</span>, frequency<span class="op">=</span>f, amplitude<span class="op">=</span><span class="fl">2.5</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                             offset<span class="op">=</span><span class="fl">2.5</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        answer <span class="op">=</span> <span class="bu">input</span>(<span class="ss">f"</span><span class="sc">{</span>f<span class="sc">:.0f}</span><span class="ss"> Hz — do you see flicker? (y/n): "</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        freqs_tested.append(f)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        responses.append(<span class="dv">1</span> <span class="cf">if</span> answer <span class="op">==</span> <span class="st">'y'</span> <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> answer <span class="op">!=</span> <span class="st">'y'</span>:</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span>                            <span class="co"># fusion reached — stop</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        f <span class="op">=</span> f <span class="op">+</span> <span class="dv">5</span>                            <span class="co"># step up and ask again</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Flicker-fusion threshold: between </span><span class="sc">{</span>freqs_tested[<span class="op">-</span><span class="dv">2</span>]<span class="sc">:.0f}</span><span class="ss"> "</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"and </span><span class="sc">{</span>freqs_tested[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.0f}</span><span class="ss"> Hz"</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>np.savetxt(<span class="st">'../Data/Flicker_Staircase_PartnerA.csv'</span>,   <span class="co"># rename per partner</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>           np.column_stack([freqs_tested, responses]),</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>           header<span class="op">=</span><span class="st">'frequency_Hz,flicker_visible(1=yes 0=no)'</span>,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>           delimiter<span class="op">=</span><span class="st">','</span>, fmt<span class="op">=</span><span class="st">'</span><span class="sc">%d</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><strong><code>while True:</code> + <code>break</code></strong> — a loop with no built-in end condition; it runs until the <code>break</code> line executes. Use it when the stopping rule (“the user said no”) emerges from <em>inside</em> the loop, unlike <code>for</code>, which knows its itinerary in advance. Every <code>while True:</code> you ever write must contain a reachable <code>break</code> — check for it before running, or the loop runs forever (if that happens: the Interrupt button, as in Lab 03).</li>
+<li><strong><code>1 if answer == 'y' else 0</code></strong> — Lab 02’s conditional expression, converting a text answer into a number worth saving.</li>
+</ul>
+<p>Procedure notes: look <em>directly</em> at the LED from your normal seated distance, answer honestly (there is no right answer — thresholds legitimately differ), and run the staircase <strong>once per partner</strong>, changing the filename before the second run.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q17.</strong> Record both partners’ threshold brackets. Are they the same? Typical values run 50–90 Hz — where do you two fall?</p>
+<p><strong>Q18.</strong> Re-run a frequency just <em>above</em> your threshold, but this time look slightly <em>away</em> from the LED, watching it with your peripheral vision. Does the flicker come back? (For most people it does.) What does that tell you about treating “the eye” as one single sensor?</p>
+<p><strong>Q19.</strong> LED room lights are typically dimmed by switching on/off rapidly (PWM). Using your measured threshold plus the safety callout above, propose a minimum PWM frequency for comfortable, safe lighting, and justify it in two sentences.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</h2>
+<p>Upload your submissions to Canvas. <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u> A full example solution notebook is posted after all sections have met; check your approach against it, but submit your own work.</p>
+<section id="submission-items" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="submission-items"><span class="header-section-number">11.1</span> Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook (<code>FirstName_LastName_Lab04.ipynb</code>), restarted and run top-to-bottom (acquisition cells may show their saved outputs)</li>
+<li>Static comparison plot, <strong>.pdf</strong></li>
+<li>Aliasing sweep plot (five panels), <strong>.pdf</strong></li>
+<li>Eye-vs-DAQ plot, <strong>.pdf</strong></li>
+<li>Answers to the post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="static-comparison-plot-requirements" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="static-comparison-plot-requirements"><span class="header-section-number">11.2</span> Static Comparison Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>Major and minor grids on; top and right spines removed</li>
+<li>DMM errors: red open circles, size 75; ADS errors: blue open squares, size 75</li>
+<li>A horizontal line at zero error; y-axis in mV; legend placed clear of the data</li>
+<li>Axis labels with units; title “FirstName LastName’s Static Voltage Comparison Plot” with the date</li>
+<li><code>ax.text</code> annotation: the maximum absolute error for each instrument, in mV</li>
+</ul>
+</section>
+<section id="aliasing-sweep-plot-requirements" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="aliasing-sweep-plot-requirements"><span class="header-section-number">11.3</span> Aliasing Sweep Plot Requirements</h3>
+<ul>
+<li>Five stacked panels; figure size 6.5” wide × 10.0” tall; white background; Times font, 10 pt</li>
+<li>Samples as red circle markers (size 3) <em>connected by</em> a thin (0.8 pt) red line — the connecting line is what reveals the apparent frequency</li>
+<li>Each panel: 0–40 ms window, 0–5 V limits, major grid, top/right spines removed</li>
+<li>Each panel title: <span class="math inline">\(f_{signal}\)</span>, <span class="math inline">\(f_s\)</span>, the <em>predicted</em> apparent frequency, and your <em>observed</em> apparent frequency</li>
+<li>Overall suptitle “FirstName LastName’s Aliasing Sweep Plot” with the date</li>
+</ul>
+</section>
+<section id="eye-vs-daq-plot-requirements" class="level3" data-number="11.4">
+<h3 data-number="11.4" class="anchored" data-anchor-id="eye-vs-daq-plot-requirements"><span class="header-section-number">11.4</span> Eye-vs-DAQ Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>Samples as red circle markers (size 4) connected by a thin red line; full 20 s window</li>
+<li>Major and minor grids on; top and right spines removed</li>
+<li>Axis labels with units; title “FirstName LastName’s Eye vs.&nbsp;DAQ Plot” with the date</li>
+<li><code>ax.text</code> annotation: LED blink frequency, sample rate, and apparent frequency, each in Hz</li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="11.5">
+<h3 data-number="11.5" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">11.5</span> Post-Lab Questions</h3>
+<ol type="1">
+<li>A DAQ samples at 8000 Hz. What is its Nyquist frequency, and what is the highest signal frequency it can capture without aliasing?</li>
+<li>Use <a href="#eq-folding" class="quarto-xref">Equation&nbsp;3</a> to predict the apparent frequency when a 725 Hz sine is sampled at 600 Hz. Show your arithmetic.</li>
+<li>Your aliasing plot’s panels 2 and 4 are (nearly) identical. Explain, in your own words, why no amount of post-processing can determine which input signal produced such a record — and what hardware solves this problem in real DAQ systems.</li>
+<li>In the eye-vs-DAQ experiment, suppose you had sampled at 5.5 Hz instead of 4.5 Hz. Predict the apparent frequency. Would the data look meaningfully more honest?</li>
+<li>Your flicker-fusion threshold is a property of <em>you</em> as a measurement system. Give one engineering situation where a human observer’s temporal bandwidth matters, and one where an electronic sensor’s Nyquist limit matters, and state the analogous “sample rate” in each.</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="before-you-leave"><span class="header-section-number">12</span> Before You Leave</h2>
+<ul>
+<li>Show your aliasing sweep plot to a TA before tearing down — re-capturing takes two minutes now and a week later.</li>
+<li>Remove all jumper wires and return them to the wire bin, sorted by color; return LEDs and resistors to their labeled containers.</li>
+<li>Return the DMM and tools to their stations.</li>
+<li>Confirm your data files have synced to OneDrive (check on a second device) and that <strong>both</strong> partners have everything.</li>
+<li>Clean the station, collect your belongings, and log off.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

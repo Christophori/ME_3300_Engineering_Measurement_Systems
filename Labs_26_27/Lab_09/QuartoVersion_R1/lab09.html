@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Experiment-09: Propeller Thrust Stand — Calibration, Confidence, and Design</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="lab09_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab09_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="lab09_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="lab09_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab09_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab09_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab09_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lab09_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lab09_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab09_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab09_files/libs/bootstrap/bootstrap-6b9a4e2bc1d929dbbc8f0b698e19a81c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="lab09_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="lab09_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="lab09_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objective" id="toc-learning-objective" class="nav-link active" data-scroll-target="#learning-objective"><span class="header-section-number">1</span> Learning Objective</a>
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">1.1</span> Objectives</a></li>
+  <li><a href="#check-your-understanding" id="toc-check-your-understanding" class="nav-link" data-scroll-target="#check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</a></li>
+  </ul></li>
+  <li><a href="#pre-lab-setup" id="toc-pre-lab-setup" class="nav-link" data-scroll-target="#pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</a>
+  <ul class="collapse">
+  <li><a href="#extend-your-folder-structure" id="toc-extend-your-folder-structure" class="nav-link" data-scroll-target="#extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</a></li>
+  <li><a href="#read-the-background-section" id="toc-read-the-background-section" class="nav-link" data-scroll-target="#read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</a></li>
+  <li><a href="#sec-prelab-walkthrough" id="toc-sec-prelab-walkthrough" class="nav-link" data-scroll-target="#sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</a></li>
+  <li><a href="#python-quick-reference-new-this-lab" id="toc-python-quick-reference-new-this-lab" class="nav-link" data-scroll-target="#python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</a></li>
+  </ul></li>
+  <li><a href="#laboratory-introduction" id="toc-laboratory-introduction" class="nav-link" data-scroll-target="#laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background"><span class="header-section-number">4</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#commanding-a-bldc-motor-the-esc-and-servo-pwm" id="toc-commanding-a-bldc-motor-the-esc-and-servo-pwm" class="nav-link" data-scroll-target="#commanding-a-bldc-motor-the-esc-and-servo-pwm"><span class="header-section-number">4.1</span> Commanding a BLDC Motor: the ESC and Servo PWM</a></li>
+  <li><a href="#sec-force-chain" id="toc-sec-force-chain" class="nav-link" data-scroll-target="#sec-force-chain"><span class="header-section-number">4.2</span> The Force Signal Chain: Load Cell → In-Amp → ADS</a></li>
+  <li><a href="#the-current-signal-chain-hall-effect-sensing" id="toc-the-current-signal-chain-hall-effect-sensing" class="nav-link" data-scroll-target="#the-current-signal-chain-hall-effect-sensing"><span class="header-section-number">4.3</span> The Current Signal Chain: Hall-Effect Sensing</a></li>
+  <li><a href="#sec-momentum" id="toc-sec-momentum" class="nav-link" data-scroll-target="#sec-momentum"><span class="header-section-number">4.4</span> Momentum Theory: What Physics Expects of Your Curve</a></li>
+  <li><a href="#why-three-runs" id="toc-why-three-runs" class="nav-link" data-scroll-target="#why-three-runs"><span class="header-section-number">4.5</span> Why Three Runs?</a></li>
+  </ul></li>
+  <li><a href="#sec-part-1" id="toc-sec-part-1" class="nav-link" data-scroll-target="#sec-part-1"><span class="header-section-number">5</span> Part-1: Wire and Verify the Station</a></li>
+  <li><a href="#sec-part-2" id="toc-sec-part-2" class="nav-link" data-scroll-target="#sec-part-2"><span class="header-section-number">6</span> Part-2: Arm the ESC and First Spin</a></li>
+  <li><a href="#sec-part-3" id="toc-sec-part-3" class="nav-link" data-scroll-target="#sec-part-3"><span class="header-section-number">7</span> Part-3: Dead-Weight Calibration</a>
+  <ul class="collapse">
+  <li><a href="#example-result" id="toc-example-result" class="nav-link" data-scroll-target="#example-result"><span class="header-section-number">7.1</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#sec-part-4" id="toc-sec-part-4" class="nav-link" data-scroll-target="#sec-part-4"><span class="header-section-number">8</span> Part-4: Automated Thrust and Current Sweeps</a></li>
+  <li><a href="#sec-part-5" id="toc-sec-part-5" class="nav-link" data-scroll-target="#sec-part-5"><span class="header-section-number">9</span> Part-5: Curves, Confidence, and the Propeller Trade-Off</a>
+  <ul class="collapse">
+  <li><a href="#example-results" id="toc-example-results" class="nav-link" data-scroll-target="#example-results"><span class="header-section-number">9.1</span> Example Results</a></li>
+  </ul></li>
+  <li><a href="#sec-part-6" id="toc-sec-part-6" class="nav-link" data-scroll-target="#sec-part-6"><span class="header-section-number">10</span> Part-6: The Hover Design Point</a>
+  <ul class="collapse">
+  <li><a href="#the-endurance-design-map-a-surface-not-a-point" id="toc-the-endurance-design-map-a-surface-not-a-point" class="nav-link" data-scroll-target="#the-endurance-design-map-a-surface-not-a-point"><span class="header-section-number">10.1</span> The Endurance Design Map — a Surface, Not a Point</a></li>
+  <li><a href="#example-result-1" id="toc-example-result-1" class="nav-link" data-scroll-target="#example-result-1"><span class="header-section-number">10.2</span> Example Result</a></li>
+  </ul></li>
+  <li><a href="#post-lab-assignment" id="toc-post-lab-assignment" class="nav-link" data-scroll-target="#post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</a>
+  <ul class="collapse">
+  <li><a href="#submission-items" id="toc-submission-items" class="nav-link" data-scroll-target="#submission-items"><span class="header-section-number">11.1</span> Submission Items</a></li>
+  <li><a href="#calibration-plot-requirements" id="toc-calibration-plot-requirements" class="nav-link" data-scroll-target="#calibration-plot-requirements"><span class="header-section-number">11.2</span> Calibration Plot Requirements</a></li>
+  <li><a href="#thrust-curve-plot-requirements" id="toc-thrust-curve-plot-requirements" class="nav-link" data-scroll-target="#thrust-curve-plot-requirements"><span class="header-section-number">11.3</span> Thrust-Curve Plot Requirements</a></li>
+  <li><a href="#current-efficiency-figure-requirements" id="toc-current-efficiency-figure-requirements" class="nav-link" data-scroll-target="#current-efficiency-figure-requirements"><span class="header-section-number">11.4</span> Current &amp; Efficiency Figure Requirements</a></li>
+  <li><a href="#momentum-fit-plot-requirements" id="toc-momentum-fit-plot-requirements" class="nav-link" data-scroll-target="#momentum-fit-plot-requirements"><span class="header-section-number">11.5</span> Momentum Fit Plot Requirements</a></li>
+  <li><a href="#endurance-map-requirements" id="toc-endurance-map-requirements" class="nav-link" data-scroll-target="#endurance-map-requirements"><span class="header-section-number">11.6</span> Endurance Map Requirements</a></li>
+  <li><a href="#post-lab-questions" id="toc-post-lab-questions" class="nav-link" data-scroll-target="#post-lab-questions"><span class="header-section-number">11.7</span> Post-Lab Questions</a></li>
+  </ul></li>
+  <li><a href="#before-you-leave" id="toc-before-you-leave" class="nav-link" data-scroll-target="#before-you-leave"><span class="header-section-number">12</span> Before You Leave</a></li>
+  <li><a href="#sec-lab10-preview" id="toc-sec-lab10-preview" class="nav-link" data-scroll-target="#sec-lab10-preview"><span class="header-section-number">13</span> Looking Ahead</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lab09.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Experiment-09: Propeller Thrust Stand — Calibration, Confidence, and Design</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="learning-objective" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-objective"><span class="header-section-number">1</span> Learning Objective</h2>
+<p>This is the first half of the course’s two-lab capstone. Everything you have practiced all semester — building a signal chain, calibrating it, scripting the instrument, quantifying confidence — now serves an actual <em>design decision</em>: choosing a propeller and operating point for a small quadcopter.</p>
+<section id="objectives" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">1.1</span> Objectives</h3>
+<p>Your objectives for this laboratory session are to:</p>
+<ul>
+<li><strong>Command a brushless motor from Python</strong>: generate the hobby-servo PWM signal an ESC (electronic speed controller) expects, using the ADS pattern generator via <code>pydwf</code></li>
+<li><strong>Calibrate a complete force-measurement chain</strong> (load cell → instrumentation amplifier → ADS) with dead weights, exactly as commercial thrust stands are calibrated</li>
+<li><strong>Script a fully automated experiment</strong>: a throttle sweep that measures thrust <em>and</em> current at 13 setpoints with no manual recording</li>
+<li>Quantify run-to-run repeatability with <strong>95% confidence intervals</strong> from repeated sweeps</li>
+<li><strong>Compare two propellers</strong> on thrust, current draw, and efficiency (grams per watt) — the trade-off at the heart of drone design</li>
+<li>Test your data against <strong>propeller momentum theory</strong> and extract a figure of merit</li>
+<li><strong>Choose an operating point from your measured curve</strong> to meet a hover design spec, with quantified margin</li>
+<li>Build a <strong>3-D design map</strong>: flight time as a surface over vehicle mass and battery capacity, computed entirely from your measured curves (<code>np.meshgrid</code> + <code>plot_surface</code>)</li>
+</ul>
+</section>
+<section id="check-your-understanding" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="check-your-understanding"><span class="header-section-number">1.2</span> Check Your Understanding</h3>
+<p>By the end of this lab, you should be able to answer all of these questions.</p>
+<section id="hardware-instruments" class="level4" data-number="1.2.1">
+<h4 data-number="1.2.1" class="anchored" data-anchor-id="hardware-instruments"><span class="header-section-number">1.2.1</span> Hardware &amp; Instruments</h4>
+<ul>
+<li>What three wires does an ESC signal connection use, and what pulse widths mean 0% and 100% throttle?</li>
+<li>Why does the load cell need an instrumentation amplifier before the ADS can read it usefully?</li>
+<li>Why must the propeller be removed during the dead-weight calibration?</li>
+<li>What does the hall-effect current sensor output at zero current, and why is that a feature rather than a flaw?</li>
+<li>Why is there a hardware kill switch in the motor power path when the software can already command zero throttle?</li>
+</ul>
+</section>
+<section id="programming" class="level4" data-number="1.2.2">
+<h4 data-number="1.2.2" class="anchored" data-anchor-id="programming"><span class="header-section-number">1.2.2</span> Programming</h4>
+<ul>
+<li>Which <code>pydwf</code> object generates digital patterns, and how do a divider and a counter turn a 100 MHz clock into a 1520 µs pulse every 20 ms?</li>
+<li>How does a dictionary (<code>data['PropA']</code>) differ from a list, and why is it the right container here?</li>
+<li>What does <code>np.stack</code> do to a list of three equal-size arrays, and what does <code>axis=0</code> mean in <code>arr.mean(axis=0)</code>?</li>
+<li>What does <code>np.interp(y_target, y, x)</code> return?</li>
+<li>What two arrays does <code>np.meshgrid(x, y)</code> produce, and why does evaluating a function over a <em>design space</em> need them?</li>
+</ul>
+</section>
+<section id="data-analysis" class="level4" data-number="1.2.3">
+<h4 data-number="1.2.3" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">1.2.3</span> Data Analysis</h4>
+<ul>
+<li>Why is thrust <em>tare-corrected</em> (motor-off reading subtracted), and what physical loads make up the tare?</li>
+<li>With <span class="math inline">\(n = 3\)</span> runs, why is the 95% confidence interval multiplier so large (<span class="math inline">\(t_{2,95\%} = 4.303\)</span>)?</li>
+<li>Momentum theory predicts <span class="math inline">\(P \propto T^{3/2}\)</span>. What plot makes that prediction testable with a <em>linear</em> fit?</li>
+<li>Your quadcopter needs 60 g of thrust per motor. Your curve says that needs 38% throttle ± 1%. What does that “± 1%” actually promise, and what does it <em>not</em> promise?</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+</section>
+<section id="pre-lab-setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="pre-lab-setup"><span class="header-section-number">2</span> Pre-Lab Setup</h2>
+<p>You should come to lab having completed all tasks in this section.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Safety First: This Lab Has a Spinning Propeller">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Safety First: This Lab Has a Spinning Propeller
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is the first lab with a fast-spinning part. The rules are not optional:</p>
+<ul>
+<li><strong>The propeller guard stays on</strong> whenever the motor’s power switch is on. No exceptions, including “just a quick test”.</li>
+<li><strong>Safety glasses on</strong> while any station in the room has a powered motor.</li>
+<li>The <strong>kill switch</strong> (the red switch in the 12 V line) is OFF except when a test is actively running. Flipping it is the <em>first</em> response to anything unexpected — not <code>Ctrl-C</code>.</li>
+<li><strong>Prop OFF for calibration.</strong> The dead-weight calibration is done with the propeller removed.</li>
+<li>Tie back long hair, remove lanyards and dangling sleeves, and keep the bench clear of loose paper — a 3-inch prop at 25,000 RPM will find anything that can reach it.</li>
+</ul>
+</div>
+</div>
+<section id="extend-your-folder-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="extend-your-folder-structure"><span class="header-section-number">2.1</span> Extend Your Folder Structure</h3>
+<p>Add a Lab_09 folder set to your <code>ME3300</code> folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href="#cb1-1"></a>ME3300/</span>
+<span id="cb1-2"><a href="#cb1-2"></a>├── Lab_01/ ... Lab_08/</span>
+<span id="cb1-3"><a href="#cb1-3"></a>├── Lab_09/</span>
+<span id="cb1-4"><a href="#cb1-4"></a>│   ├── Code/</span>
+<span id="cb1-5"><a href="#cb1-5"></a>│   │   ├── Lab09_Prelab_Walkthrough.ipynb</span>
+<span id="cb1-6"><a href="#cb1-6"></a>│   │   └── FirstName_LastName_Lab09.ipynb</span>
+<span id="cb1-7"><a href="#cb1-7"></a>│   ├── Data/</span>
+<span id="cb1-8"><a href="#cb1-8"></a>│   └── Figures/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>No new packages are needed — <code>pydwf</code> (Lab 03) and the usual scientific stack cover everything.</p>
+</section>
+<section id="read-the-background-section" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="read-the-background-section"><span class="header-section-number">2.2</span> Read the Background Section</h3>
+<p>Read the <a href="#sec-background">Background</a> section before lab. It explains how an ESC is commanded, how the force and current signal chains work, and derives the momentum-theory relation you will test.</p>
+</section>
+<section id="sec-prelab-walkthrough" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="sec-prelab-walkthrough"><span class="header-section-number">2.3</span> Complete the Prelab Walkthrough Notebook</h3>
+<p>Download <code>Lab09_Prelab_Walkthrough.ipynb</code> from Canvas into <code>ME3300/Lab_09/Code/</code> and work through it before lab. It introduces this lab’s <em>new</em> Python skills using simulated data:</p>
+<ul>
+<li><strong>dictionaries</strong> — organizing datasets by name (<code>data['PropA']</code>)</li>
+<li><strong><code>np.stack</code> and <code>axis</code> reductions</strong> — turning repeated runs into one array and getting per-setpoint statistics in one line</li>
+<li><strong><code>np.interp</code></strong> — reading a value off a measured curve (your design tool this week)</li>
+<li><strong><code>np.meshgrid</code> and 3-D surface plots</strong> — evaluating a design over every combination of two variables at once</li>
+<li>the <strong>servo-PWM arithmetic</strong> used to command the ESC (divider and counter values, computed by hand and checked in code)</li>
+</ul>
+<p>As always, report the <strong>checkpoint</strong> values in the <strong>Prelab 09 quiz on Canvas</strong> before your lab session.</p>
+</section>
+<section id="python-quick-reference-new-this-lab" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="python-quick-reference-new-this-lab"><span class="header-section-number">2.4</span> Python Quick Reference: New This Lab</h3>
+<table class="caption-top table">
+<caption>New Python syntax and functions introduced in Lab 09</caption>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Store datasets by name</td>
+<td><code>data = {}</code> then <code>data['PropA'] = ...</code></td>
+</tr>
+<tr class="even">
+<td>Stack run arrays for statistics</td>
+<td><code>arr = np.stack([run1, run2, run3])</code></td>
+</tr>
+<tr class="odd">
+<td>Statistics across runs</td>
+<td><code>arr.mean(axis=0)</code>, <code>arr.std(axis=0, ddof=1)</code></td>
+</tr>
+<tr class="even">
+<td>Read a value off a curve</td>
+<td><code>np.interp(F_target, F_curve, throttle)</code></td>
+</tr>
+<tr class="odd">
+<td>Grid of every (x, y) combination</td>
+<td><code>M, C = np.meshgrid(x, y)</code></td>
+</tr>
+<tr class="even">
+<td>3-D axes</td>
+<td><code>ax = fig.add_subplot(projection='3d')</code></td>
+</tr>
+<tr class="odd">
+<td>Surface plot</td>
+<td><code>ax.plot_surface(M, C, Z, cmap='viridis')</code></td>
+</tr>
+<tr class="even">
+<td>Pattern-generator instrument</td>
+<td><code>dout = device.digitalOut</code></td>
+</tr>
+<tr class="odd">
+<td>Set channel tick rate</td>
+<td><code>dout.dividerSet(0, ticks)</code></td>
+</tr>
+<tr class="even">
+<td>Set pulse low/high counts</td>
+<td><code>dout.counterSet(0, low, high)</code></td>
+</tr>
+<tr class="odd">
+<td>Start the pattern</td>
+<td><code>dout.configure(True)</code></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="laboratory-introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="laboratory-introduction"><span class="header-section-number">3</span> Laboratory Introduction</h2>
+<p>Small multirotor drones are designed around one question: <strong>how much thrust does a motor-propeller combination produce, and at what electrical cost?</strong> Manufacturers publish thrust tables, but serious builders measure their own — on a thrust stand exactly like the one at your station. The commercial versions (RCbenchmark, Tyto Robotics) automate a step-throttle test and log force and current; this week you will build and run precisely that test, and next week (<a href="#sec-lab10-preview">Lab 10</a>) you will characterize the same system <em>dynamically</em>.</p>
+<p>The lab runs the full measurement chain you have practiced all semester, end to end:</p>
+<ul>
+<li><strong>Build &amp; verify</strong> — wire the load-cell amplifier, current sensor, and ESC signal line; confirm each stage with the DMM and a live scope view before trusting anything.</li>
+<li><strong>Calibrate</strong> — dead weights on the platform give a traceable volts-to-newtons calibration, with the same fit statistics you have used since Lab 01.</li>
+<li><strong>Measure</strong> — an automated Python sweep steps the throttle and records thrust and current. You will run it three times per propeller. <em>Why three?</em> Because a curve without a confidence interval is an anecdote, and your design decision needs better than an anecdote.</li>
+<li><strong>Model</strong> — momentum theory says electrical power should grow like thrust to the 3/2 power. Your data gets to vote.</li>
+<li><strong>Decide</strong> — a design brief (a 240 g quadcopter that must hover) turns your calibrated, confidence-bounded curve into an engineering choice: which prop, what throttle, how much margin.</li>
+</ul>
+</section>
+<section id="sec-background" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-background"><span class="header-section-number">4</span> Background</h2>
+<section id="commanding-a-bldc-motor-the-esc-and-servo-pwm" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="commanding-a-bldc-motor-the-esc-and-servo-pwm"><span class="header-section-number">4.1</span> Commanding a BLDC Motor: the ESC and Servo PWM</h3>
+<p>A brushless DC motor cannot simply be connected to a power supply — its three phase windings must be energized in a precisely timed sequence. That is the ESC’s job: it converts DC bus power into the three-phase drive, and it takes its orders as a <strong>hobby-servo PWM signal</strong>: one pulse every 20 ms (50 Hz), whose <em>width</em> encodes the command — 1000 µs means 0% throttle, 2000 µs means 100% (<a href="#fig-servo-pwm" class="quarto-xref">Figure&nbsp;1</a>). The ESC also enforces an <strong>arming rule</strong>: it will not start until it has first seen a 0% command, so a script that crashes and restarts cannot surprise you with a spinning prop.</p>
+<div id="fig-servo-pwm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-servo-pwm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Servo_PWM_Diagram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Servo PWM: the pulse width, not the duty cycle, carries the command. 1000 µs = 0%, 1500 µs = 50%, 2000 µs = 100% throttle, repeated every 20 ms."><img src="figures/Servo_PWM_Diagram.png" class="img-fluid figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-servo-pwm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Servo PWM: the pulse width, not the duty cycle, carries the command. 1000 µs = 0%, 1500 µs = 50%, 2000 µs = 100% throttle, repeated every 20 ms.
+</figcaption>
+</figure>
+</div>
+<p>The ADS <strong>pattern generator</strong> (<code>device.digitalOut</code>) makes this signal trivially. Its channels run from a 100 MHz internal clock: a <strong>divider</strong> slows the clock to a chosen tick rate, and a <strong>counter</strong> holds the output low for <code>low</code> ticks then high for <code>high</code> ticks, repeating. With the divider set for 1 µs ticks, a 38% throttle command is simply <code>low = 20000 − 1380</code>, <code>high = 1380</code>. Same knobs as the WaveForms <em>Patterns</em> instrument — turned from Python, as in Lab 03.</p>
+<p><span id="eq-throttle-us"><span class="math display">\[u = 1000\,\mu\text{s} + 10\,\mu\text{s} \times (\text{throttle \%}) \tag{1}\]</span></span></p>
+</section>
+<section id="sec-force-chain" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="sec-force-chain"><span class="header-section-number">4.2</span> The Force Signal Chain: Load Cell → In-Amp → ADS</h3>
+<p>The thrust sensor is a <strong>1 kg bar load cell</strong>: an aluminum beam with a full strain-gauge bridge bonded to it, the same Wheatstone-bridge physics you used in the strain-gauge lab. Its sensitivity is tiny — about 1 mV of bridge output per volt of excitation at full load, so roughly <strong>5 mV at 9.81 N</strong> with 5 V excitation. The ADS cannot resolve your experiment in that range, so an <strong>AD620 instrumentation amplifier</strong> boosts the differential bridge signal by a gain near 200 before it reaches Scope channel 1 (<a href="#fig-signal-chain" class="quarto-xref">Figure&nbsp;2</a>).</p>
+<div id="fig-signal-chain" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-signal-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/SignalChain_Diagram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: The force signal chain. Each stage multiplies the previous one; the calibration constant c_1 you measure lumps them all together."><img src="figures/SignalChain_Diagram.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-signal-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The force signal chain. Each stage multiplies the previous one; the calibration constant <span class="math inline">\(c_1\)</span> you measure lumps them all together.
+</figcaption>
+</figure>
+</div>
+<p>You could compute the chain gain stage by stage — but every stage has tolerance, the amp’s gain resistor is imperfect, and the motor mount preloads the cell. This is why engineers calibrate the <em>chain</em>, not the parts. Dead weights of known mass load the cell exactly like thrust does (the rig points the thrust axis vertically for precisely this reason), and a linear fit</p>
+<p><span id="eq-cell-cal"><span class="math display">\[F = c_1 V + c_0 \tag{2}\]</span></span></p>
+<p>absorbs every gain, offset, and preload in one stroke. The fit-quality statistics are the Lab 02 set (norm of residuals, <span class="math inline">\(s_{yx}\)</span>, 95% CI, <span class="math inline">\(S_{c_1}\)</span>) with force units.</p>
+<p>One subtlety: the motor and mount sit on the cell permanently, so even “zero thrust” reads a nonzero voltage — the <strong>tare</strong>. Thrust is therefore always a <em>difference</em>:</p>
+<p><span id="eq-tare"><span class="math display">\[T = F(V_{\text{running}}) - F(V_{\text{motor off}}) \tag{3}\]</span></span></p>
+</section>
+<section id="the-current-signal-chain-hall-effect-sensing" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="the-current-signal-chain-hall-effect-sensing"><span class="header-section-number">4.3</span> The Current Signal Chain: Hall-Effect Sensing</h3>
+<p>Motor current is measured by an <strong>ACS712-20A hall-effect sensor</strong> in the 12 V supply line. Current through its internal conductor creates a magnetic field; the hall element converts that field to voltage. The datasheet transfer function is</p>
+<p><span id="eq-acs712"><span class="math display">\[I = \frac{V_{\text{out}} - 2.5\,\text{V}}{0.100\,\text{V/A}} \tag{4}\]</span></span></p>
+<p>The 2.5 V zero-current offset is deliberate: it lets one supply rail report current in <em>both</em> directions. Because the sensing is magnetic, the measurement circuit is electrically <strong>isolated</strong> from the noisy motor power path — a real advantage you get for three dollars. Note what we did <em>not</em> do: put a shunt resistor in the motor line and measure its voltage drop directly. A shunt works, but it wastes power, heats up (changing its own resistance), and ties your scope ground into the motor current path.</p>
+</section>
+<section id="sec-momentum" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="sec-momentum"><span class="header-section-number">4.4</span> Momentum Theory: What Physics Expects of Your Curve</h3>
+<p>Model the propeller as an <strong>actuator disk</strong> of area <span class="math inline">\(A\)</span> that accelerates air from rest to a jet velocity <span class="math inline">\(v_j\)</span> (<a href="#fig-momentum" class="quarto-xref">Figure&nbsp;3</a>). Thrust is the momentum flux through the disk, and the <em>ideal</em> power is the kinetic energy given to that air per second. Momentum theory (derived in the prelab reading, summarized here) gives:</p>
+<p><span id="eq-momentum"><span class="math display">\[T = 2 \rho A v_i^2 \qquad P_{\text{ideal}} = T v_i = \frac{T^{3/2}}{\sqrt{2\rho A}} \tag{5}\]</span></span></p>
+<p>where <span class="math inline">\(v_i\)</span> is the induced velocity at the disk and <span class="math inline">\(\rho\)</span> is air density. The prediction to test: <strong>electrical power should grow like thrust to the 3/2 power.</strong> Plot <span class="math inline">\(P\)</span> against <span class="math inline">\(T^{3/2}\)</span> and the physics says you should see a line. Its slope, compared with the ideal slope <span class="math inline">\(1/\sqrt{2\rho A}\)</span>, defines a system <strong>figure of merit</strong></p>
+<p><span id="eq-fm"><span class="math display">\[FM = \frac{P_{\text{ideal}}}{P_{\text{elec}}} = \frac{1/\sqrt{2\rho A}}{\text{measured slope}} \tag{6}\]</span></span></p>
+<p>which bundles propeller aerodynamic efficiency with motor and ESC losses. Small hobby systems typically land between 0.3 and 0.5 — you will measure where yours sits, and <em>which propeller wastes less</em>.</p>
+<div id="fig-momentum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-momentum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/MomentumTheory_Diagram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: The actuator-disk model: the propeller is an infinitely thin disk that adds momentum to the air passing through it."><img src="figures/MomentumTheory_Diagram.png" class="img-fluid figure-img" style="width:60.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-momentum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The actuator-disk model: the propeller is an infinitely thin disk that adds momentum to the air passing through it.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="why-three-runs" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="why-three-runs"><span class="header-section-number">4.5</span> Why Three Runs?</h3>
+<p>A single sweep gives you numbers; it cannot tell you how much those numbers wobble. Motor temperature, ESC timing, air currents, and tare drift all move between runs. Three repeated sweeps let you compute, at every setpoint, a mean and a 95% confidence interval on that mean — with <span class="math inline">\(\nu = n - 1 = 2\)</span> degrees of freedom, so <span class="math inline">\(t_{2,95\%} = 4.303\)</span> (compare <span class="math inline">\(t_{9,95\%} = 2.262\)</span> from your Lab 02 calibration: small samples pay a steep premium). That interval is what turns “my motor makes about 60 g at 38%” into a claim your design can stand on.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-part-1"><span class="header-section-number">5</span> Part-1: Wire and Verify the Station</h2>
+<p>Your station has the thrust rig pre-assembled (load cell, motor, guard); you make the electrical connections. Your guides are <a href="#fig-station" class="quarto-xref">Figure&nbsp;4</a> and <a href="#fig-wiring" class="quarto-xref">Figure&nbsp;5</a>.</p>
+<div id="fig-station" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-station-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Rig_Station_Photo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: The thrust stand station, annotated."><img src="figures/Rig_Station_Photo.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-station-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The thrust stand station, annotated.
+</figcaption>
+</figure>
+</div>
+<div id="fig-wiring" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wiring-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Wiring_Photo_ADS.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: All station wiring at the ADS breadboard."><img src="figures/Wiring_Photo_ADS.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wiring-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: All station wiring at the ADS breadboard.
+</figcaption>
+</figure>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 16%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Connection</th>
+<th>ADS pin</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AD620 board V+ / V−</td>
+<td>V+ (5 V) / V− (−5 V)</td>
+<td>Amplifier supply</td>
+</tr>
+<tr class="even">
+<td>Load cell E+ (red) / E− (black)</td>
+<td>V+ (5 V) / GND</td>
+<td>Bridge excitation</td>
+</tr>
+<tr class="odd">
+<td>Load cell S+ (green) / S− (white)</td>
+<td>AD620 IN+ / IN−</td>
+<td>Bridge signal to amp</td>
+</tr>
+<tr class="even">
+<td>AD620 OUT</td>
+<td><strong>1+</strong></td>
+<td>Force signal</td>
+</tr>
+<tr class="odd">
+<td>GND rail</td>
+<td><strong>1−</strong></td>
+<td>Ch. 1 reference</td>
+</tr>
+<tr class="even">
+<td>ACS712 VCC / GND</td>
+<td>V+ (5 V) / GND rail</td>
+<td>Current sensor supply</td>
+</tr>
+<tr class="odd">
+<td>ACS712 OUT</td>
+<td><strong>2+</strong></td>
+<td>Current signal</td>
+</tr>
+<tr class="even">
+<td>GND rail</td>
+<td><strong>2−</strong></td>
+<td>Ch. 2 reference</td>
+</tr>
+<tr class="odd">
+<td>ESC signal (thin lead, orange)</td>
+<td><strong>DIO-0</strong></td>
+<td>Throttle command</td>
+</tr>
+<tr class="even">
+<td>ESC signal ground (thin lead, brown)</td>
+<td>GND rail</td>
+<td>Command reference</td>
+</tr>
+</tbody>
+</table>
+<p>The 12 V power path (supply → kill switch → ACS712 → ESC) is pre-wired at the rig — <strong>do not modify it</strong>. The ESC’s three motor wires are likewise pre-connected.</p>
+<ol type="1">
+<li>Make the table’s connections with the kill switch OFF.</li>
+<li>Enable the ADS Supplies: V+ = 5 V, V− = −5 V (as in Lab 03).</li>
+<li>Verify with your DMM: 5.0 V at the load cell E+ pin; ~2.5 V at the ACS712 OUT pin (zero current); a small, stable voltage (the tare) at AD620 OUT. Gently press down on the motor platform and watch the AD620 output rise — that is your force channel working.</li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q1.</strong> Record the AD620 output voltage at rest (the tare) and while you press lightly on the platform. Which direction does pressing move it? What force direction does that correspond to?</p>
+<p><strong>Q2.</strong> Record the ACS712 output with the kill switch OFF. How far from the ideal 2.500 V is it, and how many amps of <em>apparent</em> current is that offset error (<a href="#eq-acs712" class="quarto-xref">Equation&nbsp;4</a>)?</p>
+<p><strong>Q3.</strong> Trace the 12 V power path from the supply barrel jack to the motor and list every element in order. Where in that chain does the current sensor sit, and what current does it therefore <em>not</em> see?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-part-2"><span class="header-section-number">6</span> Part-2: Arm the ESC and First Spin</h2>
+<p>Open your notebook <code>FirstName_LastName_Lab09.ipynb</code> (kernel: your <code>.venv</code>; starter on Canvas). Close WaveForms — pydwf needs the device (Lab 03 rule).</p>
+<p>The throttle-command function is the heart of the lab. Read it line by line — the divider/counter arithmetic is <a href="#eq-throttle-us" class="quarto-xref">Equation&nbsp;1</a> implemented in hardware ticks:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> pydwf <span class="im">import</span> DwfLibrary, DwfState</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="im">from</span> pydwf.utilities <span class="im">import</span> openDwfDevice</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="im">import</span> time</span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a>dwf <span class="op">=</span> DwfLibrary()</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="kw">def</span> set_throttle(dout, pct):</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="co">"""Command the ESC: 0-100 % throttle -&gt; 1000-2000 us pulse at 50 Hz."""</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>    us <span class="op">=</span> <span class="bu">int</span>(<span class="dv">1000</span> <span class="op">+</span> <span class="dv">10</span> <span class="op">*</span> pct)                    <span class="co"># Eq. 1</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>    ticks_per_us <span class="op">=</span> <span class="bu">int</span>(dout.internalClockInfo() <span class="op">/</span> <span class="dv">1_000_000</span>)</span>
+<span id="cb2-12"><a href="#cb2-12"></a>    dout.dividerSet(<span class="dv">0</span>, ticks_per_us)             <span class="co"># 1 counter tick = 1 us</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>    dout.counterSet(<span class="dv">0</span>, <span class="dv">20_000</span> <span class="op">-</span> us, us)          <span class="co"># low ticks, high ticks</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>    dout.enableSet(<span class="dv">0</span>, <span class="va">True</span>)</span>
+<span id="cb2-15"><a href="#cb2-15"></a>    dout.configure(<span class="va">True</span>)                         <span class="co"># start the pattern</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>dout.internalClockInfo()</code></strong> returns the pattern generator’s base clock (100 MHz). Dividing by 1,000,000 gives the divider that makes each counter tick exactly 1 µs — we <em>compute</em> the divider rather than hard-coding 100, so the code survives a different device.</li>
+<li><strong><code>dout.counterSet(0, low, high)</code></strong> — channel DIO-0 repeats: low for <code>20000 − us</code> ticks, high for <code>us</code> ticks. Total 20,000 µs = 20 ms = 50 Hz, with the high time carrying the throttle command.</li>
+<li><strong><code>dout.configure(True)</code></strong> starts (or restarts) the pattern — the GUI <em>Run</em> button, in code.</li>
+</ul>
+<p>Now arm and spin, gently:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    dout <span class="op">=</span> device.digitalOut</span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a>    set_throttle(dout, <span class="dv">0</span>)                        <span class="co"># ESC must see 0% first</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>    <span class="bu">input</span>(<span class="st">"Guard on? Glasses on? Flip kill switch ON, wait for the "</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>          <span class="st">"arming beeps, then press Enter..."</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a>    set_throttle(dout, <span class="dv">15</span>)                       <span class="co"># a gentle first spin</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>    time.sleep(<span class="fl">3.0</span>)</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    set_throttle(dout, <span class="dv">0</span>)                        <span class="co"># ALWAYS end at zero</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>    <span class="bu">input</span>(<span class="st">"Flip kill switch OFF, then press Enter to release the device..."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The motor should spin smoothly for three seconds. <strong>If anything unexpected happens, flip the kill switch</strong> — that is what it is for.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Troubleshooting: no arming beeps?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Troubleshooting: no arming beeps?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No beeps when the kill switch goes on usually means the ESC is not seeing a valid 0% signal: check DIO-0 and the signal-ground wire (the ESC’s brown lead must share ground with the ADS), and confirm the <code>set_throttle(dout, 0)</code> cell ran <em>before</em> power-on.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q4.</strong> Find the ESC’s deadband: raise the throttle 1% at a time from zero. At what percent does the motor actually start turning? Why do ESCs deliberately not respond to the first few percent?</p>
+<p><strong>Q5.</strong> While the motor spins at 15%, watch the AD620 output with your DMM. Which way did it move relative to the tare, and is that consistent with your Q1 press test? What is the propeller blowing air <em>toward</em>, and why did we build the rig that way?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-3" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-part-3"><span class="header-section-number">7</span> Part-3: Dead-Weight Calibration</h2>
+<p><strong>Remove the propeller</strong> (motor power off, kill switch off — the two-wrench technique is demonstrated at the front bench). Calibration loads must be the <em>only</em> thing changing.</p>
+<p>The script is the Lab 03 pattern — <code>input()</code> pauses while you change the physical setup, the code does the recording:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>masses_g <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">500</span>]</span>
+<span id="cb4-2"><a href="#cb4-2"></a>mean_voltages <span class="op">=</span> []</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a>fs, duration <span class="op">=</span> <span class="dv">1000</span>, <span class="fl">2.0</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    ai <span class="op">=</span> device.analogIn</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    ai.channelEnableSet(<span class="dv">0</span>, <span class="va">True</span>)</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    ai.channelRangeSet(<span class="dv">0</span>, <span class="fl">5.0</span>)</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    ai.frequencySet(fs)</span>
+<span id="cb4-12"><a href="#cb4-12"></a>    ai.bufferSizeSet(n)</span>
+<span id="cb4-13"><a href="#cb4-13"></a></span>
+<span id="cb4-14"><a href="#cb4-14"></a>    <span class="cf">for</span> m <span class="kw">in</span> masses_g:</span>
+<span id="cb4-15"><a href="#cb4-15"></a>        <span class="bu">input</span>(<span class="ss">f"Place </span><span class="sc">{</span>m<span class="sc">}</span><span class="ss"> g on the platform, hands clear, then Enter..."</span>)</span>
+<span id="cb4-16"><a href="#cb4-16"></a>        ai.configure(<span class="va">False</span>, <span class="va">True</span>)</span>
+<span id="cb4-17"><a href="#cb4-17"></a>        <span class="cf">while</span> ai.status(<span class="va">True</span>) <span class="op">!=</span> DwfState.Done:</span>
+<span id="cb4-18"><a href="#cb4-18"></a>            time.sleep(<span class="fl">0.05</span>)</span>
+<span id="cb4-19"><a href="#cb4-19"></a>        volts <span class="op">=</span> np.array(ai.statusData(<span class="dv">0</span>, n))</span>
+<span id="cb4-20"><a href="#cb4-20"></a>        mean_voltages.append(volts.mean())</span>
+<span id="cb4-21"><a href="#cb4-21"></a>        <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>m<span class="sc">:4d}</span><span class="ss"> g: </span><span class="sc">{</span>mean_voltages[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22"></a></span>
+<span id="cb4-23"><a href="#cb4-23"></a>np.savetxt(<span class="st">'../Data/loadcell_calibration_data.csv'</span>,</span>
+<span id="cb4-24"><a href="#cb4-24"></a>           np.column_stack([masses_g, mean_voltages]),</span>
+<span id="cb4-25"><a href="#cb4-25"></a>           header<span class="op">=</span><span class="st">'mass_g,voltage_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Nothing here is new syntax — this is your Lab 03 calibration loop with masses instead of pendulum positions.</p>
+<p>Fit the calibration (<a href="#eq-cell-cal" class="quarto-xref">Equation&nbsp;2</a>). Convert masses to newtons first — the fit maps volts to <em>force</em>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>cal <span class="op">=</span> np.loadtxt(<span class="st">'../Data/loadcell_calibration_data.csv'</span>,</span>
+<span id="cb5-2"><a href="#cb5-2"></a>                 delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>masses_g <span class="op">=</span> cal[:, <span class="dv">0</span>]</span>
+<span id="cb5-4"><a href="#cb5-4"></a>volts    <span class="op">=</span> cal[:, <span class="dv">1</span>]</span>
+<span id="cb5-5"><a href="#cb5-5"></a>force_N  <span class="op">=</span> masses_g <span class="op">/</span> <span class="dv">1000</span> <span class="op">*</span> <span class="fl">9.81</span>          <span class="co"># grams -&gt; kg -&gt; newtons</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a>coeffs <span class="op">=</span> np.polyfit(volts, force_N, <span class="dv">1</span>)     <span class="co"># F = c1*V + c0</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="bu">print</span>(<span class="ss">f"c1 = </span><span class="sc">{</span>coeffs[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss"> N/V, c0 = </span><span class="sc">{</span>coeffs[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss"> N"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Compute the fit statistics exactly as in Lab 02 (norm of residuals, <span class="math inline">\(s_{yx}\)</span>, 95% CI with <span class="math inline">\(\nu = N - 2 = 3\)</span>, and <span class="math inline">\(S_{c_1}\)</span>), build the calibration plot to match <a href="#fig-example-cal" class="quarto-xref">Figure&nbsp;6</a> per the Post-Lab requirements, and save the coefficients — <strong>Lab 10 reuses this calibration</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>np.savetxt(<span class="st">'../Data/loadcell_calibration_coeffs.csv'</span>, coeffs,</span>
+<span id="cb6-2"><a href="#cb6-2"></a>           header<span class="op">=</span><span class="st">'c1 (N/V), c0 (N)'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q6.</strong> Record your calibration equation with units on both coefficients. Your <span class="math inline">\(c_0\)</span> is <em>negative</em> even though every voltage you measured was positive — what two physical offsets is it absorbing?</p>
+<p><strong>Q7.</strong> Using <span class="math inline">\(S_{c_1}\)</span> and <span class="math inline">\(t_{3,95\%}\)</span>, what is the 95% uncertainty in your chain gain <span class="math inline">\(c_1\)</span>, as a percentage? Is the calibration or the run-to-run repeatability (you’ll know after Part-5) the bigger uncertainty in this experiment?</p>
+</div>
+</div>
+<section id="example-result" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="example-result"><span class="header-section-number">7.1</span> Example Result</h3>
+<div id="fig-example-cal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-cal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab09_LoadCellCalibration.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Example load-cell calibration plot (made-up data). Your values will differ, but your formatting and annotations should match."><img src="figures/Python/FirstName_LastName_Lab09_LoadCellCalibration.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-cal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Example load-cell calibration plot (made-up data). Your values will differ, but your formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<p><strong>Reinstall the propeller</strong> (snug, not gorilla-tight) and have a TA check it before you re-power.</p>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-4" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-part-4"><span class="header-section-number">8</span> Part-4: Automated Thrust and Current Sweeps</h2>
+<p>Here is the capstone version of the course’s automation philosophy: the entire experiment is one script. It steps through 13 throttle setpoints, lets the motor settle at each, records two seconds of both channels, and saves a tidy table.</p>
+<p>First, a helper that reads both channels and returns their means — a function <em>returning two values</em>, which you have seen <code>step</code>-by-step since Lab 02’s <code>def</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">def</span> read_means(ai, fs<span class="op">=</span><span class="dv">1000</span>, duration<span class="op">=</span><span class="fl">2.0</span>):</span>
+<span id="cb7-2"><a href="#cb7-2"></a>    <span class="co">"""Record both channels and return (mean_cell_V, mean_current_V)."""</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>    n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="cf">for</span> ch <span class="kw">in</span> (<span class="dv">0</span>, <span class="dv">1</span>):</span>
+<span id="cb7-5"><a href="#cb7-5"></a>        ai.channelEnableSet(ch, <span class="va">True</span>)</span>
+<span id="cb7-6"><a href="#cb7-6"></a>        ai.channelRangeSet(ch, <span class="fl">5.0</span>)</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    ai.frequencySet(fs)</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    ai.bufferSizeSet(n)</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    ai.configure(<span class="va">False</span>, <span class="va">True</span>)</span>
+<span id="cb7-10"><a href="#cb7-10"></a>    <span class="cf">while</span> ai.status(<span class="va">True</span>) <span class="op">!=</span> DwfState.Done:</span>
+<span id="cb7-11"><a href="#cb7-11"></a>        time.sleep(<span class="fl">0.05</span>)</span>
+<span id="cb7-12"><a href="#cb7-12"></a>    <span class="cf">return</span> (np.array(ai.statusData(<span class="dv">0</span>, n)).mean(),</span>
+<span id="cb7-13"><a href="#cb7-13"></a>            np.array(ai.statusData(<span class="dv">1</span>, n)).mean())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Before any powered run, record the <strong>tare</strong> (kill switch ON so the ESC electronics are live, throttle 0%, prop still):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    dout, ai <span class="op">=</span> device.digitalOut, device.analogIn</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    set_throttle(dout, <span class="dv">0</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="bu">input</span>(<span class="st">"Kill switch ON, wait for arming beeps, then Enter..."</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a></span>
+<span id="cb8-6"><a href="#cb8-6"></a>    fs, duration <span class="op">=</span> <span class="dv">1000</span>, <span class="fl">5.0</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>    n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb8-8"><a href="#cb8-8"></a>    <span class="cf">for</span> ch <span class="kw">in</span> (<span class="dv">0</span>, <span class="dv">1</span>):</span>
+<span id="cb8-9"><a href="#cb8-9"></a>        ai.channelEnableSet(ch, <span class="va">True</span>)</span>
+<span id="cb8-10"><a href="#cb8-10"></a>        ai.channelRangeSet(ch, <span class="fl">5.0</span>)</span>
+<span id="cb8-11"><a href="#cb8-11"></a>    ai.frequencySet(fs)</span>
+<span id="cb8-12"><a href="#cb8-12"></a>    ai.bufferSizeSet(n)</span>
+<span id="cb8-13"><a href="#cb8-13"></a>    ai.configure(<span class="va">False</span>, <span class="va">True</span>)</span>
+<span id="cb8-14"><a href="#cb8-14"></a>    <span class="cf">while</span> ai.status(<span class="va">True</span>) <span class="op">!=</span> DwfState.Done:</span>
+<span id="cb8-15"><a href="#cb8-15"></a>        time.sleep(<span class="fl">0.05</span>)</span>
+<span id="cb8-16"><a href="#cb8-16"></a>    t <span class="op">=</span> np.arange(n) <span class="op">/</span> fs</span>
+<span id="cb8-17"><a href="#cb8-17"></a>    v_cell <span class="op">=</span> np.array(ai.statusData(<span class="dv">0</span>, n))</span>
+<span id="cb8-18"><a href="#cb8-18"></a>    v_curr <span class="op">=</span> np.array(ai.statusData(<span class="dv">1</span>, n))</span>
+<span id="cb8-19"><a href="#cb8-19"></a></span>
+<span id="cb8-20"><a href="#cb8-20"></a>np.savetxt(<span class="st">'../Data/TareRecording.csv'</span>,</span>
+<span id="cb8-21"><a href="#cb8-21"></a>           np.column_stack([t, v_cell, v_curr]),</span>
+<span id="cb8-22"><a href="#cb8-22"></a>           header<span class="op">=</span><span class="st">'time_s,loadcell_V,current_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now the sweep itself. Edit the two variables at the top before <em>every</em> run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>prop_name <span class="op">=</span> <span class="st">'PropA'</span>      <span class="co"># EDIT: 'PropA' (2-blade) or 'PropB' (3-blade)</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>run <span class="op">=</span> <span class="dv">1</span>                  <span class="co"># EDIT: 1, 2, or 3</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a></span>
+<span id="cb9-4"><a href="#cb9-4"></a>throttle_pct <span class="op">=</span> np.arange(<span class="dv">10</span>, <span class="dv">71</span>, <span class="dv">5</span>)          <span class="co"># 10% to 70% in 5% steps</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="cf">with</span> openDwfDevice(dwf) <span class="im">as</span> device:</span>
+<span id="cb9-7"><a href="#cb9-7"></a>    dout, ai <span class="op">=</span> device.digitalOut, device.analogIn</span>
+<span id="cb9-8"><a href="#cb9-8"></a>    set_throttle(dout, <span class="dv">0</span>)                    <span class="co"># arming state</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>    <span class="bu">input</span>(<span class="st">"Guard on? Kill switch ON, wait for beeps, then Enter..."</span>)</span>
+<span id="cb9-10"><a href="#cb9-10"></a></span>
+<span id="cb9-11"><a href="#cb9-11"></a>    rows <span class="op">=</span> []</span>
+<span id="cb9-12"><a href="#cb9-12"></a>    <span class="cf">for</span> pct <span class="kw">in</span> throttle_pct:</span>
+<span id="cb9-13"><a href="#cb9-13"></a>        set_throttle(dout, pct)</span>
+<span id="cb9-14"><a href="#cb9-14"></a>        time.sleep(<span class="fl">1.0</span>)                      <span class="co"># settle before measuring</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a>        v_cell, v_curr <span class="op">=</span> read_means(ai)      <span class="co"># 2-s average of both channels</span></span>
+<span id="cb9-16"><a href="#cb9-16"></a>        rows.append((pct, v_cell, v_curr))</span>
+<span id="cb9-17"><a href="#cb9-17"></a>        <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>pct<span class="sc">:3d}</span><span class="ss">%   cell </span><span class="sc">{</span>v_cell<span class="sc">:.4f}</span><span class="ss"> V   current </span><span class="sc">{</span>v_curr<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span>
+<span id="cb9-18"><a href="#cb9-18"></a></span>
+<span id="cb9-19"><a href="#cb9-19"></a>    set_throttle(dout, <span class="dv">0</span>)                    <span class="co"># ALWAYS end at zero throttle</span></span>
+<span id="cb9-20"><a href="#cb9-20"></a></span>
+<span id="cb9-21"><a href="#cb9-21"></a>np.savetxt(<span class="ss">f'../Data/ThrustSweep_</span><span class="sc">{</span>prop_name<span class="sc">}</span><span class="ss">_Run</span><span class="sc">{</span>run<span class="sc">}</span><span class="ss">.csv'</span>,</span>
+<span id="cb9-22"><a href="#cb9-22"></a>           np.array(rows),</span>
+<span id="cb9-23"><a href="#cb9-23"></a>           header<span class="op">=</span><span class="st">'throttle_pct,loadcell_V,current_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each sweep takes about 40 seconds (<a href="#fig-sweep-output" class="quarto-xref">Figure&nbsp;7</a> shows a run in progress). Your test matrix: <strong>3 runs with Prop A, then swap to Prop B (kill switch OFF for the swap, TA checks the prop nut), then 3 runs with Prop B.</strong> Let the motor rest a minute between runs — you are holding temperature roughly constant, which is part of what “repeatability” means.</p>
+<div id="fig-sweep-output" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sweep-output-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Pydwf_Sweep_Output.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: The sweep script mid-run in VS Code."><img src="figures/Pydwf_Sweep_Output.png" class="img-fluid figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sweep-output-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: The sweep script mid-run in VS Code.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="Cap is 70% for a reason">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Cap is 70% for a reason
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Do not edit the sweep above 70%. The 3-blade prop draws over 9 A near full throttle — past the supply’s comfortable limit, and the thrust data up to 70% is everything the design task needs.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q8.</strong> During a Prop A sweep, record the printed cell voltage at 30% and 60% from two different runs. How repeatable are they, in millivolts? Convert that to grams using your calibration.</p>
+<p><strong>Q9.</strong> The script sleeps 1.0 s <em>then</em> averages for 2.0 s. What error would sneak in if the sleep were removed entirely? (You will measure exactly this settling behavior in Lab 10.)</p>
+<p><strong>Q10.</strong> Why must the throttle return to zero <em>inside</em> the <code>with</code> block, before the device closes? What state would DIO-0 be left in otherwise, and what would the ESC do?</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-part-5" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-part-5"><span class="header-section-number">9</span> Part-5: Curves, Confidence, and the Propeller Trade-Off</h2>
+<p>The analysis needs no hardware. Load the tare and all six sweeps. A <strong>dictionary</strong> keyed by propeller name keeps the two datasets organized, and <code>np.stack</code> turns each propeller’s three runs into a single 3-D array so statistics across runs become one-line <code>axis=0</code> reductions:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>tare <span class="op">=</span> np.loadtxt(<span class="st">'../Data/TareRecording.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>v_tare <span class="op">=</span> tare[:, <span class="dv">1</span>].mean()                 <span class="co"># motor-off cell voltage</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="bu">print</span>(<span class="ss">f"tare voltage = </span><span class="sc">{</span>v_tare<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4"></a></span>
+<span id="cb10-5"><a href="#cb10-5"></a>props <span class="op">=</span> [<span class="st">'PropA'</span>, <span class="st">'PropB'</span>]</span>
+<span id="cb10-6"><a href="#cb10-6"></a>data <span class="op">=</span> {}                                  <span class="co"># dictionary: one entry per prop</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="cf">for</span> prop <span class="kw">in</span> props:</span>
+<span id="cb10-9"><a href="#cb10-9"></a>    runs <span class="op">=</span> [np.loadtxt(<span class="ss">f'../Data/ThrustSweep_</span><span class="sc">{</span>prop<span class="sc">}</span><span class="ss">_Run</span><span class="sc">{</span>r<span class="sc">}</span><span class="ss">.csv'</span>,</span>
+<span id="cb10-10"><a href="#cb10-10"></a>                       delimiter<span class="op">=</span><span class="st">','</span>, comments<span class="op">=</span><span class="st">'#'</span>) <span class="cf">for</span> r <span class="kw">in</span> (<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)]</span>
+<span id="cb10-11"><a href="#cb10-11"></a>    arr <span class="op">=</span> np.stack(runs)                   <span class="co"># shape (3 runs, 13 setpoints, 3 cols)</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a>    throttle <span class="op">=</span> arr[<span class="dv">0</span>, :, <span class="dv">0</span>]                <span class="co"># same setpoints every run</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a>    thrust_N <span class="op">=</span> (np.polyval(coeffs, arr[:, :, <span class="dv">1</span>])</span>
+<span id="cb10-15"><a href="#cb10-15"></a>                <span class="op">-</span> np.polyval(coeffs, v_tare))       <span class="co"># Eq. 3: tare-corrected</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a>    current_A <span class="op">=</span> (arr[:, :, <span class="dv">2</span>] <span class="op">-</span> <span class="fl">2.5</span>) <span class="op">/</span> <span class="fl">0.100</span>        <span class="co"># Eq. 4: ACS712 datasheet</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a></span>
+<span id="cb10-18"><a href="#cb10-18"></a>    data[prop] <span class="op">=</span> {<span class="st">'throttle'</span>: throttle, <span class="st">'T'</span>: thrust_N, <span class="st">'I'</span>: current_A}</span>
+<span id="cb10-19"><a href="#cb10-19"></a>    <span class="bu">print</span>(prop, <span class="st">'thrust array shape:'</span>, thrust_N.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>New syntax, in order of appearance:</p>
+<ul>
+<li><strong><code>data = {}</code> and <code>data[prop] = ...</code></strong> — a <em>dictionary</em> stores values under names instead of positions. <code>data['PropA']['T']</code> reads like what it is; <code>results[0][1]</code> does not. Dictionaries are how real analysis code stays readable as datasets multiply.</li>
+<li><strong>The list comprehension</strong> <code>[np.loadtxt(...) for r in (1, 2, 3)]</code> — a <code>for</code> loop that builds a list in one line; the loop variable <code>r</code> fills in each filename via the f-string.</li>
+<li><strong><code>np.stack(runs)</code></strong> — glues three (13 × 3) arrays into one (3 × 13 × 3) array. Axis 0 is <em>which run</em>, axis 1 is <em>which setpoint</em>, axis 2 is <em>which column</em>.</li>
+<li><strong><code>arr[:, :, 1]</code></strong> — all runs, all setpoints, column 1: the entire experiment’s cell voltages as one (3 × 13) array. <code>np.polyval</code> happily converts all 39 numbers at once — no loop required.</li>
+</ul>
+<p>Statistics across the three runs, at every setpoint simultaneously:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a>t2 <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>, df<span class="op">=</span><span class="dv">2</span>)              <span class="co"># two-sided 95%, n-1 = 2</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="cf">for</span> prop <span class="kw">in</span> props:</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    d <span class="op">=</span> data[prop]</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    d[<span class="st">'T_mean'</span>] <span class="op">=</span> d[<span class="st">'T'</span>].mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    d[<span class="st">'T_CI'</span>]   <span class="op">=</span> t2 <span class="op">*</span> d[<span class="st">'T'</span>].std(axis<span class="op">=</span><span class="dv">0</span>, ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(<span class="dv">3</span>)</span>
+<span id="cb11-8"><a href="#cb11-8"></a>    d[<span class="st">'I_mean'</span>] <span class="op">=</span> d[<span class="st">'I'</span>].mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-9"><a href="#cb11-9"></a>    d[<span class="st">'I_CI'</span>]   <span class="op">=</span> t2 <span class="op">*</span> d[<span class="st">'I'</span>].std(axis<span class="op">=</span><span class="dv">0</span>, ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(<span class="dv">3</span>)</span>
+<span id="cb11-10"><a href="#cb11-10"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>prop<span class="sc">}</span><span class="ss">: max thrust </span><span class="sc">{</span>d[<span class="st">'T_mean'</span>][<span class="op">-</span><span class="dv">1</span>]<span class="op">/</span><span class="fl">9.81</span><span class="op">*</span><span class="dv">1000</span><span class="sc">:.0f}</span><span class="ss"> g, "</span></span>
+<span id="cb11-11"><a href="#cb11-11"></a>          <span class="ss">f"CI at 70% = ±</span><span class="sc">{</span>d[<span class="st">'T_CI'</span>][<span class="op">-</span><span class="dv">1</span>]<span class="op">/</span><span class="fl">9.81</span><span class="op">*</span><span class="dv">1000</span><span class="sc">:.1f}</span><span class="ss"> g"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>axis=0</code></strong> tells the reduction which direction to collapse: <code>mean(axis=0)</code> averages <em>across runs</em>, leaving one value per setpoint. This one argument replaces the nested loops you would have written in Lab 02.</li>
+<li>The CI is the standard error of the mean, scaled by <span class="math inline">\(t_{2,95\%} = 4.303\)</span> — the small-sample premium from the Background.</li>
+</ul>
+<p>Build the <strong>thrust-curve plot</strong> (<a href="#fig-example-thrust" class="quarto-xref">Figure&nbsp;8</a>): both propellers in grams vs.&nbsp;throttle, mean lines with markers, and the CI as dashed black lines hugging each curve. Then the <strong>current-and-efficiency figure</strong> (<a href="#fig-example-eff" class="quarto-xref">Figure&nbsp;9</a>): a two-panel plot — current draw on top, grams-per-watt below, with <span class="math inline">\(P = 12.0\,\text{V} \times I\)</span>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>P <span class="op">=</span> <span class="fl">12.0</span> <span class="op">*</span> d[<span class="st">'I_mean'</span>]                     <span class="co"># electrical watts</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>eff <span class="op">=</span> (d[<span class="st">'T_mean'</span>] <span class="op">/</span> <span class="fl">9.81</span> <span class="op">*</span> <span class="dv">1000</span>) <span class="op">/</span> P      <span class="co"># grams per watt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Finally the <strong>momentum-theory test</strong> (<a href="#fig-example-momentum" class="quarto-xref">Figure&nbsp;10</a>). All 39 points per prop (every run, every setpoint — no averaging needed for a fit), power against thrust<sup>1.5</sup>, <code>np.polyfit</code> line, and the figure of merit from <a href="#eq-fm" class="quarto-xref">Equation&nbsp;6</a>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>rho <span class="op">=</span> <span class="fl">1.204</span>                    <span class="co"># kg/m^3, sea level 20 C</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>A <span class="op">=</span> np.pi <span class="op">*</span> (<span class="fl">0.0381</span>)<span class="op">**</span><span class="dv">2</span>        <span class="co"># 3-inch prop disk area, m^2</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>slope_ideal <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> np.sqrt(<span class="dv">2</span> <span class="op">*</span> rho <span class="op">*</span> A)</span>
+<span id="cb13-4"><a href="#cb13-4"></a></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="cf">for</span> prop <span class="kw">in</span> props:</span>
+<span id="cb13-6"><a href="#cb13-6"></a>    d <span class="op">=</span> data[prop]</span>
+<span id="cb13-7"><a href="#cb13-7"></a>    T15 <span class="op">=</span> d[<span class="st">'T'</span>].flatten() <span class="op">**</span> <span class="fl">1.5</span>          <span class="co"># all runs, all setpoints</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a>    P   <span class="op">=</span> <span class="fl">12.0</span> <span class="op">*</span> d[<span class="st">'I'</span>].flatten()</span>
+<span id="cb13-9"><a href="#cb13-9"></a>    pc  <span class="op">=</span> np.polyfit(T15, P, <span class="dv">1</span>)</span>
+<span id="cb13-10"><a href="#cb13-10"></a>    d[<span class="st">'FM'</span>] <span class="op">=</span> slope_ideal <span class="op">/</span> pc[<span class="dv">0</span>]</span>
+<span id="cb13-11"><a href="#cb13-11"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>prop<span class="sc">}</span><span class="ss">: slope = </span><span class="sc">{</span>pc[<span class="dv">0</span>]<span class="sc">:.2f}</span><span class="ss"> W/N^1.5, FM = </span><span class="sc">{</span>d[<span class="st">'FM'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>.flatten()</code></strong> unrolls the (3 × 13) array into one 39-element vector — the fit does not care which run a point came from.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q11.</strong> At 40% throttle, which prop makes more thrust? Which makes more thrust <em>per watt</em>? Write one sentence a drone customer would understand about this trade-off.</p>
+<p><strong>Q12.</strong> Is your <span class="math inline">\(P\)</span> vs.&nbsp;<span class="math inline">\(T^{3/2}\)</span> plot actually straight? Where does it deviate most, and offer a physical suspect (ESC behavior at low throttle? motor efficiency falling at high current?).</p>
+<p><strong>Q13.</strong> Your momentum fit has a nonzero intercept. What real electrical loads exist at zero thrust?</p>
+</div>
+</div>
+<section id="example-results" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="example-results"><span class="header-section-number">9.1</span> Example Results</h3>
+<div id="fig-example-thrust" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-thrust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab09_ThrustCurves.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Example thrust curves with 95% CIs (made-up data). Your values will differ, but your formatting and annotations should match."><img src="figures/Python/FirstName_LastName_Lab09_ThrustCurves.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-thrust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Example thrust curves with 95% CIs (made-up data). Your values will differ, but your formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<div id="fig-example-eff" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-eff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab09_CurrentEfficiency.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Example current and efficiency figure (made-up data)."><img src="figures/Python/FirstName_LastName_Lab09_CurrentEfficiency.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-eff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Example current and efficiency figure (made-up data).
+</figcaption>
+</figure>
+</div>
+<div id="fig-example-momentum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-momentum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab09_MomentumFit.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10: Example momentum-theory fit (made-up data)."><img src="figures/Python/FirstName_LastName_Lab09_MomentumFit.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-momentum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Example momentum-theory fit (made-up data).
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="sec-part-6" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-part-6"><span class="header-section-number">10</span> Part-6: The Hover Design Point</h2>
+<p><strong>Design brief.</strong> Your team is designing a 240 g quadcopter (all-up weight, four motors — so 60 g of thrust per motor at hover) using this motor and <em>a propeller you will choose</em>. Deliver: the chosen prop, the hover throttle setting, the hover current per motor, the thrust margin, and an estimated flight time on an 850 mAh battery.</p>
+<p><code>np.interp</code> reads your measured curve backwards — given the required thrust, what throttle produces it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>m_quad <span class="op">=</span> <span class="fl">0.240</span>                          <span class="co"># kg, all-up weight</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>F_hover <span class="op">=</span> m_quad <span class="op">*</span> <span class="fl">9.81</span> <span class="op">/</span> <span class="dv">4</span>             <span class="co"># N per motor</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="cf">for</span> prop <span class="kw">in</span> props:</span>
+<span id="cb14-5"><a href="#cb14-5"></a>    d <span class="op">=</span> data[prop]</span>
+<span id="cb14-6"><a href="#cb14-6"></a>    thr, Tm, TCI <span class="op">=</span> d[<span class="st">'throttle'</span>], d[<span class="st">'T_mean'</span>], d[<span class="st">'T_CI'</span>]</span>
+<span id="cb14-7"><a href="#cb14-7"></a></span>
+<span id="cb14-8"><a href="#cb14-8"></a>    delta_h <span class="op">=</span> np.interp(F_hover, Tm, thr)     <span class="co"># throttle at hover thrust</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a></span>
+<span id="cb14-10"><a href="#cb14-10"></a>    <span class="co"># thrust CI at that throttle -&gt; throttle uncertainty via local slope</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a>    ci_h    <span class="op">=</span> np.interp(delta_h, thr, TCI)</span>
+<span id="cb14-12"><a href="#cb14-12"></a>    slope_h <span class="op">=</span> np.gradient(Tm, thr)[np.argmin(np.<span class="bu">abs</span>(thr <span class="op">-</span> delta_h))]</span>
+<span id="cb14-13"><a href="#cb14-13"></a>    dthr    <span class="op">=</span> ci_h <span class="op">/</span> slope_h</span>
+<span id="cb14-14"><a href="#cb14-14"></a></span>
+<span id="cb14-15"><a href="#cb14-15"></a>    I_h  <span class="op">=</span> np.interp(delta_h, thr, d[<span class="st">'I_mean'</span>])</span>
+<span id="cb14-16"><a href="#cb14-16"></a>    marg <span class="op">=</span> d[<span class="st">'T_mean'</span>][<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> F_hover</span>
+<span id="cb14-17"><a href="#cb14-17"></a>    t_fly <span class="op">=</span> <span class="fl">0.850</span> <span class="op">/</span> (<span class="dv">4</span> <span class="op">*</span> I_h) <span class="op">*</span> <span class="dv">60</span>      <span class="co"># 850 mAh, 4 motors, minutes</span></span>
+<span id="cb14-18"><a href="#cb14-18"></a></span>
+<span id="cb14-19"><a href="#cb14-19"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>prop<span class="sc">}</span><span class="ss">: hover at </span><span class="sc">{</span>delta_h<span class="sc">:.1f}</span><span class="ss"> ± </span><span class="sc">{</span>dthr<span class="sc">:.1f}</span><span class="ss"> %throttle, "</span></span>
+<span id="cb14-20"><a href="#cb14-20"></a>          <span class="ss">f"I = </span><span class="sc">{</span>I_h<span class="sc">:.2f}</span><span class="ss"> A/motor, thrust margin </span><span class="sc">{</span>marg<span class="sc">:.2f}</span><span class="ss">x, "</span></span>
+<span id="cb14-21"><a href="#cb14-21"></a>          <span class="ss">f"ideal flight time </span><span class="sc">{</span>t_fly<span class="sc">:.1f}</span><span class="ss"> min"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>np.interp(F_hover, Tm, thr)</code></strong> — linear interpolation with the axes swapped on purpose: we know the <em>y</em> value (required thrust) and want the <em>x</em> (throttle). It requires <code>Tm</code> to be increasing, which a thrust curve is.</li>
+<li>The throttle uncertainty converts the thrust CI through the curve’s local slope — the same first-order error propagation you used in the Monte Carlo lab, done with the measured gradient.</li>
+</ul>
+<p>Record your decision in your logbook <em>as a decision</em>: which prop, and why — in numbers.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q14.</strong> State your chosen propeller and hover throttle with its ± uncertainty. Round the throttle <strong>up</strong> to the next whole percent (why up? — thrust margin is safer than thrust deficit) and write down that commanded value. You will fly this exact setpoint in Lab 10.</p>
+<p><strong>Q15.</strong> Multirotor designers demand at least a 2:1 max-thrust-to-hover ratio for controllability. Does your choice meet it? What is the margin number?</p>
+<p><strong>Q16.</strong> Your flight-time estimate assumed the battery voltage stays at 12 V and hover current stays constant. Name two reasons the real number is smaller, and whether each is a <em>systematic</em> or <em>random</em> effect on your estimate.</p>
+</div>
+</div>
+<section id="the-endurance-design-map-a-surface-not-a-point" class="level3" data-number="10.1">
+<h3 data-number="10.1" class="anchored" data-anchor-id="the-endurance-design-map-a-surface-not-a-point"><span class="header-section-number">10.1</span> The Endurance Design Map — a Surface, Not a Point</h3>
+<p>One hover point answers one design question. But mass and battery capacity are both <em>choices</em>, and your measured curves can score <strong>every</strong> combination at once — that is a design <em>space</em>, and it is two-dimensional, so its natural picture is a 3-D surface.</p>
+<p><code>np.meshgrid</code> builds the grid: given a mass axis and a capacity axis, it returns two 2-D arrays holding, respectively, the mass and the capacity of every combination. Every line of the scalar design calculation then works unchanged — <code>np.interp</code> and the arithmetic simply operate elementwise over the whole grid:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>d <span class="op">=</span> data[<span class="st">'PropA'</span>]                        <span class="co"># your chosen prop from above</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>thr, Tm, Im <span class="op">=</span> d[<span class="st">'throttle'</span>], d[<span class="st">'T_mean'</span>], d[<span class="st">'I_mean'</span>]</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a>mass_g  <span class="op">=</span> np.linspace(<span class="dv">150</span>, <span class="dv">900</span>, <span class="dv">60</span>)      <span class="co"># all-up mass candidates</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>cap_mAh <span class="op">=</span> np.linspace(<span class="dv">500</span>, <span class="dv">1500</span>, <span class="dv">60</span>)     <span class="co"># battery candidates</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a>M, C <span class="op">=</span> np.meshgrid(mass_g, cap_mAh)      <span class="co"># 2-D grids: every combination</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a></span>
+<span id="cb15-8"><a href="#cb15-8"></a>F_req   <span class="op">=</span> M <span class="op">/</span> <span class="dv">1000</span> <span class="op">*</span> <span class="fl">9.81</span> <span class="op">/</span> <span class="dv">4</span>            <span class="co"># hover thrust per motor (N)</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a>thr_req <span class="op">=</span> np.interp(F_req, Tm, thr)      <span class="co"># throttle to hover, elementwise</span></span>
+<span id="cb15-10"><a href="#cb15-10"></a>I_req   <span class="op">=</span> np.interp(thr_req, thr, Im)    <span class="co"># current at that throttle</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>t_fly   <span class="op">=</span> C <span class="op">/</span> <span class="dv">1000</span> <span class="op">/</span> (<span class="dv">4</span> <span class="op">*</span> I_req) <span class="op">*</span> <span class="dv">60</span>    <span class="co"># ideal flight time (min)</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a></span>
+<span id="cb15-13"><a href="#cb15-13"></a>t_fly[F_req <span class="op">&gt;</span> Tm.<span class="bu">max</span>()] <span class="op">=</span> np.nan         <span class="co"># cannot hover: off the map</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>np.meshgrid(mass_g, cap_mAh)</code></strong> — <code>M[i, j]</code> and <code>C[i, j]</code> are the mass and capacity of combination (i, j). Same trick as <code>np.stack</code> giving you all-runs-at-once math in Part-5, now in two design dimensions.</li>
+<li><strong>The NaN line is the physics honesty clause.</strong> Where required thrust exceeds your <em>measured</em> maximum, <code>np.interp</code> would silently clamp to the 70% value and invent flyable vehicles. Setting those cells to <code>np.nan</code> cuts the surface off at the cliff where hovering becomes impossible — the map shows the <em>boundary of the feasible design space</em>, which is often the most valuable thing on it.</li>
+</ul>
+<p>Plot it as a surface, and mark your Part-6 design point on the map:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">5.0</span>), facecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>ax <span class="op">=</span> fig.add_subplot(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>surf <span class="op">=</span> ax.plot_surface(M, C, t_fly, cmap<span class="op">=</span><span class="st">'viridis'</span>, edgecolor<span class="op">=</span><span class="st">'none'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4"></a></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co"># mark the Part-6 design point: 240 g, 850 mAh</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>t_pt <span class="op">=</span> <span class="fl">0.850</span> <span class="op">/</span> (<span class="dv">4</span> <span class="op">*</span> np.interp(np.interp(<span class="fl">0.240</span><span class="op">*</span><span class="fl">9.81</span><span class="op">/</span><span class="dv">4</span>, Tm, thr), thr, Im)) <span class="op">*</span> <span class="dv">60</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>ax.scatter(<span class="dv">240</span>, <span class="dv">850</span>, t_pt, s<span class="op">=</span><span class="dv">60</span>, c<span class="op">=</span><span class="st">'red'</span>, depthshade<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb16-8"><a href="#cb16-8"></a>           label<span class="op">=</span><span class="st">'240 g / 850 mAh design'</span>)</span>
+<span id="cb16-9"><a href="#cb16-9"></a></span>
+<span id="cb16-10"><a href="#cb16-10"></a>ax.set_xlabel(<span class="st">'All-up mass (g)'</span>)</span>
+<span id="cb16-11"><a href="#cb16-11"></a>ax.set_ylabel(<span class="st">'Battery capacity (mAh)'</span>)</span>
+<span id="cb16-12"><a href="#cb16-12"></a>ax.set_zlabel(<span class="st">'Ideal flight time (min)'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13"></a>ax.set_title(<span class="ss">f"FirstName LastName's Endurance Design Map  </span><span class="sc">{</span>date_str<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-14"><a href="#cb16-14"></a>ax.view_init(elev<span class="op">=</span><span class="dv">25</span>, azim<span class="op">=-</span><span class="dv">135</span>)</span>
+<span id="cb16-15"><a href="#cb16-15"></a>fig.colorbar(surf, shrink<span class="op">=</span><span class="fl">0.6</span>, pad<span class="op">=</span><span class="fl">0.10</span>, label<span class="op">=</span><span class="st">'minutes'</span>)</span>
+<span id="cb16-16"><a href="#cb16-16"></a>ax.legend(loc<span class="op">=</span><span class="st">'upper left'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>fig.add_subplot(projection='3d')</code></strong> turns the axes three-dimensional; <code>plot_surface</code> drapes <code>t_fly</code> over the (M, C) grid, and <code>cmap='viridis'</code> colors by height so the map reads even in print.</li>
+<li><strong><code>ax.view_init(elev, azim)</code></strong> sets the camera. Rotate until the cliff and the design point are both visible — a 3-D plot whose interesting feature is hidden behind the surface has failed at its one job.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Logbook Questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logbook Questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Q17.</strong> Where is your design point on the map — comfortably on the plateau, on the steep slope, or near the cliff? What does its <em>local slope</em> along the mass axis tell you about how much payload you could add before flight time suffers badly?</p>
+<p><strong>Q18.</strong> The map’s best corner (light vehicle, huge battery) is fiction. What physical coupling between the two axes does this map ignore, and which direction does the true optimum move because of it?</p>
+</div>
+</div>
+</section>
+<section id="example-result-1" class="level3" data-number="10.2">
+<h3 data-number="10.2" class="anchored" data-anchor-id="example-result-1"><span class="header-section-number">10.2</span> Example Result</h3>
+<div id="fig-example-map" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/Python/FirstName_LastName_Lab09_EnduranceMap.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figure&nbsp;11: Example endurance design map (made-up data). Your values will differ, but your formatting and annotations should match."><img src="figures/Python/FirstName_LastName_Lab09_EnduranceMap.png" class="img-fluid figure-img" style="width:6.5in"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Example endurance design map (made-up data). Your values will differ, but your formatting and annotations should match.
+</figcaption>
+</figure>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+</section>
+<section id="post-lab-assignment" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="post-lab-assignment"><span class="header-section-number">11</span> Post-Lab Assignment</h2>
+<p>Upload your submissions to Canvas. <u><strong>Post-labs are due Mondays at 10:00 pm.</strong></u> A full example solution notebook is posted after all sections have met; check your approach against it, but submit your own work.</p>
+<section id="submission-items" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="submission-items"><span class="header-section-number">11.1</span> Submission Items</h3>
+<ul>
+<li>Your final <strong>.ipynb</strong> notebook (<code>FirstName_LastName_Lab09.ipynb</code>), restarted and run top-to-bottom (acquisition cells may show their saved outputs)</li>
+<li>Load-cell calibration plot, <strong>.pdf</strong></li>
+<li>Thrust-curve plot with CIs, <strong>.pdf</strong></li>
+<li>Current &amp; efficiency figure, <strong>.pdf</strong></li>
+<li>Momentum-theory fit plot, <strong>.pdf</strong></li>
+<li>Endurance design map (3-D surface), <strong>.pdf</strong></li>
+<li>Answers to the post-lab questions on Canvas</li>
+</ul>
+</section>
+<section id="calibration-plot-requirements" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="calibration-plot-requirements"><span class="header-section-number">11.2</span> Calibration Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; white background; Times font, 10–12 pt</li>
+<li>Major and minor grids on; top and right spines removed</li>
+<li>Calibration data: red circle markers, size 75</li>
+<li>Linear fit: solid blue, 2 pt; 95% CI: dashed black, 1 pt</li>
+<li>Axis labels with units; title “FirstName LastName’s Load-Cell Calibration Plot” with the date</li>
+<li><code>ax.text</code> annotation (4 decimals, units): calibration equation, norm of residuals, <span class="math inline">\(s_{yx}\)</span>, <span class="math inline">\(S_{c_1}\)</span></li>
+</ul>
+</section>
+<section id="thrust-curve-plot-requirements" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="thrust-curve-plot-requirements"><span class="header-section-number">11.3</span> Thrust-Curve Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; same grid/spine/font standards</li>
+<li>Prop A: red line with circle markers; Prop B: blue line with square markers; 1.5 pt lines, marker size 5</li>
+<li>95% CI: dashed black, 1 pt, tracking each curve</li>
+<li>Thrust axis in <strong>grams</strong>; legend naming both props; note identifying the CI</li>
+<li>Title “FirstName LastName’s Thrust Curve Plot” with the date</li>
+</ul>
+</section>
+<section id="current-efficiency-figure-requirements" class="level3" data-number="11.4">
+<h3 data-number="11.4" class="anchored" data-anchor-id="current-efficiency-figure-requirements"><span class="header-section-number">11.4</span> Current &amp; Efficiency Figure Requirements</h3>
+<ul>
+<li>Two stacked panels, 6.5” wide × 7.0” tall total, shared throttle axis</li>
+<li>Top: bus current (A) with CIs; bottom: efficiency (g/W); same per-prop colors/markers as the thrust plot</li>
+<li>Title on the top panel only, “FirstName LastName’s Current &amp; Efficiency Plot” with the date</li>
+</ul>
+</section>
+<section id="momentum-fit-plot-requirements" class="level3" data-number="11.5">
+<h3 data-number="11.5" class="anchored" data-anchor-id="momentum-fit-plot-requirements"><span class="header-section-number">11.5</span> Momentum Fit Plot Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 4.0” tall; same standards</li>
+<li>All 39 points per prop as markers (per-prop colors/markers); fits as solid lines</li>
+<li>Legend reporting each prop’s figure of merit at 2 decimals</li>
+<li>Axis labels: Thrust<sup>3/2</sup> (N<sup>1.5</sup>), Electrical Power (W)</li>
+<li>Title “FirstName LastName’s Momentum Theory Plot” with the date</li>
+</ul>
+</section>
+<section id="endurance-map-requirements" class="level3" data-number="11.6">
+<h3 data-number="11.6" class="anchored" data-anchor-id="endurance-map-requirements"><span class="header-section-number">11.6</span> Endurance Map Requirements</h3>
+<ul>
+<li>Figure size: 6.5” wide × 5.0” tall; white background; Times font, 10–12 pt</li>
+<li><code>plot_surface</code> with the viridis colormap, colorbar labeled “minutes”</li>
+<li>Infeasible region removed via NaN (the cliff must be visible), design point marked as a red dot with a legend entry</li>
+<li>Axis labels with units on all three axes; camera angle chosen so both the cliff and the design point are visible</li>
+<li>Title “FirstName LastName’s Endurance Design Map” with the date</li>
+</ul>
+</section>
+<section id="post-lab-questions" class="level3" data-number="11.7">
+<h3 data-number="11.7" class="anchored" data-anchor-id="post-lab-questions"><span class="header-section-number">11.7</span> Post-Lab Questions</h3>
+<ol type="1">
+<li>Report your calibration equation with units, its <span class="math inline">\(s_{yx}\)</span>, and the 95% uncertainty on <span class="math inline">\(c_1\)</span> in percent.</li>
+<li>Your 95% CIs came from three runs. Estimate (using the <span class="math inline">\(t\)</span>-table) how much narrower the CI would be with five runs, assuming the standard deviation stayed the same. Is the improvement worth 15 more minutes of lab time? For what kind of engineering decision would it be?</li>
+<li>Explain the tare correction (<a href="#eq-tare" class="quarto-xref">Equation&nbsp;3</a>) to an imaginary teammate who claims “we can skip the motor-off recording, <span class="math inline">\(c_0\)</span> already handles the offset.” Where exactly does their reasoning break?</li>
+<li>From your data: which propeller would you choose for <em>maximum payload</em>, and which for <em>maximum flight time</em>? Cite the specific numbers that decide each.</li>
+<li>The ACS712 datasheet allows the zero-current output to be anywhere in 2.5 V ± 0.075 V. Propagate that tolerance: how many amps of systematic error is possible, and at your hover point, how many minutes of flight-time estimate error does it cause?</li>
+<li>Real batteries weigh roughly 20 g per 250 mAh at this scale. Add that coupling to your endurance map’s arithmetic (mass = airframe mass + battery mass) and report how the flight time at a 220 g <em>airframe</em> now varies with capacity choice: does bigger always win? Where is the optimum, approximately?</li>
+</ol>
+</section>
+</section>
+<section id="before-you-leave" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="before-you-leave"><span class="header-section-number">12</span> Before You Leave</h2>
+<ul>
+<li>Show your thrust-curve plot to a TA before tearing down — re-running a sweep now takes 40 seconds; next week it takes a lab period.</li>
+<li>Kill switch OFF, ADS supplies off, propeller removed and returned to its labeled bag (leave the motor mounted).</li>
+<li>Return masses to their case, jumper wires to the bin, sorted by color.</li>
+<li>Confirm your data files (calibration, tare, six sweeps, coefficients) synced to OneDrive and that <strong>both</strong> partners have everything — <strong>Lab 10 loads this week’s calibration file.</strong></li>
+<li>Clean the station, collect your belongings, and log off.</li>
+</ul>
+</section>
+<section id="sec-lab10-preview" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="sec-lab10-preview"><span class="header-section-number">13</span> Looking Ahead</h2>
+<p>You measured what this motor-prop system does in <em>steady state</em>. Lab 10 asks the dynamic questions: how <em>fast</em> can it change thrust (step response, time constant), what are the rig’s own dynamics (tap test, natural frequency, damping ratio — your second-order systems toolkit), and does the hover design point you committed to in Q14 survive contact with reality?</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

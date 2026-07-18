@@ -1,0 +1,19 @@
+author: "Dr. Christopher Bitikofer"
+toc: true
+number-sections: true
+lightbox: true
+code-copy: true
+code-line-numbers: true
+
+filters:
+   - filters/logbook-questions.lua
+
+theme:
+   light: yeti
+format:
+   html: default
+   pdf:
+      documentclass: article
+      papersize: letter
+      fontsize: 12pt
+      geometry: margin=.5in

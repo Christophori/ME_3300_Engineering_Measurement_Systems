@@ -1,18 +1,5 @@
 ---
 title: "ME 3300 Experiment-01: Introduction to Data Analysis and Visualization in Python"
-author: "Dr. Christopher Bitikofer"
-toc: true
-number-sections: true
-theme:
-   light: yeti
-format:
-   html: default
-   pdf:
-      documentclass: article
-      papersize: letter
-      fontsize: 12pt
-      geometry: margin=.5in
-      lightbox: true
 ---
 
 {{< pagebreak >}}

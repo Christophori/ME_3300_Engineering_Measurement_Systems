@@ -20,11 +20,12 @@ plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = ['Times New Roman', 'Times', 'DejaVu Serif']
 plt.rcParams['font.size'] = 10
 
-BASE = ('/sessions/kind-bold-thompson/mnt/ME_3300_Engineering_Measurement_Systems/'
-        'Labs_26_27/Lab_03/')
-DATA = BASE + 'SolutionPackage_TA/Data/'
-FIGP = BASE + 'QuartoVersion_R1/figures/Python/'
-FIG = BASE + 'QuartoVersion_R1/figures/'
+# Paths relative to this script's location (SolutionPackage_TA/Code/)
+import os
+BASE = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')) + os.sep
+DATA = BASE + os.path.join('SolutionPackage_TA', 'Data') + os.sep
+FIGP = BASE + os.path.join('QuartoVersion_R2', 'figures', 'Python') + os.sep
+FIG = BASE + os.path.join('QuartoVersion_R2', 'figures') + os.sep
 
 g = 9.81
 # True sensor constants (slightly perturbed from round numbers)
@@ -34,7 +35,7 @@ def v_of_accel(a): return (a - A0_ACC) / A1_ACC
 def v_of_angle(deg): return (deg - A0_POT) / A1_POT
 
 # ---------------------------------------------------------------------------
-# 1. Accelerometer calibration summary CSV (what the pydwf script produces)
+# 1. Accelerometer calibration summary CSV (what the dwfpy script produces)
 # ---------------------------------------------------------------------------
 known_accel = np.array([0.0, 9.81, 0.0, -9.81])      # right, up, left, down
 mean_voltages = v_of_accel(known_accel) + rng.normal(0, 0.004, 4)

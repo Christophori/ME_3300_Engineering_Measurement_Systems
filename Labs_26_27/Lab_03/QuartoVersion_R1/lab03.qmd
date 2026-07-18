@@ -1,21 +1,5 @@
 ---
 title: "ME 3300 Experiment-03: Multichannel Measurement and Normal Acceleration of a Rotating Pendulum"
-author: "Dr. Christopher Bitikofer"
-toc: true
-number-sections: true
-lightbox: true
-code-copy: true
-code-line-numbers: true
-
-theme:
-   light: yeti
-format:
-   html: default
-   pdf:
-      documentclass: article
-      papersize: letter
-      fontsize: 12pt
-      geometry: margin=.5in
 ---
 
 {{< pagebreak >}}
@@ -26,9 +10,9 @@ format:
 
 Your objectives for this laboratory session are to:
 
-- Measure **two sensors at once**: the Lab 02 potentiometer plus a MEMS accelerometer, acquired on two differential channels
-- Write your **first Python automation** of the ADS using `pydwf`, replacing a repetitive GUI task (a multi-point calibration) with a script
-- **Calibrate a MEMS accelerometer** using gravity as the reference, via a four-orientation static calibration
+- Measure using **two sensors at once**: the Lab 02 potentiometer plus a MEMS accelerometer, acquired on two differential channels
+- Write your **first Python automation** of the ADS using `pydwf`, to replace a repetitive GUI task (a multi-point calibration) with a script
+- **Calibrate a MEMS accelerometer** using gravity as the reference, via a four point calibration
 - **Reuse a saved calibration**: load your Lab 02 potentiometer coefficients from file instead of re-calibrating
 - Use the WaveForms Scope **Record mode** to capture a long, fast (1 kHz), two-channel recording
 - Compute angular velocity by **numerical differentiation** (`np.gradient`) and understand why differentiation amplifies noise
@@ -41,8 +25,8 @@ By the end of this lab, you should be able to answer all of these questions.
 #### Hardware & Instruments
 
 - What does a MEMS accelerometer actually measure? Why does a *stationary* accelerometer read ±9.81 m/s² instead of zero?
-- Why can gravity serve as a calibration reference for an accelerometer?
-- Why do both ADS channels need their − input referenced (to GND) in this circuit?
+- How / why can gravity serve as a calibration reference for an accelerometer?
+- Why do both ADS channels need their (−) input referenced (to GND) in this circuit?
 - What is the difference between the Scope's normal acquisition and **Record mode**? When do you need Record?
 - Why must WaveForms be closed before a `pydwf` script can run?
 
@@ -86,7 +70,7 @@ ME3300/
 
 ### Add the pydwf Package
 
-This lab introduces `pydwf`, the Python interface to the WaveForms SDK. Add it to your course environment: open a terminal in your `ME3300` folder and run
+This lab introduces `pydwf` (**PY**thon **D**iligent **W**ave**F**orms), the Python interface to the WaveForms SDK. Add it to your course environment: open a terminal in your `ME3300` folder and run
 
 ``` bash
 uv add pydwf
@@ -94,13 +78,19 @@ uv add pydwf
 
 You can verify the install with `uv run python -c "import pydwf; print(pydwf.__version__)"`. Note that `pydwf` talks to the same WaveForms *runtime* the GUI uses, so having WaveForms installed (Lab 01) is required.
 
+::: callout-note
+## What is an SDK?
+
+An SDK (Software Development Kit) is a software toolbox that provides the necessary tools, code, and documentation to write code for a program (in this case WaveForms)
+:::
+
 ### Read the Background Section
 
-Read the [Background](#sec-background) section before lab. It explains what the accelerometer measures, derives the gravity-correction equation you will implement, and introduces the pydwf device model.
+Read the [Background](#sec-background) section before lab. It explains what the accelerometer measures, derives the gravity-correction equation you will implement, and introduces our new pydwf package.
 
 ### Complete the Prelab Walkthrough Notebook {#sec-prelab-walkthrough}
 
-Download `Lab03_Prelab_Walkthrough.ipynb` from Canvas into `ME3300/Lab_03/Code/` and work through it before lab. It introduces this lab's *new* Python skills using simulated signals (no hardware needed at home):
+Download `Lab03_Prelab_Walkthrough.ipynb` from Canvas into `ME3300/Lab_03/Code/` and work through it before lab. It introduces this lab's *new* Python skills using simulated signals:
 
 - `while` loops, `break`, and the status-polling pattern DAQ code uses
 - pausing a script for the user with `input()`
@@ -109,7 +99,7 @@ Download `Lab03_Prelab_Walkthrough.ipynb` from Canvas into `ME3300/Lab_03/Code/`
 - combining arrays into columns with `np.column_stack`
 - loading files with `#` header lines using `np.loadtxt(..., comments='#')`
 
-As always, report the **checkpoint** values in the **Prelab 03 quiz on Canvas** before your lab session. Skills from Labs 01–02 (loading CSVs, `polyfit`, fit statistics, `for`/`enumerate`, f-strings, `.iloc`, plot formatting) are not retaught.
+As always, working through the prelab will allow you to answer the **checkpoint** questions in the **Prelab quiz on Canvas** before your lab session.
 
 ### Python Quick Reference: New This Lab
 
@@ -126,12 +116,12 @@ As always, report the **checkpoint** values in the **Prelab 03 quiz on Canvas** 
 
 : New Python syntax and functions introduced in Lab 03
 
-| WaveForms GUI instrument | pydwf object |
-|------------------------------------|------------------------------------|
-| Scope / Logger (analog inputs) | `device.analogIn` |
-| Wavegen (signal generator) | `device.analogOut` |
-| Supplies (power) | `device.analogIO` |
-| Static I/O (digital pins) | `device.digitalIO` |
+| WaveForms GUI instrument       | pydwf object       |
+|--------------------------------|--------------------|
+| Scope / Logger (analog inputs) | `device.analogIn`  |
+| Wavegen (signal generator)     | `device.analogOut` |
+| Supplies (power)               | `device.analogIO`  |
+| Static I/O (digital pins)      | `device.digitalIO` |
 
 : The pydwf device model: every GUI instrument is an object in code
 
@@ -139,11 +129,11 @@ As always, report the **checkpoint** values in the **Prelab 03 quiz on Canvas** 
 
 ## Laboratory Introduction
 
-In Lab 02 you completed the full measurement chain for one sensor: build, verify, calibrate, measure, model. This lab scales that chain up in three directions at once.
+In Lab 02 you completed the full measurement chain for one sensor: *build, verify, calibrate, measure, model*. This lab scales that chain up in three directions.
 
-- **Two sensors, two channels.** You will measure the pendulum's angle (potentiometer, Channel 1) and the acceleration at its tip (MEMS accelerometer, Channel 2) *simultaneously*. Multichannel measurement is the norm in real experiments — one signal alone rarely tells the whole story.
-- **Your first DAQ automation.** The accelerometer calibration requires holding the pendulum in four orientations and recording each one. In Lab 02 you did this kind of repetitive record–export–rename loop by hand, eleven times. This week, a short `pydwf` script does the repetition for you: it prompts you for each position, records, and averages, all in one run. This is the course's automation philosophy from here forward: **use the GUI where it makes sense** (one-off captures, live exploration) **and Python where tasks repeat**. By Lab 10 you will be able to script complete experiments — a skill that carries directly into capstone and industry work.
-- **Independent cross-checks.** You will determine the pendulum tip's normal acceleration two completely independent ways — measured directly by the accelerometer, and calculated from the differentiated potentiometer angle — and compare them. Agreement between independent methods is one of the strongest forms of experimental evidence; their *disagreement* teaches you about noise, alignment, and modeling assumptions.
+- **Two sensors, two channels.** You will measure the pendulum's angle (potentiometer, Channel 1) and the acceleration at its tip (MEMS accelerometer, Channel 2) *simultaneously*. Multichannel measurement is the norm in real experiments as one signal alone rarely tells the whole story.
+- **Your first DAQ automation.** The accelerometer calibration requires holding the pendulum in four orientations and recording each one. In Lab 02 you did this kind of repetitive record–export–rename loop by hand, eleven times. This week, you will use a short `pydwf` script to handle that repetition for you: it prompts you for each position, records, and averages, all in one run. This is the course's automation philosophy from here forward: **use the GUI where it makes sense** (one-off captures, live exploration) **and Python where tasks repeat**. By Lab 10, you will be able to script complete experiments, which is a skill that carries directly into capstone and industry work.
+- **Independent cross-checks.** You will determine the pendulum tip's normal acceleration in two independent ways — measured directly by the accelerometer, and calculated from the differentiated potentiometer angle — and compare them. Agreement between independent methods is one of the strongest forms of experimental evidence and a means of validating measurement systems. *Disagreement* informs you about noise, and correctness of modeling assumptions.
 
 ## Background {#sec-background}
 
@@ -153,35 +143,44 @@ For rotation about a fixed axis, a point at radius $r$ from the pivot has a **no
 
 $$a_n = -\dot{\theta}^2 r$$ {#eq-normal-accel}
 
-where $\dot\theta$ is the angular velocity in rad/s. The minus sign reflects our sign convention: the accelerometer's **+y axis points from the sensor toward the pivot** (see @fig-orientations), and the centripetal acceleration a swinging pendulum tip experiences points that same way. You will measure $\dot\theta$ by numerically differentiating the potentiometer angle, and $r$ with a tape measure (pivot to accelerometer center).
+where $\dot\theta$ is the angular velocity in rad/s. The minus sign reflects the accelerometer's sign convention which may seem counter intuitive, but is a results of the accelerometer's **+y axis direction pointing from the sensor toward the pivot** and the way in which accelerometer's "feel" **proper acceleration** (The next section will illustrate that we mean here).\
+You will measure $\dot\theta$ by numerically differentiating the potentiometer angle, and estimating $r$ with a tape measure (pivot to accelerometer center).
 
 ### What the Accelerometer Measures
 
-The MEMS accelerometer (MMA7361, mounted at the pendulum tip; see @fig-accel-board) contains a microscopic proof mass on silicon springs. It measures **proper acceleration** — the deflection of that mass — which includes gravity. A stationary accelerometer with its +y axis pointing straight up reads +9.81 m/s², not zero, because the springs must hold the proof mass up against gravity.
+The MEM's accelerometer (You will have either a model [MMA7361LC](https://www.pololu.com/product/1251/resources), or a [NEED to find the new model!!!](www.notasite.com)), mounted at the pendulum tip; see @fig-accel-board) contains a microscopic proof mass on silicon springs. It measures [**proper acceleration**](https://en.wikipedia.org/wiki/Proper_acceleration) which represents the actual mechanical forces acting on the sensor's internal proof mass.
 
-For our swinging pendulum, the y-axis therefore senses *both* effects at once:
+The important distinction in this context is that gravity itself does not cause "proper acceleration"; rather, it is the physical stiffness of the MEM's suspension springs that push/pull to hold the internal proof mass in the internal housing.
 
-$$a_y = \underbrace{-\dot{\theta}^2 r}_{\text{normal accel.}} \; \underbrace{- \, g\cos\theta}_{\text{gravity component}}$$ {#eq-accel-reading}
+A few key cases:
 
-where $\theta$ is the pendulum angle measured from straight down. The gravity term follows from the free-body diagram in @fig-gravity-fbd: the component of $g$ along the +y direction (tip toward pivot) is $-g\cos\theta$ — largest in magnitude when hanging straight down ($\theta = 0$), zero when horizontal. In Part 5 you will *subtract* this term from the measured signal to isolate the normal acceleration and enable a fair comparison with @eq-normal-accel.
+- A stationary accelerometer with its +y axis pointing straight up reads $+9.81$ $m/s^2$, not zero, as the springs must hold the proof mass up against gravity.
+- In free fall, the accelerometer measures $0$ $m/s^2$ because there are no mechanical forces acting on the sensor, even though it is accelerating downward from an observer's perspective (coordinate acceleration)
+- In our swinging pendulum, the gravity force acts in both x and y directions depending on the position of the pendulum, but normal acceleration is always negative in the accelerometer frame of reference, since the proof mass deflects down.
 
-![Free-body diagram of the accelerometer at angle $\theta$. The +y axis points from the sensor toward the pivot; the gravity component along +y is $-g\cos\theta$.](figures/Accel_Gravity_FBD.png){#fig-gravity-fbd width="45%"}
+For our swinging pendulum, the y-axis sensed acceleration is thus:
+
+$$a_y = \underbrace{-\dot{\theta}^2 r}_{\text{normal accel.}} \; \underbrace{-\, g\cos\theta}_{\text{gravity component}}$$ {#eq-accel-reading}
+
+where $\theta$ is the pendulum angle measured from straight down. The gravity term follows from the free-body diagram in @fig-gravity-fbd: the component of $g$ along the +y direction (tip toward pivot) is $g\cos\theta$ — largest in magnitude when hanging straight down ($\theta = 0$), zero when horizontal. In Part 5, you will *subtract* this term from the measured signal to isolate the normal acceleration @eq-normal-accel.
+
+![Free-body diagram of the accelerometer at angle $\theta$. The +y axis points from the sensor toward the pivot; the gravity component along +y is $-g\cos\theta$.](figures/lab03diagram.png){#fig-gravity-fbd width="100%"}
 
 ### Gravity as a Calibration Reference
 
-Equation @eq-accel-reading also hands us a free calibration standard. When the pendulum is held *still*, $\dot\theta = 0$ and the sensor feels only the gravity component — which we know exactly at four easy-to-set orientations:
+Equation @eq-accel-reading also hands us a nice calibration standard. When the pendulum is held *still*, $\dot\theta = 0$ and the sensor should feel only the gravity component — which we know exactly at four easy-to-set orientations:
 
 ![The four calibration orientations. At each, the known gravity component along +y is the calibration reference.](figures/Accel_Calibration_Orientations.png){#fig-orientations width="100%"}
 
 The sensor output voltage is linear in acceleration, so as in Lab 02 a linear calibration
 
-$$a = a_1 V + a_0$$ {#eq-accel-cal}
+$$a = -a_1 V + a_0$$ {#eq-accel-cal}
 
-is appropriate — now mapping volts to m/s² instead of degrees. Four points spanning ±1 g are enough to pin down the line, and the fit-quality statistics are computed exactly as in Lab 02 (norm of residuals, $s_{yx}$, 95% CI, $S_{a_1}$ — see Lab 02 Eqs. 7–9), just with different units.
+is appropriate, now mapping volts to $m/s^2$ instead of degrees. These four points spanning ±1 g are enough to pin down the fit line, and the fit-quality statistics are computed exactly as in Lab 02 (norm of residuals, $s_{yx}$, 95% CI, $S_{a_1}$), just with different units.
 
 ### From GUI to Code: the pydwf Device Model
 
-`pydwf` exposes every WaveForms instrument as a Python object (see the quick-reference table above). Setting a sample rate in code, `ai.frequencySet(1000)`, does *exactly* what typing 1000 Hz into the GUI does — same instrument, same hardware, different interface. Because you drove these instruments by hand in Lab 02, none of this is magic; it is the same knobs, turned programmatically. One consequence: **only one program can hold the device at a time**, so WaveForms must be closed before a pydwf script runs (and vice versa).
+`pydwf` exposes every WaveForms instrument as a Python object (see the quick-reference table above). Setting a sample rate in code, `ai.frequencySet(1000)`, does *exactly* what typing 1000 Hz into the GUI does — same instrument, same hardware, different interface. You drove these instruments via the WaveForms GUI by hand in Lab 02, so none of this is magic; it is the same knobs, turned programmatically. One consequence: **only one program can talk to the ADS device at a time**, so WaveForms must be closed before a pydwf script runs (and vice versa).
 
 {{< pagebreak >}}
 
@@ -189,20 +188,20 @@ is appropriate — now mapping volts to m/s² instead of degrees. Four points sp
 
 Your guides are the annotated photos in @fig-accel-board and @fig-circuit-build. The potentiometer circuit is identical to Lab 02; the accelerometer adds three wires.
 
-![The MMA7361 accelerometer board mounted at the pendulum tip, with its 3-wire cable.](figures/Accel_Board_Photo.png){#fig-accel-board width="70%"}
+![The accelerometer board mounted at the pendulum tip, with its 3-wire cable.](figures/Accel_Board_Photo.png){#fig-accel-board width="70%"}
 
 ![Both sensors wired to the ADS breadboard.](figures/Accel_Circuit_Build_ADS.png){#fig-circuit-build width="100%"}
 
-| Connection | ADS pin | Purpose |
-|------------------------|------------------|------------------------|
-| Pot V+ end terminal | 3.3 V (V+) | Divider supply (Lab 02) |
-| Pot GND end / Signal − | GND | Divider ground |
-| Pot wiper | **1+** | Angle signal |
-| GND rail | **1−** | Ch. 1 reference |
-| Accel VIN (red) | 3.3 V rail | Sensor supply (shared with pot) |
-| Accel GND (black) | GND rail | Sensor ground |
-| Accel Y-OUT (signal) | **2+** | Acceleration signal |
-| GND rail | **2−** | Ch. 2 reference |
+| Connection             | ADS pin    | Purpose                         |
+|------------------------|------------|---------------------------------|
+| Pot V+ end terminal    | 3.3 V (V+) | Divider supply (Lab 02)         |
+| Pot GND end / Signal − | GND        | Divider ground                  |
+| Pot wiper              | **1+**     | Angle signal                    |
+| GND rail               | **1−**     | Ch. 1 reference                 |
+| Accel VIN (red)        | 3.3 V rail | Sensor supply (shared with pot) |
+| Accel GND (black)      | GND rail   | Sensor ground                   |
+| Accel Y-OUT (signal)   | **2+**     | Acceleration signal             |
+| GND rail               | **2−**     | Ch. 2 reference                 |
 
 1.  Re-wire the potentiometer exactly as in Lab 02 and confirm with your DMM that the wiper voltage varies smoothly over the swing range. (Sudden jumps? Same grub-screw fix as Lab 02 — ask your TA.)
 2.  Add the accelerometer connections per the table. The accelerometer board has X, Y, and Z outputs; **only the Y axis is used** — it is the axis aligned with the pendulum arm, pointing toward the pivot.
@@ -360,13 +359,13 @@ np.savetxt('../Data/accel_calibration_coeffs.csv', coeffs_acc,
 
 ## Part-4: Record the Swing (Scope Record Mode) {#sec-part-4}
 
-The swing capture is a *one-off* task, so the GUI is the right tool. But it is also a demanding capture — two channels for ~15 seconds at 1000 Hz — which exceeds what the Logger (built for slow trend logging) or a single Scope buffer can hold. WaveForms' **Record mode** streams samples to the computer for exactly this situation.
+The swing capture is a *one-off* task, so the GUI is the right tool. But it is also a demanding capture — two channels for \~15 seconds at 1000 Hz — which exceeds what the Logger (built for slow trend logging) or a single Scope buffer can hold. WaveForms' **Record mode** streams samples to the computer for exactly this situation.
 
 Why 1000 Hz, when 100 Hz resolved the swing fine in Lab 02? Because this week you will **differentiate** the angle signal. Differentiation is exquisitely sensitive to how well the samples trace the true curve; a densely-sampled signal gives the difference quotient a fighting chance. (It also multiplies file size ×10 — engineering is trade-offs.)
 
 1.  Close your notebook's device connection (re-run any cell *outside* a `with` block, or restart the kernel) and open **WaveForms**.
 2.  Open **Scope**, enable **both channels** (Ch1 pot, Ch2 accel), range ±5 V.
-3.  Switch the acquisition **Mode** to **Record**, set **Rate** to 1 kHz and the sample count for ~15 s; match @fig-record-setup.
+3.  Switch the acquisition **Mode** to **Record**, set **Rate** to 1 kHz and the sample count for \~15 s; match @fig-record-setup.
 4.  One partner holds the pendulum at **+90°**; start the recording; release smoothly after a second or two; let it ring down.
 5.  Stop, then **File → Export** the record as CSV to `ME3300/Lab_03/Data/FirstName_LastName_Lab03_Swing.csv`; match @fig-record-export. Open it in VS Code: confirm three columns (time, Ch1, Ch2) and count the `#` header lines for `skiprows`.
 

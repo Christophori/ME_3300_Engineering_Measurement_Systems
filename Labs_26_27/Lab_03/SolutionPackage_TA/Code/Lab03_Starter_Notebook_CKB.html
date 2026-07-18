@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Christopher Bitikofer">
+
+<title>ME 3300 Lab 03 — FirstName LastName</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Lab03_Starter_Notebook_CKB_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Lab03_Starter_Notebook_CKB_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Lab03_Starter_Notebook_CKB_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Lab03_Starter_Notebook_CKB_files/libs/quarto-html/popper.min.js"></script>
+<script src="Lab03_Starter_Notebook_CKB_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Lab03_Starter_Notebook_CKB_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Lab03_Starter_Notebook_CKB_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Lab03_Starter_Notebook_CKB_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Lab03_Starter_Notebook_CKB_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Lab03_Starter_Notebook_CKB_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Lab03_Starter_Notebook_CKB_files/libs/bootstrap/bootstrap-6b9a4e2bc1d929dbbc8f0b698e19a81c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="Lab03_Starter_Notebook_CKB_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="Lab03_Starter_Notebook_CKB_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="Lab03_Starter_Notebook_CKB_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#part-3-dwfpy-connection-test" id="toc-part-3-dwfpy-connection-test" class="nav-link active" data-scroll-target="#part-3-dwfpy-connection-test"><span class="header-section-number">1</span> Part 3 — dwfpy connection test</a>
+  <ul class="collapse">
+  <li><a href="#connection-test-7.1" id="toc-connection-test-7.1" class="nav-link" data-scroll-target="#connection-test-7.1"><span class="header-section-number">1.1</span> Connection Test (7.1)</a></li>
+  <li><a href="#single-channel-read-7.2" id="toc-single-channel-read-7.2" class="nav-link" data-scroll-target="#single-channel-read-7.2"><span class="header-section-number">1.2</span> Single Channel Read (7.2)</a></li>
+  </ul></li>
+  <li><a href="#part-4---automated-accelerometer-calibration" id="toc-part-4---automated-accelerometer-calibration" class="nav-link" data-scroll-target="#part-4---automated-accelerometer-calibration"><span class="header-section-number">2</span> Part 4 - Automated accelerometer calibration</a>
+  <ul class="collapse">
+  <li><a href="#aquire-four-calibration-points" id="toc-aquire-four-calibration-points" class="nav-link" data-scroll-target="#aquire-four-calibration-points"><span class="header-section-number">2.1</span> Aquire Four Calibration Points</a></li>
+  <li><a href="#fit-and-plot-calibration" id="toc-fit-and-plot-calibration" class="nav-link" data-scroll-target="#fit-and-plot-calibration"><span class="header-section-number">2.2</span> 8.2 Fit and Plot Calibration</a></li>
+  </ul></li>
+  <li><a href="#part-5-swing-capture-waveforms-scope-record-mode" id="toc-part-5-swing-capture-waveforms-scope-record-mode" class="nav-link" data-scroll-target="#part-5-swing-capture-waveforms-scope-record-mode"><span class="header-section-number">3</span> Part 5 — Swing capture (WaveForms Scope Record mode)</a></li>
+  <li><a href="#part-6-post-processing" id="toc-part-6-post-processing" class="nav-link" data-scroll-target="#part-6-post-processing"><span class="header-section-number">4</span> Part 6 — Post-processing</a></li>
+  <li><a href="#recorded-values" id="toc-recorded-values" class="nav-link" data-scroll-target="#recorded-values"><span class="header-section-number">5</span> Recorded values</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Lab03_Starter_Notebook_CKB.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ME 3300 Lab 03 — FirstName LastName</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Christopher Bitikofer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Multichannel Measurement and Normal Acceleration</strong></p>
+<p>Rename to <code>FirstName_LastName_Lab03.ipynb</code>, save in <code>ME3300/Lab_03/Code/</code>. Fill in the <code>TODO</code>s following the manual. New syntax is in the Prelab 03 walkthrough.</p>
+<blockquote class="blockquote">
+<p>Close WaveForms before running dwfpy cells. Restart Kernel and Run All before submitting (acquisition cells keep their saved outputs).</p>
+</blockquote>
+<div id="afaac20f" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a>plt.rcParams[<span class="st">'font.family'</span>] <span class="op">=</span> <span class="st">'serif'</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>plt.rcParams[<span class="st">'font.serif'</span>] <span class="op">=</span> [<span class="st">'Times New Roman'</span>]</span>
+<span id="cb1-8"><a href="#cb1-8"></a>plt.rcParams[<span class="st">'font.size'</span>] <span class="op">=</span> <span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="part-3-dwfpy-connection-test" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="part-3-dwfpy-connection-test"><span class="header-section-number">1</span> Part 3 — dwfpy connection test</h2>
+<section id="connection-test-7.1" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="connection-test-7.1"><span class="header-section-number">1.1</span> Connection Test (7.1)</h3>
+<div id="1ec835e4" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> dwfpy <span class="im">as</span> dwf</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb2-3"><a href="#cb2-3"></a> <span class="bu">print</span>(<span class="st">"Connected to:"</span>, device.name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Connected to: Analog Discovery Studio</code></pre>
+</div>
+</div>
+</section>
+<section id="single-channel-read-7.2" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="single-channel-read-7.2"><span class="header-section-number">1.2</span> Single Channel Read (7.2)</h3>
+<div id="ac542a01" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>fs <span class="op">=</span> <span class="dv">1000</span> <span class="co"># sample rate (Hz)</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>duration <span class="op">=</span> <span class="fl">2.0</span> <span class="co"># seconds</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration) <span class="co"># number of samples</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb4-6"><a href="#cb4-6"></a> scope <span class="op">=</span> device.analog_input <span class="co"># the Scope/Logger instrument</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a> scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>) <span class="co"># enable Ch. 1, +/-5 V input range</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a> <span class="co"># Acquire one buffer: set the rate and size, configure, start, and wait</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a> scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a> volts <span class="op">=</span> scope[<span class="st">'ch1'</span>].get_data() <span class="co"># the samples, as a NumPy array</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a> <span class="bu">print</span>(<span class="ss">f"mean = </span><span class="sc">{</span>volts<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> V, std = </span><span class="sc">{</span>volts<span class="sc">.</span>std(ddof<span class="op">=</span><span class="dv">1</span>)<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mean = 2.1923 V, std = 0.0001 V</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="part-4---automated-accelerometer-calibration" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="part-4---automated-accelerometer-calibration"><span class="header-section-number">2</span> Part 4 - Automated accelerometer calibration</h2>
+<section id="aquire-four-calibration-points" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="aquire-four-calibration-points"><span class="header-section-number">2.1</span> Aquire Four Calibration Points</h3>
+<p>Prompt through the four orientations of manual Fig. 4, record 10 s at 20 Hz each, store the mean voltages.</p>
+<div id="5e544c0c" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>positions <span class="op">=</span> [<span class="st">'right'</span>, <span class="st">'up'</span>, <span class="st">'left'</span>, <span class="st">'down'</span>]</span>
+<span id="cb6-2"><a href="#cb6-2"></a>known_accel <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">9.81</span>, <span class="fl">0.0</span>, <span class="op">-</span><span class="fl">9.81</span>] <span class="co"># m/s^2</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>mean_voltages <span class="op">=</span> []</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a>fs, duration <span class="op">=</span> <span class="dv">20</span>, <span class="fl">10.0</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb6-9"><a href="#cb6-9"></a> scope <span class="op">=</span> device.analog_input</span>
+<span id="cb6-10"><a href="#cb6-10"></a> scope[<span class="st">'ch1'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>) </span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: open the device with a 'with' block, then set up the accelerometer</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co"># channel: scope = device.analog_input</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co"># scope['ch2'].setup(range=5.0)</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: loop with zip(positions, known_accel):</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="co"># - input() prompt to position the pendulum</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="co"># - scope.single(sample_rate=fs, buffer_size=n,</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="co"># configure=True, start=True)</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co"># - append the mean of scope['ch2'].get_data() to mean_voltages</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: convert mean_voltages to np.array</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: save known_accel &amp; mean_voltages with np.column_stack + np.savetxt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="589562ee" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="im">from</span> numpy.random <span class="im">import</span> sample</span>
+<span id="cb7-2"><a href="#cb7-2"></a>positions <span class="op">=</span> [<span class="st">'right'</span>, <span class="st">'up'</span>, <span class="st">'left'</span>, <span class="st">'down'</span>]</span>
+<span id="cb7-3"><a href="#cb7-3"></a>known_accel <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">9.81</span>, <span class="fl">0.0</span>, <span class="op">-</span><span class="fl">9.81</span>] <span class="co"># m/s^2</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>mean_voltages <span class="op">=</span> []</span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a>fs, duration <span class="op">=</span> <span class="dv">20</span>, <span class="fl">10.0</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>n <span class="op">=</span> <span class="bu">int</span>(fs <span class="op">*</span> duration)</span>
+<span id="cb7-8"><a href="#cb7-8"></a></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="cf">with</span> dwf.Device() <span class="im">as</span> device:</span>
+<span id="cb7-10"><a href="#cb7-10"></a> scope <span class="op">=</span> device.analog_input</span>
+<span id="cb7-11"><a href="#cb7-11"></a> scope[<span class="st">'ch2'</span>].setup(<span class="bu">range</span><span class="op">=</span><span class="fl">5.0</span>) </span>
+<span id="cb7-12"><a href="#cb7-12"></a></span>
+<span id="cb7-13"><a href="#cb7-13"></a> <span class="cf">for</span> pos, accel <span class="kw">in</span> <span class="bu">zip</span>(positions, known_accel):</span>
+<span id="cb7-14"><a href="#cb7-14"></a> <span class="bu">input</span>(<span class="ss">f"Hold Pendulum '</span><span class="sc">{</span>pos<span class="sc">}</span><span class="ss">' (</span><span class="sc">{</span>accel<span class="sc">:+.2f}</span><span class="ss"> m/s^2), then press Enter..."</span>)</span>
+<span id="cb7-15"><a href="#cb7-15"></a></span>
+<span id="cb7-16"><a href="#cb7-16"></a> scope.single(sample_rate<span class="op">=</span>fs, buffer_size<span class="op">=</span>n, configure<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-17"><a href="#cb7-17"></a></span>
+<span id="cb7-18"><a href="#cb7-18"></a> volts <span class="op">=</span> scope[<span class="st">'ch2'</span>].get_data()</span>
+<span id="cb7-19"><a href="#cb7-19"></a> mean_voltages.append(volts.mean())</span>
+<span id="cb7-20"><a href="#cb7-20"></a> <span class="bu">print</span>(<span class="ss">f" </span><span class="sc">{</span>pos<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>mean_voltages[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss"> V"</span>)</span>
+<span id="cb7-21"><a href="#cb7-21"></a></span>
+<span id="cb7-22"><a href="#cb7-22"></a>mean_voltages <span class="op">=</span> np.array(mean_voltages)</span>
+<span id="cb7-23"><a href="#cb7-23"></a></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co"># Save the raw calibration table for your records</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a>np.savetxt(<span class="st">'../Data/accel_calibration_data_test.csv'</span>,</span>
+<span id="cb7-26"><a href="#cb7-26"></a> np.column_stack([known_accel,mean_voltages]),</span>
+<span id="cb7-27"><a href="#cb7-27"></a> header<span class="op">=</span><span class="st">'accel_m_per_s2,voltage_V'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> right: 1.6416 V
+ up: 1.4469 V
+ left: 1.6441 V
+ down: 1.8586 V</code></pre>
+</div>
+</div>
+</section>
+<section id="fit-and-plot-calibration" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="fit-and-plot-calibration"><span class="header-section-number">2.2</span> 8.2 Fit and Plot Calibration</h3>
+<div id="fb42d2ed" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># --- Fit the calibration (manual Eq. 3; stats per Lab 02) ---</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: polyfit voltage -&gt; acceleration</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: N, nu, residuals, norm_r, s_yx, t_val (careful: 0.975!), CI, S_a1</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: print equation + stats with units; save coeffs with np.savetxt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="2ee9c046" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># -- Load data</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>data <span class="op">=</span> np.loadtxt(<span class="st">"../Data/accel_calibration_data_test.csv"</span>,delimiter<span class="op">=</span><span class="st">','</span>,skiprows<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a>known_accel <span class="op">=</span> data[:,<span class="dv">0</span>]</span>
+<span id="cb10-4"><a href="#cb10-4"></a>mean_voltages <span class="op">=</span> data[:,<span class="dv">1</span>]</span>
+<span id="cb10-5"><a href="#cb10-5"></a></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="co"># --- Fit: ay = a1*x+a0 ---</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>coeffs <span class="op">=</span> np.polyfit(mean_voltages,known_accel,<span class="dv">1</span>)</span>
+<span id="cb10-8"><a href="#cb10-8"></a>accels_fit <span class="op">=</span> np.polyval(coeffs,mean_voltages)</span>
+<span id="cb10-9"><a href="#cb10-9"></a></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="co"># save coeffs</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a>np.savetxt(<span class="st">'../Data/calibration_coeffs.csv'</span>, coeffs,</span>
+<span id="cb10-12"><a href="#cb10-12"></a>           header<span class="op">=</span><span class="st">'a1 ((m/s^2)/V), a0 (m/s^2)'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span>
+<span id="cb10-13"><a href="#cb10-13"></a></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="co"># --- Fit quality ---</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a>N <span class="op">=</span> <span class="bu">len</span>(accels_fit)</span>
+<span id="cb10-16"><a href="#cb10-16"></a>nu <span class="op">=</span> N <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a>resid <span class="op">=</span> known_accel <span class="op">-</span> accels_fit</span>
+<span id="cb10-18"><a href="#cb10-18"></a>norm_r <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(resid<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb10-19"><a href="#cb10-19"></a>s_yx <span class="op">=</span> norm_r <span class="op">/</span> np.sqrt(nu)</span>
+<span id="cb10-20"><a href="#cb10-20"></a>t_val <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>,df<span class="op">=</span>nu)</span>
+<span id="cb10-21"><a href="#cb10-21"></a>CI <span class="op">=</span> t_val<span class="op">*</span>s_yx</span>
+<span id="cb10-22"><a href="#cb10-22"></a>S_a1 <span class="op">=</span> s_yx <span class="op">/</span> np.sqrt(np.<span class="bu">sum</span>((mean_voltages <span class="op">-</span> np.mean(mean_voltages))<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb10-23"><a href="#cb10-23"></a></span>
+<span id="cb10-24"><a href="#cb10-24"></a><span class="bu">print</span>(<span class="ss">f"Calibration: ay = </span><span class="sc">{</span>coeffs[<span class="dv">0</span>]<span class="sc">:.2f}</span><span class="ss"> V + </span><span class="sc">{</span>coeffs[<span class="dv">1</span>]<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb10-25"><a href="#cb10-25"></a><span class="bu">print</span>(<span class="ss">f"CI = </span><span class="sc">{</span>CI<span class="sc">:.2f}</span><span class="ss"> m/s^2"</span>)</span>
+<span id="cb10-26"><a href="#cb10-26"></a><span class="bu">print</span>(<span class="ss">f"norm = </span><span class="sc">{</span>norm_r<span class="sc">:.2f}</span><span class="ss"> m/s^2"</span>)</span>
+<span id="cb10-27"><a href="#cb10-27"></a><span class="bu">print</span>(<span class="ss">f"s_yx = </span><span class="sc">{</span>s_yx<span class="sc">:.2f}</span><span class="ss"> m/s^2"</span>)</span>
+<span id="cb10-28"><a href="#cb10-28"></a><span class="bu">print</span>(<span class="ss">f"S_a1 = </span><span class="sc">{</span>S_a1<span class="sc">:.2f}</span><span class="ss"> m/s^2/V"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Calibration: ay = -47.60 V + 78.43
+CI = 1.45 m/s^2
+norm = 0.48 m/s^2
+s_yx = 0.34 m/s^2
+S_a1 = 1.16 m/s^2/V</code></pre>
+</div>
+</div>
+<div id="09ae0101" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># --- Calibration plot ---</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: build to match the manual example figure; save .pdf/.png at 600 DPI</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="adea7ff5" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>fig1, ax1 <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">3.5</span>))</span>
+<span id="cb13-2"><a href="#cb13-2"></a>fig1.patch.set_facecolor(<span class="st">'white'</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># markers data</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>ax1.scatter(mean_voltages,known_accel,</span>
+<span id="cb13-6"><a href="#cb13-6"></a>    color <span class="op">=</span> <span class="st">'red'</span>, s <span class="op">=</span> <span class="dv">40</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, zorder <span class="op">=</span> <span class="dv">3</span>,</span>
+<span id="cb13-7"><a href="#cb13-7"></a>    label <span class="op">=</span> <span class="ss">f'Measurements'</span>)</span>
+<span id="cb13-8"><a href="#cb13-8"></a></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="co"># fit line</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a>v_rng <span class="op">=</span> np.linspace(mean_voltages.<span class="bu">min</span>()<span class="op">-</span><span class="fl">0.03</span>, mean_voltages.<span class="bu">max</span>()<span class="op">+</span><span class="fl">0.03</span>,<span class="dv">200</span>) <span class="co"># sample points for a line</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a>a_fit <span class="op">=</span> np.polyval(coeffs,v_rng)</span>
+<span id="cb13-12"><a href="#cb13-12"></a>ax1.plot(v_rng,a_fit,<span class="st">'b-'</span>,linewidth <span class="op">=</span> <span class="dv">2</span>, label <span class="op">=</span> <span class="st">'Linear Fit'</span>)</span>
+<span id="cb13-13"><a href="#cb13-13"></a></span>
+<span id="cb13-14"><a href="#cb13-14"></a><span class="co"># CI lines</span></span>
+<span id="cb13-15"><a href="#cb13-15"></a>ax1.plot(v_rng,a_fit<span class="op">+</span>CI,<span class="st">'k--'</span>,linewidth <span class="op">=</span> <span class="dv">1</span>, label <span class="op">=</span> <span class="st">'95% CI'</span>)</span>
+<span id="cb13-16"><a href="#cb13-16"></a>ax1.plot(v_rng,a_fit<span class="op">-</span>CI,<span class="st">'k--'</span>,linewidth <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb13-17"><a href="#cb13-17"></a></span>
+<span id="cb13-18"><a href="#cb13-18"></a><span class="co"># Labels, grid and formats</span></span>
+<span id="cb13-19"><a href="#cb13-19"></a>ax1.set_xlabel(<span class="st">'Accelerometer Voltage (V)'</span>)</span>
+<span id="cb13-20"><a href="#cb13-20"></a>ax1.set_ylabel(<span class="st">'Acceleration ($m/s^2$)'</span>)</span>
+<span id="cb13-21"><a href="#cb13-21"></a>ax1.set_title(<span class="st">'Chris_Bitikofer''s Accelerometer Calibration Plot - 2026-09-16'</span>)</span>
+<span id="cb13-22"><a href="#cb13-22"></a></span>
+<span id="cb13-23"><a href="#cb13-23"></a>ax1.grid(<span class="va">True</span>, which<span class="op">=</span><span class="st">'both'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>,linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb13-24"><a href="#cb13-24"></a></span>
+<span id="cb13-25"><a href="#cb13-25"></a>ax1.minorticks_on()</span>
+<span id="cb13-26"><a href="#cb13-26"></a></span>
+<span id="cb13-27"><a href="#cb13-27"></a>ax1.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb13-28"><a href="#cb13-28"></a>ax1.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb13-29"><a href="#cb13-29"></a></span>
+<span id="cb13-30"><a href="#cb13-30"></a>plt.tight_layout()</span>
+<span id="cb13-31"><a href="#cb13-31"></a></span>
+<span id="cb13-32"><a href="#cb13-32"></a><span class="co"># Legend</span></span>
+<span id="cb13-33"><a href="#cb13-33"></a>ax1.legend(loc <span class="op">=</span> <span class="st">'lower left'</span>)</span>
+<span id="cb13-34"><a href="#cb13-34"></a></span>
+<span id="cb13-35"><a href="#cb13-35"></a><span class="co"># Text Annotation</span></span>
+<span id="cb13-36"><a href="#cb13-36"></a>txt <span class="op">=</span> (</span>
+<span id="cb13-37"><a href="#cb13-37"></a>    <span class="ss">f'Calibration: ay = </span><span class="sc">{</span>coeffs[<span class="dv">0</span>]<span class="sc">:.2f}</span><span class="ss"> V + </span><span class="sc">{</span>coeffs[<span class="dv">1</span>]<span class="sc">:.2f}</span><span class="ch">\n</span><span class="ss">'</span></span>
+<span id="cb13-38"><a href="#cb13-38"></a>    <span class="ss">f'Norm of residuals: r = </span><span class="sc">{</span>norm_r<span class="sc">:.2f}</span><span class="ss"> $m/s^2$</span><span class="ch">\n</span><span class="ss">'</span></span>
+<span id="cb13-39"><a href="#cb13-39"></a>    <span class="ss">f'Standard fit error: s_yx = </span><span class="sc">{</span>s_yx<span class="sc">:.2f}</span><span class="ss"> $m/s^2$</span><span class="ch">\n</span><span class="ss">'</span></span>
+<span id="cb13-40"><a href="#cb13-40"></a>    <span class="ss">f'Standard slow error: S_a1 = </span><span class="sc">{</span>S_a1<span class="sc">:.2f}</span><span class="ss"> $(m/s^2)/V$'</span></span>
+<span id="cb13-41"><a href="#cb13-41"></a>    )</span>
+<span id="cb13-42"><a href="#cb13-42"></a>ax1.text(<span class="fl">1.67</span>,<span class="fl">8.5</span>,txt,</span>
+<span id="cb13-43"><a href="#cb13-43"></a>    fontsize<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb13-44"><a href="#cb13-44"></a>    ha<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb13-45"><a href="#cb13-45"></a>    va<span class="op">=</span><span class="st">'center'</span>,</span>
+<span id="cb13-46"><a href="#cb13-46"></a>    bbox<span class="op">=</span><span class="bu">dict</span>(boxstyle<span class="op">=</span><span class="st">'round'</span>,ec<span class="op">=</span><span class="st">'k'</span>,fc<span class="op">=</span><span class="st">'w'</span>)</span>
+<span id="cb13-47"><a href="#cb13-47"></a>    )</span>
+<span id="cb13-48"><a href="#cb13-48"></a></span>
+<span id="cb13-49"><a href="#cb13-49"></a><span class="co"># save figure</span></span>
+<span id="cb13-50"><a href="#cb13-50"></a>fig1.savefig(<span class="st">'../Figures/Chris_Bitikofer_Lab03_AccelCalibration.pdf'</span>,</span>
+<span id="cb13-51"><a href="#cb13-51"></a>            dpi<span class="op">=</span><span class="dv">600</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span>
+<span id="cb13-52"><a href="#cb13-52"></a></span>
+<span id="cb13-53"><a href="#cb13-53"></a>fig1.savefig(<span class="st">'../Figures/Chris_Bitikofer_Lab03_AccelCalibration.png'</span>,</span>
+<span id="cb13-54"><a href="#cb13-54"></a>            dpi<span class="op">=</span><span class="dv">600</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span>
+<span id="cb13-55"><a href="#cb13-55"></a></span>
+<span id="cb13-56"><a href="#cb13-56"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="Lab03_Starter_Notebook_CKB_files/figure-html/cell-10-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="Lab03_Starter_Notebook_CKB_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-5-swing-capture-waveforms-scope-record-mode" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="part-5-swing-capture-waveforms-scope-record-mode"><span class="header-section-number">3</span> Part 5 — Swing capture (WaveForms Scope Record mode)</h2>
+<p>No code — follow the manual. Export as <code>FirstName_LastName_Lab03_Swing.csv</code>, then open it and count the <code>#</code> header lines for <code>skiprows</code> below.</p>
+</section>
+<section id="part-6-post-processing" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="part-6-post-processing"><span class="header-section-number">4</span> Part 6 — Post-processing</h2>
+<div id="a266ef43" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: np.loadtxt both calibration coefficient files (comments='#')</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="co"># - pot calibration is in your Lab_02/Data folder!</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: pd.read_csv the swing file (check skiprows), extract 3 columns</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: apply both calibrations with np.polyval</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="e9058611" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>pot_coeffs <span class="op">=</span> np.loadtxt(<span class="st">'../../../Lab_02/SolutionPackage_TA/Data/calibration_coeffs.csv'</span>,</span>
+<span id="cb15-2"><a href="#cb15-2"></a>                        delimiter<span class="op">=</span><span class="st">','</span>,comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3"></a>acc_coeffs <span class="op">=</span> np.loadtxt(<span class="st">'../Data/calibration_coeffs.csv'</span>,</span>
+<span id="cb15-4"><a href="#cb15-4"></a>                        delimiter<span class="op">=</span><span class="st">','</span>,comments<span class="op">=</span><span class="st">'#'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5"></a></span>
+<span id="cb15-6"><a href="#cb15-6"></a>swing <span class="op">=</span> pd.read_csv(<span class="st">'../Data/Swing_Recording_CKB.csv'</span>,skiprows<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb15-7"><a href="#cb15-7"></a>time <span class="op">=</span> swing.iloc[:,<span class="dv">0</span>]</span>
+<span id="cb15-8"><a href="#cb15-8"></a>v_pot <span class="op">=</span> swing.iloc[:,<span class="dv">1</span>]</span>
+<span id="cb15-9"><a href="#cb15-9"></a>v_acc <span class="op">=</span> swing.iloc[:,<span class="dv">2</span>]</span>
+<span id="cb15-10"><a href="#cb15-10"></a></span>
+<span id="cb15-11"><a href="#cb15-11"></a>angle_deg <span class="op">=</span> np.polyval(pot_coeffs,v_pot)</span>
+<span id="cb15-12"><a href="#cb15-12"></a>accel_ms2 <span class="op">=</span> np.polyval(acc_coeffs,v_acc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="48cf5bdf" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># plot it at this point to confirm calibration makes sense</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>fig , ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">3.5</span>))</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># Pot angle data</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>ax.plot(time,angle_deg,</span>
+<span id="cb16-6"><a href="#cb16-6"></a>    color <span class="op">=</span> <span class="st">'red'</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    label <span class="op">=</span> <span class="st">'Calibrated Pot Angle (Deg)'</span>)</span>
+<span id="cb16-8"><a href="#cb16-8"></a></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="co"># Acc data</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a>ax.plot(time,accel_ms2,</span>
+<span id="cb16-11"><a href="#cb16-11"></a>    color <span class="op">=</span> <span class="st">'b'</span>,alpha<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb16-12"><a href="#cb16-12"></a>    label <span class="op">=</span> <span class="st">'Calibrated Accel (m/s^2)'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13"></a></span>
+<span id="cb16-14"><a href="#cb16-14"></a><span class="co"># Labels, grid and formats</span></span>
+<span id="cb16-15"><a href="#cb16-15"></a>ax.set_xlabel(<span class="st">'Accelerometer Voltage (V)'</span>)</span>
+<span id="cb16-16"><a href="#cb16-16"></a>ax.set_ylabel(<span class="st">'Acceleration ($m/s^2$)'</span>)</span>
+<span id="cb16-17"><a href="#cb16-17"></a>ax.set_title(<span class="st">'Chris_Bitikofer''s Accelerometer Calibration Plot - 2026-09-16'</span>)</span>
+<span id="cb16-18"><a href="#cb16-18"></a></span>
+<span id="cb16-19"><a href="#cb16-19"></a>ax.grid(<span class="va">True</span>, which<span class="op">=</span><span class="st">'both'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>,linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb16-20"><a href="#cb16-20"></a></span>
+<span id="cb16-21"><a href="#cb16-21"></a>ax.minorticks_on()</span>
+<span id="cb16-22"><a href="#cb16-22"></a></span>
+<span id="cb16-23"><a href="#cb16-23"></a>ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb16-24"><a href="#cb16-24"></a>ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb16-25"><a href="#cb16-25"></a></span>
+<span id="cb16-26"><a href="#cb16-26"></a>plt.tight_layout()</span>
+<span id="cb16-27"><a href="#cb16-27"></a></span>
+<span id="cb16-28"><a href="#cb16-28"></a><span class="co"># Legend</span></span>
+<span id="cb16-29"><a href="#cb16-29"></a>ax.legend(loc <span class="op">=</span> <span class="st">'lower left'</span>)</span>
+<span id="cb16-30"><a href="#cb16-30"></a></span>
+<span id="cb16-31"><a href="#cb16-31"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="Lab03_Starter_Notebook_CKB_files/figure-html/cell-13-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="Lab03_Starter_Notebook_CKB_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="326ba8a0" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
+<span id="cb17-2"><a href="#cb17-2"></a></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co"># plot it at this point to confirm calibration makes sense</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>fig <span class="op">=</span> go.Figure()</span>
+<span id="cb17-5"><a href="#cb17-5"></a></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="co"># Pot angle data</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>fig.add_trace(go.Scatter(</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    x<span class="op">=</span>time, y<span class="op">=</span>angle_deg,</span>
+<span id="cb17-9"><a href="#cb17-9"></a>    mode<span class="op">=</span><span class="st">'lines'</span>,</span>
+<span id="cb17-10"><a href="#cb17-10"></a>    name<span class="op">=</span><span class="st">'Calibrated Pot Angle (Deg)'</span>,</span>
+<span id="cb17-11"><a href="#cb17-11"></a>    line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span><span class="st">'red'</span>),</span>
+<span id="cb17-12"><a href="#cb17-12"></a>    opacity<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb17-13"><a href="#cb17-13"></a>    customdata<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="bu">len</span>(time))),</span>
+<span id="cb17-14"><a href="#cb17-14"></a>    hovertemplate<span class="op">=</span><span class="st">'idx=%</span><span class="sc">{customdata}</span><span class="st">&lt;br&gt;t=%</span><span class="sc">{x:.4f}</span><span class="st">&lt;br&gt;angle=%</span><span class="sc">{y:.3f}</span><span class="st"> deg&lt;extra&gt;&lt;/extra&gt;'</span></span>
+<span id="cb17-15"><a href="#cb17-15"></a>))</span>
+<span id="cb17-16"><a href="#cb17-16"></a></span>
+<span id="cb17-17"><a href="#cb17-17"></a><span class="co"># Accel data</span></span>
+<span id="cb17-18"><a href="#cb17-18"></a>fig.add_trace(go.Scatter(</span>
+<span id="cb17-19"><a href="#cb17-19"></a>    x<span class="op">=</span>time, y<span class="op">=</span>accel_ms2,</span>
+<span id="cb17-20"><a href="#cb17-20"></a>    mode<span class="op">=</span><span class="st">'lines'</span>,</span>
+<span id="cb17-21"><a href="#cb17-21"></a>    name<span class="op">=</span><span class="st">'Calibrated Accel (m/s^2)'</span>,</span>
+<span id="cb17-22"><a href="#cb17-22"></a>    line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span><span class="st">'blue'</span>),</span>
+<span id="cb17-23"><a href="#cb17-23"></a>    opacity<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb17-24"><a href="#cb17-24"></a>    customdata<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="bu">len</span>(time))),</span>
+<span id="cb17-25"><a href="#cb17-25"></a>    hovertemplate<span class="op">=</span><span class="st">'idx=%</span><span class="sc">{customdata}</span><span class="st">&lt;br&gt;t=%</span><span class="sc">{x:.4f}</span><span class="st">&lt;br&gt;accel=%</span><span class="sc">{y:.3f}</span><span class="st"> m/s^2&lt;extra&gt;&lt;/extra&gt;'</span></span>
+<span id="cb17-26"><a href="#cb17-26"></a>))</span>
+<span id="cb17-27"><a href="#cb17-27"></a></span>
+<span id="cb17-28"><a href="#cb17-28"></a><span class="co"># Labels, title, legend, rangeslider for interactive trim inspection</span></span>
+<span id="cb17-29"><a href="#cb17-29"></a>fig.update_layout(</span>
+<span id="cb17-30"><a href="#cb17-30"></a>    title<span class="op">=</span><span class="st">"Interactive Accelerometer Trim Plot"</span>,</span>
+<span id="cb17-31"><a href="#cb17-31"></a>    xaxis_title<span class="op">=</span><span class="st">'Accelerometer Voltage (V)'</span>,</span>
+<span id="cb17-32"><a href="#cb17-32"></a>    yaxis_title<span class="op">=</span><span class="st">'Acceleration (m/s^2)'</span>,</span>
+<span id="cb17-33"><a href="#cb17-33"></a>    legend<span class="op">=</span><span class="bu">dict</span>(x<span class="op">=</span><span class="fl">0.01</span>, y<span class="op">=</span><span class="fl">0.01</span>, xanchor<span class="op">=</span><span class="st">'left'</span>, yanchor<span class="op">=</span><span class="st">'bottom'</span>),</span>
+<span id="cb17-34"><a href="#cb17-34"></a>    width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">450</span>,</span>
+<span id="cb17-35"><a href="#cb17-35"></a>    template<span class="op">=</span><span class="st">'plotly_white'</span>,</span>
+<span id="cb17-36"><a href="#cb17-36"></a>    hovermode<span class="op">=</span><span class="st">'x unified'</span>,</span>
+<span id="cb17-37"><a href="#cb17-37"></a>    xaxis<span class="op">=</span><span class="bu">dict</span>(rangeslider<span class="op">=</span><span class="bu">dict</span>(visible<span class="op">=</span><span class="va">True</span>), showgrid<span class="op">=</span><span class="va">True</span>, gridwidth<span class="op">=</span><span class="fl">0.5</span>, griddash<span class="op">=</span><span class="st">'dash'</span>),</span>
+<span id="cb17-38"><a href="#cb17-38"></a>    yaxis<span class="op">=</span><span class="bu">dict</span>(showgrid<span class="op">=</span><span class="va">True</span>, gridwidth<span class="op">=</span><span class="fl">0.5</span>, griddash<span class="op">=</span><span class="st">'dash'</span>)</span>
+<span id="cb17-39"><a href="#cb17-39"></a>)</span>
+<span id="cb17-40"><a href="#cb17-40"></a></span>
+<span id="cb17-41"><a href="#cb17-41"></a>fig.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>Unable to display output for mime type(s): application/vnd.plotly.v1+json</code></pre>
+</div>
+</div>
+<div id="a7b36b68" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># --- Trim to release: deviation-from-hold detector ---</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="co"># (Lab 02's diff-threshold FAILS at 1 kHz -- see manual for why)</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: hold_mean from the first ~500 samples of angle</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: idx0 = np.argmax(np.abs(angle - hold_mean) &gt; 2.0)</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: slice t, theta (in RADIANS), a_meas from idx0; re-zero time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="784b18a9" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># from the plotly chart note the idx's to trim the recording down to the portion of data we are interested in</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="co"># then draw a new trimmed matplotlib chart</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a></span>
+<span id="cb20-4"><a href="#cb20-4"></a>idx1 <span class="op">=</span> <span class="dv">1250</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a>idx2 <span class="op">=</span> <span class="dv">12171</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a>t <span class="op">=</span> time[idx1:]<span class="op">-</span>time[idx1] <span class="co"># shift time vector</span></span>
+<span id="cb20-7"><a href="#cb20-7"></a></span>
+<span id="cb20-8"><a href="#cb20-8"></a><span class="co"># plot it at this point to confirm calibration makes sense</span></span>
+<span id="cb20-9"><a href="#cb20-9"></a>fig , ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">3.5</span>))</span>
+<span id="cb20-10"><a href="#cb20-10"></a></span>
+<span id="cb20-11"><a href="#cb20-11"></a><span class="co"># Pot angle data</span></span>
+<span id="cb20-12"><a href="#cb20-12"></a>ax.plot(time[idx1:idx2],angle_deg[idx1:idx2],</span>
+<span id="cb20-13"><a href="#cb20-13"></a>    color <span class="op">=</span> <span class="st">'red'</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span id="cb20-14"><a href="#cb20-14"></a>    label <span class="op">=</span> <span class="st">'Calibrated Pot Angle (Deg)'</span>)</span>
+<span id="cb20-15"><a href="#cb20-15"></a></span>
+<span id="cb20-16"><a href="#cb20-16"></a><span class="co"># Acc data</span></span>
+<span id="cb20-17"><a href="#cb20-17"></a>ax.plot(time[idx1:idx2],accel_ms2[idx1:idx2],</span>
+<span id="cb20-18"><a href="#cb20-18"></a>    color <span class="op">=</span> <span class="st">'b'</span>,alpha<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb20-19"><a href="#cb20-19"></a>    label <span class="op">=</span> <span class="st">'Calibrated Accel (m/s^2)'</span>)</span>
+<span id="cb20-20"><a href="#cb20-20"></a></span>
+<span id="cb20-21"><a href="#cb20-21"></a><span class="co"># Labels, grid and formats</span></span>
+<span id="cb20-22"><a href="#cb20-22"></a>ax.set_xlabel(<span class="st">'Accelerometer Voltage (V)'</span>)</span>
+<span id="cb20-23"><a href="#cb20-23"></a>ax.set_ylabel(<span class="st">'Acceleration ($m/s^2$)'</span>)</span>
+<span id="cb20-24"><a href="#cb20-24"></a>ax.set_title(<span class="st">'Chris_Bitikofer''s Accelerometer Calibration Plot - 2026-09-16'</span>)</span>
+<span id="cb20-25"><a href="#cb20-25"></a></span>
+<span id="cb20-26"><a href="#cb20-26"></a>ax.set_xlim((time[idx1],time[idx2]))</span>
+<span id="cb20-27"><a href="#cb20-27"></a></span>
+<span id="cb20-28"><a href="#cb20-28"></a>ax.grid(<span class="va">True</span>, which<span class="op">=</span><span class="st">'both'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>,linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb20-29"><a href="#cb20-29"></a></span>
+<span id="cb20-30"><a href="#cb20-30"></a>ax.minorticks_on()</span>
+<span id="cb20-31"><a href="#cb20-31"></a></span>
+<span id="cb20-32"><a href="#cb20-32"></a>ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb20-33"><a href="#cb20-33"></a>ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb20-34"><a href="#cb20-34"></a></span>
+<span id="cb20-35"><a href="#cb20-35"></a>plt.tight_layout()</span>
+<span id="cb20-36"><a href="#cb20-36"></a></span>
+<span id="cb20-37"><a href="#cb20-37"></a><span class="co"># Legend</span></span>
+<span id="cb20-38"><a href="#cb20-38"></a>ax.legend(loc <span class="op">=</span> <span class="st">'lower right'</span>)</span>
+<span id="cb20-39"><a href="#cb20-39"></a></span>
+<span id="cb20-40"><a href="#cb20-40"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="Lab03_Starter_Notebook_CKB_files/figure-html/cell-17-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="Lab03_Starter_Notebook_CKB_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="dacc8f18" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>r <span class="op">=</span> <span class="fl">0.0</span> <span class="co"># </span><span class="al">TODO</span><span class="co">: YOUR measured pivot-&gt;accelerometer distance (m)</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>g <span class="op">=</span> <span class="fl">9.81</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: theta_dot = np.gradient(theta, dt)</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: a_calc = -(theta_dot**2) * r (manual Eq. 1)</span></span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: a_meas_n = a_meas + g*np.cos(theta) (manual Eq. 2 rearranged)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="6ccdac48" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># --- Comparison plot ---</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: plot a_calc FIRST (blue, 1 pt), then a_meas_n (red, 1.5 pt)</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: format per Post-Lab requirements; save .pdf/.png at 600 DPI</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="recorded-values" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="recorded-values"><span class="header-section-number">5</span> Recorded values</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Quantity</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>r (m)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Calibration equation</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>norm of residuals, s_yx</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Peak normal acceleration (measured)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><em>Where do the two signals disagree most, and why? (1–2 sentences)</em></p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

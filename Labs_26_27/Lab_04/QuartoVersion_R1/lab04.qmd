@@ -1,17 +1,5 @@
 ---
 title: "ME 3300 Experiment-04: Signal Generation, Sampling, and Aliasing"
-author: "Dr. Christopher Bitikofer"
-toc: true
-number-sections: true
-theme:
-   light: yeti
-format:
-   html: default
-   pdf:
-      documentclass: article
-      papersize: letter
-      fontsize: 12pt
-      geometry: margin=.5in
 ---
 
 {{< pagebreak >}}
@@ -22,10 +10,10 @@ format:
 
 Your objectives for this laboratory session are to:
 
-- **Generate signals** with the ADS Wavegen — first by hand in the GUI, then scripted from Python with `dwfpy`
+- **Generate signals** with the ADS Wavegen, first by hand in the GUI, then scripted from Python with `dwfpy`
 - **Compare two instruments** measuring the same DC voltage (handheld DMM vs. a scripted ADS acquisition) and reason about accuracy, precision, and resolution
 - Understand **sampling**: sample rate, the Nyquist frequency, and the folding formula that predicts what an undersampled signal *looks like*
-- **Demonstrate aliasing deliberately** with a five-frequency sweep — and predict every apparent frequency *before* you capture it
+- **Demonstrate aliasing deliberately** with a five-frequency sweep and predict every apparent frequency *before* you capture it
 - Drive a **digital output** (an LED) from Python and understand the difference between software timing and hardware timing
 - Measure the bandwidth of a sensor you own: your own eyes, via the **flicker-fusion threshold**
 
@@ -39,7 +27,6 @@ By the end of this lab, you should be able to answer all of these questions.
 - Why does the LED need a series resistor? What happens without one?
 - Why does this lab loop W1 back into Scope Channel 1 with a wire, when both live inside the same ADS?
 - What voltage does a DIO pin supply when HIGH, and how is that different from W1?
-- Why is neither the DMM nor the ADS the "true" value in the static comparison?
 
 #### Programming
 
@@ -79,8 +66,6 @@ ME3300/
 │   └── Figures/
 ```
 
-No new packages are needed this week — `dwfpy` (added in Lab 03) covers everything.
-
 ### Read the Background Section
 
 Read the [Background](#sec-background) section before lab. It defines the anatomy of an AC signal, derives the Nyquist frequency and the folding formula you will use to *predict* every result in this lab, and explains the LED circuit you will build.
@@ -115,31 +100,31 @@ As always, working through the prelab will allow you to answer the **checkpoint*
 | Sample-time array | `t = np.arange(n) / fs` |
 | Five stacked plots | `fig, axes = plt.subplots(5, 1, figsize=(6.5, 10.0))` |
 
-: New Python syntax and functions introduced in Lab 04 {#tbl-quickref}
+: New Python syntax and functions introduced in Lab 04
 
-Recall the dwfpy device model from Lab 03: every WaveForms GUI instrument is an object in code. This week adds the second row to your working set — `wavegen['ch1']` is the GUI's **W1**.
+Recall the dwfpy device model from Lab 03: every WaveForms GUI instrument is an object in code. This week adds the second row to your working set, `wavegen['ch1']` is the GUI's **W1**.
 
-| WaveForms GUI instrument       | dwfpy object           |
-|--------------------------------|------------------------|
-| Scope / Logger (analog inputs) | `device.analog_input`  |
+| WaveForms GUI instrument       | dwfpy object               |
+|--------------------------------|----------------------------|
+| Scope / Logger (analog inputs) | `device.analog_input`      |
 | **Wavegen (signal generator)** | **`device.analog_output`** |
-| Supplies (power)               | `device.analog_io`     |
+| Supplies (power)               | `device.analog_io`         |
 | **Static I/O (digital pins)**  | **`device.digital_io`**    |
 
-: The dwfpy device model; this lab's new instruments in bold {#tbl-device-model}
+: The dwfpy device model; this lab's new instruments in bold
 
 {{< pagebreak >}}
 
 ## Laboratory Introduction
 
-In Labs 02 and 03 you measured signals the world handed you — a pendulum swung, and you recorded what its sensors did. This week you take control of the *source* side of the measurement chain: you will **generate** signals with known frequency, amplitude, and offset, and then study how faithfully a sampled measurement reproduces them. Every calibration you ever perform, and every test rig you ever build, rests on this ability to produce a known input on demand.
+In Labs 02 and 03 you measured signals the world handed you — a pendulum swung, and you recorded what its sensors did. This week you take control of the *source* side of the measurement chain: you will **generate** signals with known frequency, amplitude, and offset, and then study how faithfully a sampled measurement reproduces them.
 
-The scientific payload of the lab is **sampling theory**. A DAQ cannot watch a signal continuously — it takes snapshots at the sample rate $f_s$. You have chosen sample rates twice already this course (100 Hz in Lab 02, 1000 Hz in Lab 03) mostly by trusting the manual. This week you learn the rule that governs that choice, and — more memorably — you will watch what happens when the rule is broken: a fast signal masquerading, in your data, as a slow one that *is not there*. This impostor phenomenon is called **aliasing**, and it has caused real engineering failures: vibration monitors that missed dangerous machine resonances, and audio systems haunted by phantom tones. By the end of the session you will have seen an LED blinking rapidly in front of your eyes while your own data insists — cleanly, plausibly, and wrongly — that it blinked once every two seconds.
+The scientific focus of this lab is **sampling theory.** A DAQ cannot observe a signal continuously; it records snapshots at a sample rate, $f_s$. If those snapshots are too far apart, they cannot uniquely capture a rapidly changing signal: different real signals can produce the same sequence of measurements. You have already selected sample rates twice this course (100 Hz in Lab 02 and 1000 Hz in Lab 03), mostly by trusting the manual. This week, you will learn the rule behind that choice—and see what happens when it is broken. A fast signal can appear in your data as a slower signal that does not actually exist. This deceptive effect, called **aliasing**, is a common source of distortion in sampled data: it can produce strange sounds in audio, visual artifacts in images, or misleading vibration frequencies when measuring a beam, motor, or rotating machines. By the end of the session, you will see an LED blinking rapidly while your data incorrectly reports that it blinked only once every two seconds.
 
 Along the way you will also:
 
-- run a **two-instrument showdown** (handheld DMM vs. scripted ADS acquisition) on known DC levels, sharpening the accuracy/precision/resolution vocabulary from Lab 01;
-- write Python that drives a **digital output pin**, the simplest form of computer control of the physical world, and discover why software loops make poor clocks;
+- run a **two-instrument showdown** (handheld DMM vs. scripted ADS acquisition) on known DC levels, sharpening your understanding of accuracy/precision/resolution;
+- write Python that drives a **digital output pin**, the simplest computer control of the physical world, and discover why software loops make poor clocks;
 - measure your own **flicker-fusion threshold** — the frequency at which your eyes stop resolving blinking light — because your visual system is also a measurement system, with a bandwidth you can characterize like any other sensor's.
 
 ## Background {#sec-background}
@@ -150,13 +135,13 @@ This lab's working signal is a sine wave riding on a DC level:
 
 $$y(t) = V_{offset} + A \sin(2\pi f t)$$ {#eq-test-signal}
 
-where $A$ is the **amplitude**, $f$ the **frequency** in Hz, and $V_{offset}$ the **DC offset**. Two derived quantities appear constantly on instrument panels: the **peak-to-peak voltage** $V_{pp} = 2A$ and the **period** $T = 1/f$. @fig-signal-anatomy labels all of them on this lab's standard test signal ($V_{offset} = 2.5$ V, $A = 2$ V), which conveniently spans 0.5–4.5 V — safely inside the ADS's range, and always positive so it can light an LED.
+where $A$ is the **amplitude**, $f$ the **frequency** in Hz, and $V_{offset}$ is the **DC offset**. Two derived quantities appear constantly on instrument panels: the **peak-to-peak voltage** $V_{pp} = 2A$ and the **period** $T = 1/f$. @fig-signal-anatomy labels all of them on this lab's standard test signal ($V_{offset} = 2.5$ V, $A = 2$ V), which conveniently spans 0.5–4.5 V — safely inside the ADS's range, and always positive.
 
 ![The anatomy of an AC signal: amplitude, peak-to-peak voltage, DC offset, and period, shown on this lab's standard test signal.](figures/AC_Signal_Anatomy.png){#fig-signal-anatomy width="90%"}
 
 ### Sampling and the Nyquist Frequency
 
-A DAQ samples a continuous signal at discrete instants $t_k = k/f_s$, producing snapshots $y(t_k)$ and discarding everything in between. How fast is fast enough? The celebrated answer is the **Nyquist criterion**: a sampled signal can only faithfully represent frequencies below the **Nyquist frequency**,
+A DAQ (**d**ata **aq**uisition system) samples a continuous signal at discrete instants $t_k = k/f_s$, producing snapshots $y(t_k)$ and discarding everything in between. The measured signal is useful is it is captured "fast enough." But, how fast is fast enough? The answer to this question is the **Nyquist criterion**: a sampled signal can only faithfully represent frequencies below the **Nyquist frequency**,
 
 $$f_N = \frac{f_s}{2}$$ {#eq-nyquist}
 
@@ -176,69 +161,68 @@ where $\operatorname{round}(\cdot)$ is rounding to the nearest whole number. Bel
 
 ![The folding diagram for $f_s = 1000$ Hz: apparent frequency vs. true signal frequency. Above $f_N$, frequency folds back like light off a mirror — hence the name. Red dots: this lab's sweep frequencies.](figures/Folding_Diagram.png){#fig-folding width="90%"}
 
-One consequence deserves emphasis, because it is the deepest lesson of this lab: **aliasing is irreversible**. Once a 550 Hz signal has been sampled at 1000 Hz, the data is *identical* to that of a 450 Hz signal — not similar, identical. No later processing can tell them apart. Real DAQ systems therefore remove high-frequency content with analog **anti-aliasing filters** *before* the sampler, because afterward is too late. (You will build exactly such a filter in a later lab.)
+One consequence deserving emphasis: **aliasing is irreversible**. Once a 550 Hz signal has been sampled at 1000 Hz, the data is *identical* to that of a 450 Hz signal — not similar, identical. No later processing can tell them apart. Real DAQ systems therefore remove high-frequency content with analog **anti-aliasing filters** *before* the sampler, because afterward is too late. (You will build exactly such a filter in a later lab.)
 
 ### The LED Circuit
 
-An LED (light-emitting diode) passes current — and emits light — in one direction only, once the voltage across it exceeds its **forward voltage** $V_f$ (about 1.8–2.2 V for ordinary red/green LEDs). An LED does not limit its own current: connected directly across a supply it will happily destroy itself. The series resistor sets the current:
+An LED (light-emitting diode) passes current — and emits light — in one direction only, once the voltage across it exceeds its **forward voltage** $V_f$ (about 1.8–2.5 V for ordinary red/green/blue LEDs). An LED does not limit its own current: connected directly across a supply it will happily destroy itself. The series resistor sets the current:
 
 $$I = \frac{V_{supply} - V_f}{R}$$ {#eq-led-current}
 
-With this lab's 330 Ω resistor and a 5 V drive, $I \approx (5 - 2)/330 \approx 9$ mA — bright, and comfortably inside a standard LED's ~20 mA limit. @fig-led-schematic shows the two circuits you will build: one LED driven by the Wavegen (W1) and one by digital pin DIO 0. Note the polarity: LEDs only work one way around.
+With this lab's 330 Ω resistor and a 5 V drive, $I \approx (5 - 2)/330 \approx 9$ mA — bright, and comfortably inside a standard LED's \~20 mA limit. @fig-led-schematic shows the two circuits you will build: one LED driven by the Wavegen (W1) and one by digital pin DIO 0. Note the polarity: LEDs only work one way around.
 
 ![The two LED circuits, plus the Scope Channel 1 tap used to record what the W1 LED receives.](figures/LED_Circuit_Schematic.png){#fig-led-schematic width="95%"}
 
 ### Your Eye Is Also a Sensor
 
-A blinking LED looks *steady* if it blinks fast enough. The changeover frequency — the **flicker-fusion threshold** — is typically 50–90 Hz, varying with brightness, contrast, where the image lands on your retina (peripheral vision is more flicker-sensitive), and from person to person. Above the threshold your visual system fuses the flicker into steady light, but the flicker is still physically there — and "invisible" flicker from cheap LED lighting and displays is a documented cause of eyestrain and headaches, which is why lighting standards (e.g., IEEE 1789) regulate it. In Part-6 you will measure your own threshold, using the Wavegen as a precision flicker source. Your eye is not literally a discrete sampler like the ADS, but it *is* a measurement system with finite bandwidth — and this lab is, at heart, about knowing the bandwidth of every instrument you use, including the two built into your head.
+A blinking LED looks *steady* if it blinks fast enough. The changeover frequency — the **flicker-fusion threshold** — is typically 50–90 Hz, varying with brightness, contrast, where the image lands on your retina (peripheral vision is more flicker-sensitive), and from person to person. Above the threshold your visual system fuses the flicker into steady light, but the flicker is still physically there — and "invisible" flicker from cheap LED lighting and displays is a documented cause of eyestrain and headaches, which is why lighting standards (e.g., IEEE 1789) regulate it. In Part-6 you will measure your own threshold, using the Wavegen as a precision flicker source. Your eye is not literally a discrete sampler like the ADS, but it *is* a measurement system with finite bandwidth (that is the range of frequency in which works as desired!) — and one key takeaway the lab is that you can find and understand the bandwidth of every instrument you use, including the two built into your head.
 
 {{< pagebreak >}}
 
 ## Part-1: Build the LED Circuits {#sec-part-1}
 
-Your guides are @fig-led-schematic and the annotated photo in @fig-circuit-build. This is the simplest circuit of the course — two LEDs, two resistors, four signal wires.
+Use these figures @fig-led-schematic and the annotated photo in @fig-circuit-build as guides to assist in building your circuit.
 
-![The breadboard build: both LED branches and the Channel 1 tap.](figures/LED_Circuit_Build_ADS.png){#fig-circuit-build width="100%"}
+![The breadboard build: both LED branches and the Channel 1 tap. (Note in the figure above 5V is connected to test LEDs, but you don't need these connections. ](figures/LED_Circuit_Build_ADS.png){#fig-circuit-build width="100%"}
 
 | Connection | ADS pin | Purpose |
-|------------------------|------------|---------------------------------|
+|-----------------------|------------------|-------------------------------|
 | LED 1 branch input | **W1** | Wavegen drive signal |
 | LED 2 branch input | **DIO 0** | Digital (on/off) drive |
 | Both LED cathodes (via breadboard rail) | GND | Return path |
 | W1 node (before the resistor) | **1+** | Scope records the drive signal |
 | GND rail | **1−** | Ch. 1 reference |
 
-1. Wire both branches per the table: pin → 330 Ω resistor → LED anode (**long leg**) → LED cathode (short leg) → GND rail. Add the Channel 1 tap at the W1 node.
-2. Check each LED with your DMM in **diode-test mode**: probes matching the LED's polarity should light it faintly and read $V_f$; reversed, it should read over-limit. This is the DMM habit from Labs 01–03 applied to a new component.
-3. Nothing should be lit yet — W1 and DIO 0 both idle at 0 V.
+1.  Wire both branches per the table: pin → 330 Ω resistor → LED anode (**long leg**) → LED cathode (short leg) → GND rail. Add the Channel 1 tap at the W1 node.
+2.  Check each LED with your DMM in **diode-test mode**: probes matching the LED's polarity should light it faintly and read $V_f$; reversed, it should read over-limit.
+3.  Nothing should be lit yet — W1 and DIO 0 both idle at 0 V.
 
 ::: {.callout-important title="Logbook Questions"}
-**Q1.** Record the forward voltage $V_f$ your DMM's diode test reports for each LED. Using @eq-led-current, what current will flow in the W1 branch when W1 outputs 5 V? When DIO 0 outputs its 3.3 V HIGH?
+**Q.** Record the forward voltage $V_f$ your DMM's diode test reports for each LED. Using @eq-led-current, what current will flow in the W1 branch when W1 outputs 5 V? When DIO 0 outputs its 3.3 V HIGH?
 
-**Q2.** In one sentence: what would happen to the LED if you omitted the 330 Ω resistor, and *why* doesn't the LED protect itself?
+**Q.** In one sentence: what would happen to the LED if you omitted the 330 Ω resistor, and *why* doesn't the LED protect itself?
 :::
 
 {{< pagebreak >}}
 
 ## Part-2: Meet the Wavegen (GUI First) {#sec-part-2}
 
-New instrument, same course rule as Lab 03: **explore it live in the GUI before you automate it**. The Wavegen is the ADS's built-in signal generator — the source you will trust for every frequency in this lab — and five minutes of knob-turning now will make the scripted version obvious later.
+Now using a new instrument, we are going to follow the same rule as Lab 03: **explore it live in the GUI before you automate it**. The Wavegen is the ADS's built-in signal generator. It is useful for generating precise controllable electrical signals useful for testing circuits.
 
-1. Open **WaveForms**, then the **Wavegen** and **Scope** instruments side by side.
-2. Configure **W1** (Channel 1 output): **Sine**, Frequency **1 Hz**, Amplitude **2 V**, Offset **2.5 V** — the standard test signal of @eq-test-signal and @fig-signal-anatomy. Match @fig-wavegen-setup. Click **Run**.
-3. Watch the LED: it should pulse smoothly, brightening and dimming once per second. You are watching @eq-test-signal in hardware.
-4. In the Scope, enable Channel 1 (range ±5 V) and start acquiring. The trace should show the 0.5–4.5 V sine feeding the LED branch. Use the Scope's **X cursors** to measure the time between two successive peaks and compare with $T = 1/f$; match @fig-scope-loopback.
-5. Now raise the frequency: 10 Hz, then 50 Hz, then **100 Hz**. Watch the LED at each step and note what your eyes report.
-6. Switch the waveform to **Square** and back. When you are done exploring, **close WaveForms fully** (check the system tray) so your scripts can claim the device.
+1.  Open **WaveForms**, then the **Wavegen** and **Scope** instruments side by side.
+2.  Configure **W1** (Channel 1 output): **Sine**, Frequency **1 Hz**, Amplitude **2 V**, Offset **2.5 V** — the standard test signal of @eq-test-signal and @fig-signal-anatomy. Match @fig-wavegen-setup. Click **Run**.
+3.  Watch the LED: it should pulse smoothly, brightening and dimming once per second. You are watching @eq-test-signal in hardware.
+4.  In the Scope, enable Channel 1 (range ±5 V) and start acquiring. The trace should show the 0.5–4.5 V sine feeding the LED branch. Use the Scope's **X cursors** to measure the time between two successive peaks and compare with $T = 1/f$; match @fig-scope-loopback.
+5.  Now raise the frequency: 2 Hz, 5Hz, 10 Hz, 20, Hz, 30 Hz, 40 Hz, then 50 Hz, then 100 Hz. Watch the LED at each step and note what your eyes report.
+6.  Switch the waveform to **Square** and try all listed frequencies above. How do these change?
+7.  When you are done exploring, **close WaveForms fully** (check the system tray) so your scripts can claim the device.
 
 ![Wavegen configured for the standard test signal.](figures/Wavegen_Sine_Setup.png){#fig-wavegen-setup width="100%"}
 
-![Scope view of the W1 loopback, with cursors measuring one period.](figures/Scope_Wavegen_Loopback.png){#fig-scope-loopback width="100%"}
-
 ::: {.callout-important title="Logbook Questions"}
-**Q3.** Record the cursor-measured period at 1 Hz. Does it match $1/f$? What is the *expected* period at 100 Hz?
+**Q.** Record the cursor-measured period at 1 Hz. Does it match $1/f$? What is the *expected* period at 100 Hz?
 
-**Q4.** Describe what the LED looked like at 1, 10, 50, and 100 Hz. At what frequency (roughly) did it stop looking like a blinking light? Keep this note — Part-6 measures it properly.
+**Q.** Describe what the LED looked like at each frequency. At what frequency (roughly) did it stop looking like a blinking light with the sine wave? How about with the square wave?
 :::
 
 ::: callout-note
@@ -251,12 +235,12 @@ W1 and the Scope live in the same box, but the ADS does not internally connect t
 
 ## Part-3: Two Instruments, One Voltage {#sec-part-3}
 
-Which do you trust: the handheld DMM or the ADS? In this part a script sets W1 to known DC levels — 0 through 5 V — and at each level you record the voltage two ways: reading the DMM yourself, and letting the script average a 2-second ADS capture. This is Lab 03's automation philosophy again: the script handles the repetitive setting/capturing/bookkeeping, and pauses for the one thing only you can do (read the DMM).
+Which do you trust: the handheld DMM or the ADS? In this part a script sets W1 to known DC levels — 0 through 5 V — and at each level you record the voltage two ways: reading the DMM yourself, and letting the script average a 2-second ADS capture. Remeber our automation philosophy again: the script handles the repetitive setting/capturing/bookkeeping, and pauses for the steps only you can do (read the DMM).
 
 Open your notebook `FirstName_LastName_Lab04.ipynb` (kernel: your `.venv`; starter notebook on Canvas as usual). Clip your DMM across the LED — probes on the W1 node and GND.
 
 ::: {.callout-warning title="Close WaveForms first!"}
-Same rule as Lab 03: the ADS accepts one controlling program at a time. Close WaveForms fully before running dwfpy cells.
+The ADS accepts one controlling program at a time. Close WaveForms fully before running dwfpy cells.
 :::
 
 ``` python
@@ -293,9 +277,9 @@ np.savetxt('../Data/Static_Comparison.csv',
 
 New syntax, in the order it appears:
 
-- **`wavegen['ch1'].setup('dc', offset=v_set, start=True)`** — the Wavegen as code. `'dc'` is a waveform *function* just like `'sine'`; a DC "waveform" ignores frequency and amplitude and simply holds the `offset` voltage. `start=True` makes the output live immediately — the exact equivalent of clicking **Run** in the GUI. Note that `wavegen['ch1']` is the GUI's **W1**, the same labels-not-indices convention as `scope['ch1']`.
-- **`float(input(...))`** — `input()` (Lab 03) always returns *text*, even if you type `3.302`. Wrapping it in `float(...)` converts that text to a number you can do math with. Type only the number — no units.
-- Notice the pattern: one `with` block, *two* instruments (`wavegen` and `scope`) working together. This source-plus-measurement pairing is the skeleton of every automated test you will ever script.
+- **`wavegen['ch1'].setup('dc', offset=v_set, start=True)`** — the Wavegen as code. `'dc'` is a waveform *function* just like `'sine'`; a DC "waveform" ignores frequency and amplitude and simply holds the `offset` voltage. `start=True` makes the output live immediately — equivalent to clicking **Run** in the GUI. Note that `wavegen['ch1']` is the GUI's **W1**, the same convention as `scope['ch1']`.
+- **`float(input(...))`** — `input()` always returns *text*, even if you type `3.302`. Wrapping it in `float(...)` converts that text to a number you can do math with. Type only the number — no units.
+- Notice the pattern: one `with` block, *two* instruments (`wavegen` and `scope`) work together in this one. This source-plus-measurement pairing is the skeleton for many automated test scripts.
 
 As you go, watch the LED: it steps up in brightness with each setpoint — a free sanity check that W1 is really changing.
 
@@ -312,11 +296,11 @@ err_ads = (v_ads - v_set) * 1000
 Build the error plot to match @fig-example-static — both instruments on one axes, errors in mV vs. the set voltage, formatted per the Post-Lab requirements. Save **.pdf** and **.png** at 600 DPI.
 
 ::: {.callout-important title="Logbook Questions"}
-**Q5.** Copy your six-row comparison table into your logbook. Which instrument's errors are larger? Which instrument's errors follow a *pattern* (a trend with voltage), and which look random? What does a trend suggest about the *type* of error?
+**Q.** Copy your six-row comparison table into your logbook. Which instrument's errors are larger? Which instrument's errors follow a *pattern* (a trend with voltage), and which look random? What does a trend suggest about the *type* of error?
 
-**Q6.** What is the resolution (smallest displayed step) of your DMM? Estimate the ADS's effective resolution from the digits that change between repeated captures. Resolution, precision, accuracy: which of the three does averaging 2000 samples improve, and which can it never improve?
+**Q.** What is the resolution (smallest displayed step) of your DMM? Estimate the ADS's effective resolution from the digits that change between repeated captures. Resolution, precision, accuracy: which of the three does averaging 2000 samples improve, and which can it never improve?
 
-**Q7.** The "error" here is measured against the W1 *setpoint* — but W1 is itself an instrument with its own tolerance. What third piece of equipment would you need to decide which of the three (W1, DMM, ADS) is closest to the truth?
+**Q.** The "error" here is measured against the W1 *setpoint* — but W1 is itself an instrument with its own tolerance. What third piece of equipment would you need to decide which of the three (W1, DMM, ADS) is closest to the truth?
 :::
 
 ### Example Result
@@ -327,11 +311,11 @@ Build the error plot to match @fig-example-static — both instruments on one ax
 
 ## Part-4: The Aliasing Sweep {#sec-part-4}
 
-Here is the heart of the lab. You will generate five sine frequencies — chosen relative to the fixed Nyquist frequency $f_N = 500$ Hz — capture each at $f_s = 1000$ Hz, and compare what you *generated* against what the data *shows*.
+In this part, you will generate five sine frequencies — chosen relative to the fixed Nyquist frequency $f_N = 500$ Hz — capture each at $f_s = 1000$ Hz, and compare what you *generated* against what the data *shows*.
 
 ### Predict First
 
-Real experimentalists commit to predictions before looking at data. Compute the apparent frequency @eq-folding predicts for every sweep frequency:
+Good experimentalists commit predictions before looking at data. Compute the apparent frequency @eq-folding predicts for every sweep frequency:
 
 ``` python
 fs  = 1000               # sample rate (Hz), fixed for the whole sweep
@@ -343,10 +327,10 @@ for f_sig in f_signals:
     print(f"f_signal = {f_sig:5d} Hz -> predicted apparent frequency = {f_app:.0f} Hz")
 ```
 
-**`round()`** is a Python built-in: `round(1.125)` → 1, so for $f_{signal} = 1125$ Hz the formula computes $|1125 - 1 \times 1000| = 125$ Hz. Note this whole cell is pure arithmetic — no hardware — which is exactly why you can run it *before* capturing anything.
+**`round()`** is a Python built-in: `round(1.125)` → 1, so for $f_{signal} = 1125$ Hz the formula computes $|1125 - 1 \times 1000| = 125$ Hz. Note this whole cell is pure arithmetic so you can run it *before* capturing any data.
 
 ::: {.callout-important title="Logbook Questions"}
-**Q8.** Write the five predictions as a table in your logbook **before running the sweep**: $f_{signal}$, predicted $f_{apparent}$, and one short phrase of what you expect the plot to look like. Check each against @fig-folding.
+**Q.** Write the five predictions as a table in your logbook **before running the sweep**: $f_{signal}$, predicted $f_{apparent}$, and one short phrase of what you expect the plot to look like. Check each against @fig-folding.
 :::
 
 ### Run the Sweep
@@ -379,15 +363,15 @@ with dwf.Device() as device:
         print(f"saved Alias_{f_sig}Hz.csv")
 ```
 
-- **`time.sleep(0.2)`** pauses the script for 0.2 seconds — here, giving the Wavegen a beat to settle on its new frequency before the capture starts. `sleep` is the workhorse for "wait a moment" in instrument scripts.
+- **`time.sleep(0.2)`** pauses the script for 0.2 seconds — here, giving the Wavegen a beat to settle on its new frequency before the capture starts. `sleep` is the function for "wait a moment" in instrument scripts.
 - **`np.arange(n) / fs`** builds the sample-time array $t_k = k/f_s$: the integers 0…n−1, divided by the sample rate. Compare with `np.linspace` (Lab 01), which needs the *endpoint*; `arange`-over-rate is the natural idiom when you know the count and the rate.
-- The five captures land as five CSV files with `#`-header lines — load them with `np.loadtxt(..., comments='#')` exactly as in Lab 03.
+- The five captures land as five CSV files with `#`-header lines — load them with `np.loadtxt(..., comments='#')`.
 
-While it runs, glance at the LED: at these frequencies it looks steadily lit (Q4 explains why) even as the *data* is about to tell five very different stories.
+While it runs, glance at the LED: at these frequencies it looks steadily lit even as the *data* is about to tell five very different stories.
 
 ### Plot All Five Panels
 
-A shared figure with stacked panels is the standard way to compare captures, and it introduces one new tool:
+A shared figure with stacked panels is a standard way to compare captures, and it introduces one new tool:
 
 ``` python
 observed = ['?', '?', '?', '?', '?']     # fill in after inspecting each panel
@@ -419,20 +403,20 @@ fig.suptitle("FirstName LastName's Aliasing Sweep Plot — Date", y=0.995)
 fig.tight_layout(rect=(0, 0, 1, 0.99))
 ```
 
-- **`plt.subplots(5, 1, figsize=(6.5, 10.0))`** creates one figure holding a 5-row, 1-column grid of axes; `axes` is an array you can loop over. Everything you know about formatting a single `ax` applies unchanged to each panel — that is the point of the axes-object style you have used since Lab 01.
-- **`zip(axes, f_signals, observed, x_max_ms)`** — Lab 03's `zip`, now pairing *four* lists at once. One loop pass = one fully-labeled panel.
-- Run it once with the `'?'` placeholders, then **measure the observed frequency in each panel** — read the time between successive peaks off the axis and invert it — and re-run with `observed` filled in (e.g., `'450 Hz — aliased!'`). The observed values are *your measurement*; the title's predicted value is the theory it must face.
+- **`plt.subplots(5, 1, figsize=(6.5, 10.0))`** creates one figure holding a 5-row, 1-column grid of axes; `axes` is an array you can loop over. Everything you know about formatting a single `ax` applies unchanged to each panel.
+- **`zip(axes, f_signals, observed, x_max_ms)`** — `zip`, now pairs *four* lists at once. One loop pass = one fully-labeled panel.
+- Run it once with the `'?'` placeholders, then **measure the observed frequency in each panel** — read the time between successive peaks off the axis and invert it — and re-run with `observed` filled in (e.g., `'450 Hz — aliased!'`). The observed values are *your measurement*; the title's predicted value is the theory we should compare too.
 
 Format per the Post-Lab requirements and save **.pdf**/**.png** at 600 DPI. Compare with @fig-example-alias.
 
 ::: {.callout-important title="Logbook Questions"}
-**Q9.** For each panel: did the observed frequency match your Q8 prediction? Record the observed values in your Q8 table.
+**Q.** For each panel: did the observed frequency match your Q8 prediction? Record the observed values in your Q8 table.
 
-**Q10.** Compare panels 2 (450 Hz) and 4 (550 Hz) closely. Could you tell, from the sampled data alone, which input produced which panel? Explain why this means an anti-aliasing filter must act *before* the sampler — no software fix can work afterward.
+**Q.** Compare panels 2 (450 Hz) and 4 (550 Hz) closely. Could you tell, from the sampled data alone, which input produced which panel? Explain why this means an anti-aliasing filter must act *before* the sampler.
 
-**Q11.** In panel 3 (exactly $f_N$), what amplitude does the sampled signal show? Re-run the sweep and watch whether it changes. What does the sampled amplitude at exactly $f_N$ depend on?
+**Q.** In panel 3 (exactly $f_N$), what amplitude does the sampled signal show? Re-run the sweep and watch whether it changes. What does the sampled amplitude at exactly $f_N$ depend on?
 
-**Q12.** In Labs 02 and 03 you sampled a swinging pendulum at 100 Hz and 1000 Hz. Estimate the highest frequency present in those signals, and argue from @eq-nyquist whether aliasing could have corrupted your measurements.
+**Q.** In Labs 02 and 03 you sampled a swinging pendulum at 100 Hz and 1000 Hz. Estimate the highest frequency present in those signals, and argue from @eq-nyquist whether aliasing could have corrupted your measurements.
 :::
 
 ### Example Result
@@ -466,9 +450,9 @@ with dwf.Device() as device:
 - The blink *rate* here comes from `time.sleep` — software timing. Your operating system juggles dozens of programs and gets around to your script when it can, so each "0.25 s" is really "0.25 s, give or take". Fine at 2 Hz; hopeless as a precision signal source. That is why Part-4 and Part-6 use the Wavegen — its timing runs on dedicated hardware inside the ADS, indifferent to what Windows is doing.
 
 ::: {.callout-important title="Logbook Questions"}
-**Q13.** LED 2 runs at 3.3 V, LED 1 at up to 5 V. Which is brighter, and does the difference match the current ratio predicted by @eq-led-current using your Q1 values?
+**Q.** LED 2 runs at 3.3 V, LED 1 at up to 5 V. Which is brighter, and does the difference match the current ratio predicted by @eq-led-current using your Q1 values?
 
-**Q14.** Name one lab task where software timing (a `sleep` loop) is perfectly fine, and one where it would ruin the measurement. What is the rough timescale that separates them?
+**Q.** Name one lab task where software timing (a `sleep` loop) is perfectly fine, and one where it would ruin the measurement. What is the rough timescale that separates them?
 :::
 
 ### Eye vs. DAQ
@@ -504,9 +488,9 @@ The cell takes a full 20 seconds — the `single(...)` call is blocking, as in L
 Plot the capture (time in seconds, voltage in volts, markers *and* line) to match @fig-example-eyevsdaq, annotate the three frequencies (blink, sample, apparent), and save **.pdf**/**.png** at 600 DPI.
 
 ::: {.callout-important title="Logbook Questions"}
-**Q15.** What frequency does your captured data show? What did your eyes see during those same 20 seconds? Reconcile the two using @eq-folding.
+**Q.** What frequency does your captured data show? What did your eyes see during those same 20 seconds? Reconcile the two using @eq-folding.
 
-**Q16.** A colleague argues: "the data is clean and periodic — clearly the LED blinked every ~2 seconds." Nothing in the file itself contradicts them. What *outside knowledge* is required to catch the error, and what does that imply about trusting logged data from a system whose sample rate you didn't choose?
+**Q.** A colleague argues: "the data is clean and periodic — clearly the LED blinked every \~2 seconds." Nothing in the file itself contradicts them. What *outside knowledge* is required to catch the error, and what does that imply about trusting logged data from a system whose sample rate you didn't choose?
 :::
 
 ### Example Result
@@ -558,11 +542,11 @@ np.savetxt('../Data/Flicker_Staircase_PartnerA.csv',   # rename per partner
 Procedure notes: look *directly* at the LED from your normal seated distance, answer honestly (there is no right answer — thresholds legitimately differ), and run the staircase **once per partner**, changing the filename before the second run.
 
 ::: {.callout-important title="Logbook Questions"}
-**Q17.** Record both partners' threshold brackets. Are they the same? Typical values run 50–90 Hz — where do you two fall?
+**Q.** Record both partners' threshold brackets. Are they the same? Typical values run 50–90 Hz — where do you two fall?
 
-**Q18.** Re-run a frequency just *above* your threshold, but this time look slightly *away* from the LED, watching it with your peripheral vision. Does the flicker come back? (For most people it does.) What does that tell you about treating "the eye" as one single sensor?
+**Q.** Re-run a frequency just *above* your threshold, but this time look slightly *away* from the LED, watching it with your peripheral vision. Does the flicker come back? (For most people it does.) What does that tell you about treating "the eye" as one single sensor?
 
-**Q19.** LED room lights are typically dimmed by switching on/off rapidly (PWM). Using your measured threshold plus the safety callout above, propose a minimum PWM frequency for comfortable, safe lighting, and justify it in two sentences.
+**Q.** LED room lights are typically dimmed by switching on/off rapidly (PWM). Using your measured threshold plus the safety callout above, propose a minimum PWM frequency for comfortable, safe lighting, and justify it in two sentences.
 :::
 
 {{< pagebreak >}}

@@ -1,4 +1,10 @@
-"""Generate Lab 05 schematics, pinout diagrams, and screenshot placeholders."""
+"""Generate Lab 05 schematics, pinout diagrams, and screenshot placeholders.
+
+Edit and re-run to regenerate. Each diagram is saved as .png (used by the
+.qmd) AND .svg (for vector editing in Inkscape etc.). If you edit an SVG by
+hand, export it back over the matching .png so the manual picks it up.
+Placeholders are PNG-only (they get replaced by real screenshots).
+"""
 
 from pathlib import Path
 
@@ -8,8 +14,15 @@ import numpy as np
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.serif"] = ["Times New Roman", "Times", "DejaVu Serif"]
 plt.rcParams["font.size"] = 11
+plt.rcParams["svg.fonttype"] = "none"   # keep SVG text editable as text
 
 HERE = Path(__file__).resolve().parent
+
+
+def save(fig, name):
+    """Save a diagram as both .png (for the manual) and .svg (for editing)."""
+    fig.savefig(HERE / f"{name}.png", dpi=300, bbox_inches="tight")
+    fig.savefig(HERE / f"{name}.svg", bbox_inches="tight")
 
 
 def hres(ax, x0, x1, y, label, label_dy=0.28):
@@ -101,7 +114,7 @@ ax.text(5.4, 0.5, "Scope 1$-$ and 2$-$ to GND", fontsize=9, style="italic")
 ax.set_xlim(0.4, 8.2)
 ax.set_ylim(0, 4.1)
 ax.axis("off")
-fig.savefig(HERE / "NonInverting_Schematic.png", dpi=300, bbox_inches="tight")
+save(fig, "NonInverting_Schematic")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
@@ -157,13 +170,13 @@ ax.text(6.28, 1.1, "REF to GND\n(don't leave floating!)", fontsize=8, color="red
 ax.set_xlim(0.4, 8.6)
 ax.set_ylim(0, 4.3)
 ax.axis("off")
-fig.savefig(HERE / "InAmp_Schematic.png", dpi=300, bbox_inches="tight")
+save(fig, "InAmp_Schematic")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
 # 3. DIP-8 pinout diagrams (top view)
 # ----------------------------------------------------------------------
-def dip8(fname, title, left_pins, right_pins):
+def dip8(name, title, left_pins, right_pins):
     fig, ax = plt.subplots(figsize=(3.6, 3.2))
     fig.patch.set_facecolor("white")
     ax.add_patch(plt.Rectangle((1.0, 0.5), 1.6, 3.0, fill=False, lw=1.8))
@@ -180,14 +193,14 @@ def dip8(fname, title, left_pins, right_pins):
     ax.set_xlim(-1.4, 5.0)
     ax.set_ylim(0.2, 4.0)
     ax.axis("off")
-    fig.savefig(HERE / fname, dpi=300, bbox_inches="tight")
+    save(fig, name)
     plt.close(fig)
 
 
-dip8("LM358_Pinout.png", "LM358",
+dip8("LM358_Pinout", "LM358",
      ["OUT A", "$-$IN A", "+IN A", "V$-$"],
      ["V+", "OUT B", "$-$IN B", "+IN B"])
-dip8("AD622_Pinout.png", "AD622",
+dip8("AD622_Pinout", "AD622",
      ["RG$-$", "$-$IN", "+IN", "V$-$"],
      ["RG+", "V+", "OUT", "REF"])
 

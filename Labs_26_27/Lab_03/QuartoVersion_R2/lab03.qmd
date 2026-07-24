@@ -171,15 +171,11 @@ $$a_y = \underbrace{\dot{\theta}^2 r}_{\text{normal accel.}} \; \underbrace{\, -
 
 where $\theta$ is the pendulum angle measured from straight down. The gravity term follows from the free-body diagram in @fig-gravity-fbd: the component of $g$ along the +y direction (tip toward pivot) is $g\cos\theta$ — largest in magnitude when hanging straight down ($\theta = 0$), zero when horizontal. In Part 6, you will *subtract* the gravity term from the measured signal to isolate the normal acceleration @eq-normal-accel.
 
-\*\*\* UPDATE FIGURE \*\*\*
-
-![Free-body diagram of the accelerometer at angle $\theta$. The +y axis points from the sensor toward the pivot; the gravity component along +y is $-g\cos\theta$.](figures/lab03diagram.png){#fig-gravity-fbd width="100%"}
+![Free-body diagram of the accelerometer at angle $\theta$. The +y axis points from the sensor toward the pivot; the gravity component along +y is $g\cos\theta$.](figures/lab03diagram.jpg){#fig-gravity-fbd width="100%"}
 
 ### Gravity as a Calibration Reference
 
 @eq-accel-reading also hands us a nice calibration standard. When the pendulum is held *still*, $\dot\theta = 0$ , the sensor should feel only the gravity component — which we know exactly at four easy-to-set orientations:
-
-\*\*\* Update this figure with ay flipped\*\*\*
 
 ![The four calibration orientations. At each, the known gravity component along +y is the calibration reference.](figures/Accel_Calibration_Orientations.png){#fig-orientations width="100%"}
 

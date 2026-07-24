@@ -431,14 +431,13 @@ window.Quarto = {
 <p>For our swinging pendulum, the y-axis sensed acceleration is thus:</p>
 <p><span id="eq-accel-reading"><span class="math display">\[a_y = \underbrace{\dot{\theta}^2 r}_{\text{normal accel.}} \; \underbrace{\, -g\cos\theta}_{\text{gravity component}} \tag{2}\]</span></span></p>
 <p>where <span class="math inline">\(\theta\)</span> is the pendulum angle measured from straight down. The gravity term follows from the free-body diagram in <a href="#fig-gravity-fbd" class="quarto-xref">Figure&nbsp;1</a>: the component of <span class="math inline">\(g\)</span> along the +y direction (tip toward pivot) is <span class="math inline">\(g\cos\theta\)</span> — largest in magnitude when hanging straight down (<span class="math inline">\(\theta = 0\)</span>), zero when horizontal. In Part 6, you will <em>subtract</em> the gravity term from the measured signal to isolate the normal acceleration <a href="#eq-normal-accel" class="quarto-xref">Equation&nbsp;1</a>.</p>
-<p>*** UPDATE FIGURE ***</p>
 <div id="fig-gravity-fbd" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gravity-fbd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="figures/lab03diagram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Free-body diagram of the accelerometer at angle \theta. The +y axis points from the sensor toward the pivot; the gravity component along +y is -g\cos\theta."><img src="figures/lab03diagram.png" class="img-fluid figure-img" style="width:100.0%"></a>
+<a href="figures/lab03diagram.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Free-body diagram of the accelerometer at angle \theta. The +y axis points from the sensor toward the pivot; the gravity component along +y is g\cos\theta."><img src="figures/lab03diagram.jpg" class="img-fluid figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gravity-fbd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Free-body diagram of the accelerometer at angle <span class="math inline">\(\theta\)</span>. The +y axis points from the sensor toward the pivot; the gravity component along +y is <span class="math inline">\(-g\cos\theta\)</span>.
+Figure&nbsp;1: Free-body diagram of the accelerometer at angle <span class="math inline">\(\theta\)</span>. The +y axis points from the sensor toward the pivot; the gravity component along +y is <span class="math inline">\(g\cos\theta\)</span>.
 </figcaption>
 </figure>
 </div>
@@ -446,7 +445,6 @@ Figure&nbsp;1: Free-body diagram of the accelerometer at angle <span class="math
 <section id="gravity-as-a-calibration-reference" class="level3" data-number="4.3">
 <h3 data-number="4.3" class="anchored" data-anchor-id="gravity-as-a-calibration-reference"><span class="header-section-number">4.3</span> Gravity as a Calibration Reference</h3>
 <p><a href="#eq-accel-reading" class="quarto-xref">Equation&nbsp;2</a> also hands us a nice calibration standard. When the pendulum is held <em>still</em>, <span class="math inline">\(\dot\theta = 0\)</span> , the sensor should feel only the gravity component — which we know exactly at four easy-to-set orientations:</p>
-<p>*** Update this figure with ay flipped***</p>
 <div id="fig-orientations" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-orientations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

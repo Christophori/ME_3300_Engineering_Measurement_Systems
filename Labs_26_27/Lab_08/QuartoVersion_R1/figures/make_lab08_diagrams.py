@@ -1,4 +1,10 @@
-"""Generate Lab 08 theory diagrams and labeled screenshot placeholders."""
+"""Generate Lab 08 theory diagrams and labeled screenshot placeholders.
+
+Edit and re-run to regenerate. Each diagram is saved as .png (used by the
+.qmd) AND .svg (for vector editing in Inkscape etc.). If you edit an SVG by
+hand, export it back over the matching .png so the manual picks it up.
+Placeholders are PNG-only (they get replaced by real screenshots).
+"""
 
 from pathlib import Path
 
@@ -8,8 +14,15 @@ import numpy as np
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.serif"] = ["Times New Roman", "Times", "DejaVu Serif"]
 plt.rcParams["font.size"] = 11
+plt.rcParams["svg.fonttype"] = "none"   # keep SVG text editable as text
 
 HERE = Path(__file__).resolve().parent
+
+
+def save_fig(fig, name):
+    """Save a diagram as both .png (for the manual) and .svg (for editing)."""
+    fig.savefig(HERE / f"{name}.png", dpi=300, bbox_inches="tight")
+    fig.savefig(HERE / f"{name}.svg", bbox_inches="tight")
 
 # ----------------------------------------------------------------------
 # 1. Signal chain: bead -> AD8495 breakout -> LM358 follower -> Scope
@@ -68,7 +81,7 @@ ax.text(4.7, 0.62, "voltage follower: $V_{out} = V_{in}$ — isolates the amplif
 ax.set_xlim(0, 8.2)
 ax.set_ylim(0.5, 3.6)
 ax.axis("off")
-fig.savefig(HERE / "TC_Signal_Chain.png", dpi=300, bbox_inches="tight")
+save_fig(fig, "TC_Signal_Chain")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
@@ -110,7 +123,7 @@ ax.set_ylim(10, 112)
 ax.grid(which="major", linestyle="--", linewidth=0.5)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-fig.savefig(HERE / "FirstOrder_Response_Anatomy.png", dpi=300, bbox_inches="tight")
+save_fig(fig, "FirstOrder_Response_Anatomy")
 plt.close(fig)
 
 # ----------------------------------------------------------------------

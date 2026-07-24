@@ -1,4 +1,10 @@
-"""Generate Lab 04 theory diagrams and labeled screenshot placeholders."""
+"""Generate Lab 04 theory diagrams and labeled screenshot placeholders.
+
+Edit and re-run to regenerate. Each diagram is saved as .png (used by the
+.qmd) AND .svg (for vector editing in Inkscape etc.). If you edit an SVG by
+hand, export it back over the matching .png so the manual picks it up.
+Placeholders are PNG-only (they get replaced by real screenshots).
+"""
 
 from pathlib import Path
 
@@ -8,8 +14,15 @@ import numpy as np
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.serif"] = ["Times New Roman", "Times", "DejaVu Serif"]
 plt.rcParams["font.size"] = 11
+plt.rcParams["svg.fonttype"] = "none"   # keep SVG text editable as text
 
 HERE = Path(__file__).resolve().parent
+
+
+def save(fig, name):
+    """Save a diagram as both .png (for the manual) and .svg (for editing)."""
+    fig.savefig(HERE / f"{name}.png", dpi=300, bbox_inches="tight")
+    fig.savefig(HERE / f"{name}.svg", bbox_inches="tight")
 
 # ----------------------------------------------------------------------
 # 1. Anatomy of an AC signal (replaces legacy demoSignal figure)
@@ -43,7 +56,7 @@ ax.set_xlim(0, 2)
 ax.grid(which="major", linestyle="--", linewidth=0.5)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-fig.savefig(HERE / "AC_Signal_Anatomy.png", dpi=300, bbox_inches="tight")
+save(fig, "AC_Signal_Anatomy")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
@@ -70,7 +83,7 @@ ax.legend(loc="upper right", ncol=1, framealpha=0.95)
 ax.grid(which="major", linestyle="--", linewidth=0.5)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-fig.savefig(HERE / "Sampling_Alias_Illustration.png", dpi=300, bbox_inches="tight")
+save(fig, "Sampling_Alias_Illustration")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
@@ -103,7 +116,7 @@ ax.legend(loc="upper right", framealpha=0.95, fontsize=9)
 ax.grid(which="major", linestyle="--", linewidth=0.5)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-fig.savefig(HERE / "Folding_Diagram.png", dpi=300, bbox_inches="tight")
+save(fig, "Folding_Diagram")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
@@ -172,7 +185,7 @@ ax.text(2.0, 2.9, "Anode (long leg) toward the resistor; cathode (short leg) to 
 ax.set_xlim(0, 5.6)
 ax.set_ylim(0, 3.2)
 ax.axis("off")
-fig.savefig(HERE / "LED_Circuit_Schematic.png", dpi=300, bbox_inches="tight")
+save(fig, "LED_Circuit_Schematic")
 plt.close(fig)
 
 # ----------------------------------------------------------------------

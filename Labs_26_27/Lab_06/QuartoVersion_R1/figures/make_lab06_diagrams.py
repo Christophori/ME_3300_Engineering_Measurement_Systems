@@ -1,4 +1,10 @@
-"""Generate Lab 06 theory diagrams and labeled screenshot placeholders."""
+"""Generate Lab 06 theory diagrams and labeled screenshot placeholders.
+
+Edit and re-run to regenerate. Each diagram is saved as .png (used by the
+.qmd) AND .svg (for vector editing in Inkscape etc.). If you edit an SVG by
+hand, export it back over the matching .png so the manual picks it up.
+Placeholders are PNG-only (they get replaced by real screenshots).
+"""
 
 from pathlib import Path
 
@@ -8,8 +14,15 @@ import numpy as np
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.serif"] = ["Times New Roman", "Times", "DejaVu Serif"]
 plt.rcParams["font.size"] = 11
+plt.rcParams["svg.fonttype"] = "none"   # keep SVG text editable as text
 
 HERE = Path(__file__).resolve().parent
+
+
+def save_fig(fig, name):
+    """Save a diagram as both .png (for the manual) and .svg (for editing)."""
+    fig.savefig(HERE / f"{name}.png", dpi=300, bbox_inches="tight")
+    fig.savefig(HERE / f"{name}.svg", bbox_inches="tight")
 
 
 def zigzag(ax, p0, p1, label=None, label_off=(0.0, 0.0), n=5, amp=0.10, fs=9):
@@ -79,7 +92,7 @@ ax.text(0.45, 0.30, "width $w$ measured with the caliper (into the page)",
 ax.set_xlim(0, 8.4)
 ax.set_ylim(0, 3.1)
 ax.axis("off")
-fig.savefig(HERE / "Cantilever_Beam_Gauges.png", dpi=300, bbox_inches="tight")
+save_fig(fig, "Cantilever_Beam_Gauges")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
@@ -147,7 +160,7 @@ ax.text(0.35, 5.9, "Bridge output = difference of the two mid-node voltages;\n"
 ax.set_xlim(0, 10.6)
 ax.set_ylim(0.3, 6.6)
 ax.axis("off")
-fig.savefig(HERE / "Half_Bridge_Schematic.png", dpi=300, bbox_inches="tight")
+save_fig(fig, "Half_Bridge_Schematic")
 plt.close(fig)
 
 # ----------------------------------------------------------------------
